@@ -2,7 +2,7 @@
   <a-layout id="components-layout-demo-fixed" class="layout">
     <a-layout-header :style="{height:'59px', background: '#fff', zIndex: 1, width: '100%' }">
       <div class="logo">
-        <img src="../assets/logo.png" />
+        <img src="../assets/logo.png">
       </div>
       <menu-login />
       <simple-menu />
@@ -19,8 +19,18 @@
 <script>
 import SimpleMenu from './menu/Menu'
 import MenuLogin from './menu/MenuLogin'
+import notification from 'ant-design-vue/lib/notification'
 export default {
-  components: { SimpleMenu, MenuLogin }
+  components: { SimpleMenu, MenuLogin },
+  created() {
+    if (this.$store.getters.token !== undefined) {
+      this.$store.dispatch('user/getInfo').catch(() => {
+        notification.error({
+          message: '初始化失败'
+        })
+      })
+    }
+  }
 }
 </script>
 

@@ -7,7 +7,7 @@
       :style="{ height:'60px', lineHeight: '59px'}"
     >
       <template v-for="item in routes">
-        <a-menu-item :key="item.path">
+        <a-menu-item v-if="item.mate.isLoading" :key="item.path">
           <menu-item
             :key="item.path"
             :path="item.path"

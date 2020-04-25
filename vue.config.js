@@ -1,5 +1,4 @@
 const path = require('path')
-// eslint-disable-next-line no-unused-vars
 const appConfig = require('./src/app.config')
 
 function resolve(dir) {
@@ -9,7 +8,7 @@ function resolve(dir) {
 module.exports = {
   /* 部署生产环境和开发环境下的URL：可对当前环境进行区分，baseUrl 从 Vue CLI 3.3 起已弃用，要使用publicPath */
   /* baseUrl: process.env.NODE_ENV === 'production' ? './' : '/' */
-  publicPath: process.env.NODE_ENV === 'production' ? '/public/' : './',
+  publicPath: process.env.NODE_ENV === 'production' ? '/public/' : '/',
   /* 输出文件目录：在npm run build时，生成文件的目录名称 */
   outputDir: 'dist',
   /* 放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录 */
@@ -27,20 +26,12 @@ module.exports = {
     /* 设置为0.0.0.0则所有的地址均能访问 */
     host: '0.0.0.0',
     port: 8066,
-    https: false,
-    hotOnly: false,
-    /* 使用代理 */
-    proxy: {
-      [process.env.VUE_APP_BASE_API]: {
-        target: `http://localhost:8080`,
-        /* 允许跨域 */
-        changeOrigin: true,
-        /* pathRewrite可以理解为一个重定向或者重新赋值的功能*/
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
-        }
-      }
-    }
+    overlay: {
+      warnings: false,
+      errors: true
+    },
+    // 6. devServer.proxy --> API 请求代理服务器
+    proxy: `http://localhost:8080`
   },
   configureWebpack: {
     /* 在Webpack的name字段中提供应用程序的标题，以便

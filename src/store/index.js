@@ -15,6 +15,15 @@ const store = new Vuex.Store({
     user,
     global
   },
+  state: {
+
+  },
+  mutations: {
+
+  },
+  actions: {
+
+  },
   getters
 })
 

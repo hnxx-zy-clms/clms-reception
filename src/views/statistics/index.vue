@@ -5,7 +5,11 @@
 </template>
 
 <script>
-export default {
+import store from '../../store'
 
+export default {
+  created() {
+    if (store.getters.roles === '') { this.$router.replace('/exception/403') }
+  }
 }
 </script>

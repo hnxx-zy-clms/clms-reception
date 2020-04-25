@@ -1,13 +1,12 @@
-// import { login, logout, getInfo } from '@/api/user'
-// import { getToken, setToken, removeToken, getName, setName, setUserId, getUserId } from '@/utils/auth'
-// import { resetRouter } from '@/router'
+import { login, getInfo } from '../../api/user'
+import { getToken, setToken, removeToken } from '../../utils/auth'
 
 const getDefaultState = () => {
   return {
-    // token: getToken(),
-    // name: getName(),
-    // avatar: '',
-    // userid: getUserId()
+    token: getToken(),
+    name: '',
+    userId: '',
+    roles: ''
   }
 }
 
@@ -28,61 +27,56 @@ const mutations = {
   },
   SET_USERID: (state, userid) => {
     state.userid = userid
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles
   }
 }
 
 const actions = {
-  // // 用户登录
-  // login({ commit }, userInfo) {
-  //   // const { username, password } = userInfo
-  //   return new Promise((resolve, reject) => {
-  //     login(true).then(res => {
-  //       commit('SET_TOKEN', res.msg)
-  //       commit('SET_NAME', res.data.userName)
-  //       commit('SET_USERID', res.data.userId)
-  //       setUserId(res.data.userId)
-  //       setName(res.data.userName)
-  //       setToken(res.msg)
-  //       resolve()
-  //     }).catch(error => {
-  //       reject(error)
-  //     })
-  //   })
-  // },
-  //
-  // // 获取用户信息
-  // getInfo({ commit }) {
-  //   return new Promise((resolve, reject) => {
-  //     getInfo().then(res => {
-  //       const { data } = res
-  //       const { name, header } = data
-  //       commit('SET_NAME', name)
-  //       commit('SET_AVATAR', header)
-  //       resolve(data)
-  //     }).catch(error => {
-  //       reject(error)
-  //     })
-  //   })
-  // },
-  //
-  // // 退出登录
-  // logout({ commit, state }) {
-  //   return new Promise((resolve, reject) => {
-  //     logout(state.token).then(() => {
-  //       removeToken() // must remove  token  first
-  //       resetRouter()
-  //       commit('RESET_STATE')
-  //       resolve()
-  //     }).catch(error => {
-  //       reject(error)
-  //     })
-  //   })
-  // },
+  // 用户登录
+  login({ commit }, userInfo) {
+    return new Promise((resolve, reject) => {
+      login(userInfo).then(res => {
+        commit('SET_TOKEN', res.msg)
+        setToken(res.msg, userInfo.remember)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  // 获取用户信息
+  getInfo({ commit }) {
+    return new Promise((resolve, reject) => {
+      getInfo().then(res => {
+        const { data } = res
+        const { userName, userId, userPositionId } = data
+        commit('SET_NAME', userName)
+        commit('SET_USERID', userId)
+        commit('SET_ROLES', userPositionId)
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  // 登出
+  logout({ commit, state }) {
+    return new Promise((resolve) => {
+      removeToken()
+      resolve()
+      commit('SET_TOKEN', '')
+      commit('SET_ROLES', [])
+    })
+  },
 
   // 刷新token
   resetToken({ commit }) {
     return new Promise(resolve => {
-      removeToken() // must remove  token  first
+      removeToken()
       commit('RESET_STATE')
       resolve()
     })

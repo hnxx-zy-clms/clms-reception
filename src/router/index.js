@@ -11,6 +11,8 @@ const Chat = () => import('../views/chat')
 const Classes = () => import('../views/classes')
 const Statistics = () => import('../views/statistics')
 const Task = () => import('../views/task')
+const Register = () => import('../views/register/index')
+const NotFoundComponent = () => import('../views/exception/404')
 
 Vue.use(VueRouter)
 
@@ -21,7 +23,16 @@ const routes = [
     component: Home,
     mate: {
       title: '主页',
-      icon: 'home'
+      icon: 'home',
+      isLoading: true
+    }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register,
+    mate: {
+      isLoading: false
     }
   },
   {
@@ -30,7 +41,8 @@ const routes = [
     component: Report,
     mate: {
       title: '报告',
-      icon: 'book'
+      icon: 'book',
+      isLoading: true
     }
   },
   {
@@ -39,7 +51,8 @@ const routes = [
     component: Chat,
     mate: {
       title: '会议',
-      icon: 'schedule'
+      icon: 'schedule',
+      isLoading: true
     }
   },
   {
@@ -48,7 +61,8 @@ const routes = [
     component: Classes,
     mate: {
       title: '班级',
-      icon: 'usergroup-add'
+      icon: 'usergroup-add',
+      isLoading: true
     }
   },
   {
@@ -57,7 +71,8 @@ const routes = [
     component: Statistics,
     mate: {
       title: '数据统计',
-      icon: 'bar-chart'
+      icon: 'bar-chart',
+      isLoading: true
     }
   },
   {
@@ -66,7 +81,8 @@ const routes = [
     component: Answer,
     mate: {
       title: '答疑',
-      icon: 'bulb'
+      icon: 'bulb',
+      isLoading: true
     }
   },
   {
@@ -75,7 +91,8 @@ const routes = [
     component: Article,
     mate: {
       title: '文章',
-      icon: 'book'
+      icon: 'book',
+      isLoading: true
     }
   },
   {
@@ -84,7 +101,8 @@ const routes = [
     component: Task,
     mate: {
       title: '任务',
-      icon: 'sound'
+      icon: 'sound',
+      isLoading: true
     }
   },
   {
@@ -93,7 +111,40 @@ const routes = [
     component: About,
     mate: {
       title: '关于',
-      icon: 'question-circle'
+      icon: 'question-circle',
+      isLoading: true
+    }
+  },
+  {
+    path: '/exception/403',
+    name: '403',
+    component: () => import('../views/exception/403'),
+    mate: {
+      isLoading: false
+    }
+  },
+  {
+    path: '/exception/500',
+    name: '500',
+    component: () => import('../views/exception/500'),
+    mate: {
+      isLoading: false
+    }
+  },
+  {
+    path: '/exception/404',
+    name: '404',
+    component: NotFoundComponent,
+    mate: {
+      isLoading: false
+    }
+  },
+  {
+    path: '*',
+    name: 'NotFound',
+    component: NotFoundComponent,
+    mate: {
+      isLoading: false
     }
   }
 ]
