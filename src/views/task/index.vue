@@ -5,6 +5,12 @@
         <a-icon
           type="notification"
           style="font-size: 24px;line-height: inherit; margin: 5px 12px 0 4.8px;"
+          v-if="leftTitle==='通知'?1:0"
+        />
+        <a-icon
+            type="highlight"
+            style="font-size: 24px;line-height: inherit; margin: 5px 12px 0 4.8px;"
+            v-else-if="leftTitle==='待办'?1:0"
         />
         <div class="title">{{ leftTitle }}</div>
         <div class="selector">
@@ -26,8 +32,7 @@
           </a-button>
         </div>
       </a-card>
-<!--      <div style="width: 100%;height: 20px;background-color: wheat;margin-top: 20px" />-->
-      <notice></notice>
+      <notice ref="notice"></notice>
     </div>
 
     <div class="tasksign">
@@ -122,6 +127,20 @@ export default {
   methods: {
     lefthandleMenuClick(key) {
       this.leftselectTitle = key.key
+      if (key.key === '全部') {
+        this.$refs.notice.page.params.type = 0
+        this.$refs.notice.handleInfiniteOnLoad()
+      }
+      if (key.key === '已读') {
+        this.$refs.notice.page.params.type = 1
+        console.log(this.$refs.notice.page.params.type)
+        this.$refs.notice.handleInfiniteOnLoad()
+      }
+      if (key.key === '未读') {
+        this.$refs.notice.page.params.type = 2
+        console.log(this.$refs.notice.page.params.type)
+        this.$refs.notice.handleInfiniteOnLoad()
+      }
     },
     righthandleMenuClick(key) {
       this.rightselectTitle = key.key
