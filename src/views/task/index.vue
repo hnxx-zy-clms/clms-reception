@@ -95,7 +95,6 @@
 </template>
 
 <script>
-import store from '../../store'
 import Notice from './notice'
 
 export default {
@@ -118,11 +117,6 @@ export default {
         height: '42px',
         width: '100%'
       }
-    }
-  },
-  created() {
-    if (store.getters.roles === '') {
-      this.$router.replace('/exception/403')
     }
   },
   methods: {

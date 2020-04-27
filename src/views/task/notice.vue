@@ -44,7 +44,7 @@ export default {
       busy: false
     }
   },
-  created() {
+  beforeCreated() {
     this.getNoticeList()
   },
   methods: {

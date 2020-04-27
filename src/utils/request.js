@@ -1,6 +1,6 @@
 import axios from 'axios'
 import store from '../store'
-import router from '../router'
+import { router } from '../router'
 import { getToken } from '../utils/auth'
 
 import notification from 'ant-design-vue/es/notification'
@@ -39,8 +39,8 @@ const err = (error) => {
     const { url } = config
     const errorText = codeMessage[response.status] || response.statusText
 
-    if (status === 401) {
-      const { code } = response.data
+    if (status === 403) {
+      const { code, msg } = response.data
       if (error.response) {
         switch (code) {
           // Token 已过期异常
@@ -60,9 +60,16 @@ const err = (error) => {
             break
           }
 
-          // 没有操作权限
+          // 用户未登录
           case 403: {
+            message.success(msg)
             router.push({ path: `/exception/403` })
+            break
+          }
+
+          // 用户未登录
+          case 410: {
+            document.getElementById('loginR').click()
             break
           }
         }
@@ -72,10 +79,6 @@ const err = (error) => {
         message: `请求错误 ${status}: ${url}`,
         description: errorText
       })
-
-      if ([403, 404, 500].indexOf(status) !== -1) {
-        router.push({ path: `/exception/${status}` })
-      }
     }
   } else if (!response) {
     notification.error({

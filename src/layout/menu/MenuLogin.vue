@@ -2,7 +2,7 @@
   <div id="menu-item">
     <search-box />
     <a-divider type="vertical" />
-    <a v-if="!isLogin" @click="showModal">登录</a>
+    <a v-if="!isLogin" @click="showModal" id="loginR">登录</a>
     <a-divider v-if="!isLogin" type="vertical" />
     <a v-if="!isLogin" href="/register">注册</a>
     <span v-else>
@@ -10,6 +10,7 @@
     </span>
     <a-modal v-model="visible" title="登录" :footer="null">
       <login />
+      Or <a href="/register">去注册</a>
     </a-modal>
   </div>
 </template>
@@ -40,7 +41,6 @@ export default {
   },
   methods: {
     showModal() {
-      console.log()
       this.visible = true
     }
   }

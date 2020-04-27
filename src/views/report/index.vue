@@ -13,9 +13,6 @@ export default {
       data: new Date()
     }
   },
-  created() {
-    if (store.getters.roles === '') { this.$router.replace('/exception/403') }
-  },
   methods: {
     moment
   }
