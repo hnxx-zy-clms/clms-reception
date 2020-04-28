@@ -8,5 +8,11 @@ export default {
       method: 'post',
       data: page
     })
+  },
+  setRead(noticeId, userId) { // 设置为已读
+    return request({
+      url: `/${group_name}/changeRead/${noticeId}/${userId}`,
+      method: 'post'
+    })
   }
 }

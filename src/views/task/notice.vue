@@ -6,7 +6,7 @@
     :infinite-scroll-distance="10"
   >
     <a-list :data-source="data">
-      <a-list-item slot="renderItem" slot-scope="item">
+      <a-list-item slot="renderItem" slot-scope="item,index" @click="showModal(item,index)">
         <div class="ifRead">
           <a-tag color="#108ee9" style="height: 40px;text-align: center;line-height: 40px;" v-if=item.ifRead>已读</a-tag>
           <a-tag color="orange" style="height: 40px;text-align: center;line-height: 40px;" v-else>未读</a-tag>
@@ -27,13 +27,16 @@
         <a-spin />
       </div>
     </a-list>
+    <a-modal title="通知详情" v-model="visible" @ok="hideModal" okText="确认" cancelText="取消">
+      <pre style="white-space: pre-wrap;">{{notice.noticeContent}}</pre>
+    </a-modal>
   </div>
 </template>
 
 <script>
 import noticeApi from '@/api/notice'
 import infiniteScroll from 'vue-infinite-scroll'
-import Cookies from 'js-cookie'
+import { mapGetters } from 'vuex'
 
 export default {
   directives: { infiniteScroll },
@@ -51,13 +54,17 @@ export default {
         sortMethod: 'desc' // 排序方式
       },
       data: [],
+      notice: [],
+      dataindex: '',
       loading: false,
       busy: false,
-      userid: ''
+      visible: false // 控制弹窗
     }
   },
-  mounted() {
-    this.userid = Cookies.get('userid')
+  computed: {
+    ...mapGetters([
+      'userId'
+    ])
   },
   methods: {
     handleInfiniteOnLoad() {
@@ -69,11 +76,29 @@ export default {
         this.loading = false
         return
       }
-      noticeApi.getByPage(this.page, this.userid).then(res => {
+      noticeApi.getByPage(this.page, this.userId).then(res => {
         this.data = data.concat(res.data.list)
         this.loading = false
         this.page.currentPage++
       })
+    },
+    hideModal() {
+      if (this.notice.ifRead === true) {
+        this.visible = false
+        return
+      } else {
+        noticeApi.setRead(this.notice.noticeId, this.userId).then(res => {
+          this.data[this.dataindex].ifRead = true
+          this.visible = false
+        })
+      }
+      this.notice = ''
+      this.index = ''
+    },
+    showModal(item, index) {
+      this.dataindex = index
+      this.notice = item
+      this.visible = true
     }
   }
 }
@@ -115,6 +140,7 @@ export default {
   .ant-list-item {
     justify-content: flex-start;
     align-items: flex-start;
+    cursor: pointer;
   }
   .single-left {
     display: flex;
@@ -123,14 +149,12 @@ export default {
     width: 100%;
     overflow: hidden
   }
-  .ifRead {
-
-  }
   .noticeTitle {
     color: #333;
     font-size: 15px;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin-left: 10px;
   }
   .nameTime {
     font-size: 13px;

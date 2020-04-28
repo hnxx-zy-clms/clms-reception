@@ -129,18 +129,16 @@ export default {
       this.leftselectTitle = key.key
       if (key.key === '全部') {
         this.$refs.notice.page.params.type = 0
-        this.$refs.notice.handleInfiniteOnLoad()
       }
       if (key.key === '已读') {
         this.$refs.notice.page.params.type = 1
-        console.log(this.$refs.notice.page.params.type)
-        this.$refs.notice.handleInfiniteOnLoad()
       }
       if (key.key === '未读') {
         this.$refs.notice.page.params.type = 2
-        console.log(this.$refs.notice.page.params.type)
-        this.$refs.notice.handleInfiniteOnLoad()
       }
+      this.$refs.notice.page.currentPage = 1
+      this.$refs.notice.data = []
+      this.$refs.notice.handleInfiniteOnLoad()
     },
     righthandleMenuClick(key) {
       this.rightselectTitle = key.key
