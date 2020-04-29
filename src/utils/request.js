@@ -60,7 +60,7 @@ const err = (error) => {
             break
           }
 
-          // 用户未登录
+          // 权限不足
           case 403: {
             message.success(msg)
             router.push({ path: `/exception/403` })
