@@ -7,6 +7,7 @@ const About = () => import('../views/about/index')
 const Report = () => import('../views/report/index')
 const Answer = () => import('../views/answer')
 const Article = () => import('../views/article/index')
+const ArticleRead = () => import('../views/article/article-read')
 const Chat = () => import('../views/chat')
 const Classes = () => import('../views/classes')
 const Statistics = () => import('../views/statistics')
@@ -93,6 +94,16 @@ const routes = [
       title: '文章',
       icon: 'book',
       isLoading: true
+    }
+  },
+  {
+    path: '/articleRead/:id',
+    name: 'ArticleRead',
+    component: ArticleRead,
+    mate: {
+      title: '阅读文章',
+      icon: 'book',
+      isLoading: false
     }
   },
   {

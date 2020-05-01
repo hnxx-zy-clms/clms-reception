@@ -3,158 +3,105 @@
     <!-- 筛选栏容器 -->
     <div class="scree-container">
       <!-- 分类标签 -->
-      <div class="type-text">分类名</div>
+      <div class="type-text">
+        <span v-if="type!=null">分类 : {{ type.typeName }}</span>
+      </div>
       <!-- 条件列 -->
       <div class="scree-menu">
-        <a-menu v-model="current" mode="horizontal">
+        <a-menu v-model="current" mode="horizontal" @click="changeSort">
           <a-menu-item key="createdTime">最新</a-menu-item>
-          <a-menu-item key="ArticleGoods">点赞最多</a-menu-item>
-          <a-menu-item key="ArticleComment">评论最多</a-menu-item>
-          <a-menu-item key="ArticleRead">阅读最多</a-menu-item>
-          <a-menu-item key="ArticleCollection">收藏最多</a-menu-item>
+          <a-menu-item key="articleGood">点赞最多</a-menu-item>
+          <a-menu-item key="articleComment">评论最多</a-menu-item>
+          <a-menu-item key="articleRead">阅读最多</a-menu-item>
+          <a-menu-item key="articleCollection">收藏最多</a-menu-item>
         </a-menu>
       </div>
     </div>
     <!-- 文案列表容器 -->
     <div class="article-list-container">
       <!-- 文章卡片 -->
-      <a-card class="article-card">
+      <a-card v-for="item in page.list" :key="item.articleId">
         <div class="article-main">
-          <!-- 文章标题 -->
-          <div class="article-title">测试文章一</div>
-          <div class="article-content">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div>
-          <div class="article-bottom">
-            <div class="author-container">
-              <div class="author-header">
-                <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
+          <router-link :to="'/articleRead/'+item.articleId" class="article-container">
+            <!-- 文章标题 -->
+            <div class="article-title">{{ item.articleTitle }}</div>
+            <div class="article-desc">{{ item.articleDesc }}</div>
+            <div class="article-bottom">
+              <div class="author-container">
+                <div class="author-header">
+                  <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
+                </div>
+                <div class="article-author">作者：{{ item.articleAuthor }}</div>
               </div>
-              <div class="article-author">作者：code-fusheng</div>
-            </div>
-            <!-- 文章标签 -->
-            <div class="article-meta">
-              <div class="created-time">2020-4-22 12:23:13</div>
-              <div class="article-other">
-                <a-icon type="eye" /> 2
-                <a-icon type="heart" /> 2
-                <a-icon type="like" /> 2
-                <a-icon type="message" /> 2
-              </div>
-            </div>
-          </div>
-        </div>
-      </a-card>
-      <a-card class="article-card">
-        <div class="article-main">
-          <!-- 文章标题 -->
-          <div class="article-title">测试文章一</div>
-          <div class="article-content">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div>
-          <div class="article-bottom">
-            <div class="author-container">
-              <div class="author-header">
-                <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
-              </div>
-              <div class="article-author">作者：code-fusheng</div>
-            </div>
-            <!-- 文章标签 -->
-            <div class="article-meta">
-              <div class="created-time">2020-4-22 12:23:13</div>
-              <div class="article-other">
-                <a-icon type="eye" /> 2
-                <a-icon type="heart" /> 2
-                <a-icon type="like" /> 2
-                <a-icon type="message" /> 2
+              <!-- 文章标签 -->
+              <div class="article-meta">
+                <div class="created-time">{{ item.createdTime }}</div>
+                <div class="article-other">
+                  <a-icon type="eye" /> {{ item.articleRead }}
+                  <a-icon type="heart" /> {{ item.articleCollection }}
+                  <a-icon type="like" /> {{ item.articleGood }}
+                  <a-icon type="message" /> {{ item.articleComment }}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </a-card>
-      <a-card class="article-card">
-        <div class="article-main">
-          <!-- 文章标题 -->
-          <div class="article-title">测试文章一</div>
-          <div class="article-content">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div>
-          <div class="article-bottom">
-            <div class="author-container">
-              <div class="author-header">
-                <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
-              </div>
-              <div class="article-author">作者：code-fusheng</div>
-            </div>
-            <!-- 文章标签 -->
-            <div class="article-meta">
-              <div class="created-time">2020-4-22 12:23:13</div>
-              <div class="article-other">
-                <a-icon type="eye" /> 2
-                <a-icon type="heart" /> 2
-                <a-icon type="like" /> 2
-                <a-icon type="message" /> 2
-              </div>
-            </div>
-          </div>
-        </div>
-      </a-card>
-      <a-card class="article-card">
-        <div class="article-main">
-          <!-- 文章标题 -->
-          <div class="article-title">测试文章一</div>
-          <div class="article-content">哈哈哈哈哈哈哈哈哈哈哈哈哈</div>
-          <div class="article-bottom">
-            <div class="author-container">
-              <div class="author-header">
-                <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
-              </div>
-              <div class="article-author">作者：code-fusheng</div>
-            </div>
-            <!-- 文章标签 -->
-            <div class="article-meta">
-              <div class="created-time">2020-4-22 12:23:13</div>
-              <div class="article-other">
-                <a-icon type="eye" /> 2
-                <a-icon type="heart" /> 2
-                <a-icon type="like" /> 2
-                <a-icon type="message" /> 2
-              </div>
-            </div>
-          </div>
-        </div>
-      </a-card>
-      <a-card class="article-card">
-        <div class="article-main">
-          <!-- 文章标题 -->
-          <div class="article-title">测试文章一</div>
-          <div class="article-content">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div>
-          <div class="article-bottom">
-            <div class="author-container">
-              <div class="author-header">
-                <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
-              </div>
-              <div class="article-author">作者：code-fusheng</div>
-            </div>
-            <!-- 文章标签 -->
-            <div class="article-meta">
-              <div class="created-time">2020-4-22 12:23:13</div>
-              <div class="article-other">
-                <a-icon type="eye" /> 2
-                <a-icon type="heart" /> 2
-                <a-icon type="like" /> 2
-                <a-icon type="message" /> 2
-              </div>
-            </div>
-          </div>
+          </router-link>
         </div>
       </a-card>
     </div>
     <div class="article-pagination">
-      <a-pagination :show-total="total => `共 10 条`" show-quick-jumper :default-current="1" align="center" />
+      <a-pagination :show-total="total => `共 ${total} 条`" show-quick-jumper :default-current="1" :total="page.totalCount" align="center" @change="pageChange" />
     </div>
   </div>
 </template>
 
 <script>
+import articleApi from '@/api/article/article'
 export default {
+  props: {
+    type: {
+      type: Object,
+      default: null
+    }
+  },
   data() {
     return {
-      current: ['createdTime']
+      current: ['createdTime'],
+      page: {
+        currentPage: 1,
+        pageSize: 5,
+        totalCount: 0,
+        totalPage: 0,
+        params: {},
+        sortColumn: 'createdTime',
+        sortMethod: 'desc',
+        list: []
+      }
+    }
+  },
+  watch: {
+    type: function() {
+      this.page.params.articleType = this.type.typeId
+      console.log('xx' + this.page)
+      this.getByPage(this.page)
+    }
+  },
+  created() {
+    this.getByPage()
+  },
+  methods: {
+    pageChange(pageNumber) {
+      this.page.currentPage = pageNumber
+      this.getByPage()
+    },
+    getByPage() {
+      articleApi.getByPage(this.page).then(res => {
+        this.page = res.data
+        console.log(res)
+      })
+    },
+    changeSort(e) {
+      this.page.sortColumn = e.key
+      this.getByPage()
     }
   }
 }
@@ -166,11 +113,13 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    line-height: 70px;
+    line-height: 50px;
+    background-color:white;
+    border: 1px solid #e8e8e8;
   }
   .type-text {
-    margin-left: 10px;
-    font-size: 20px;
+    margin-left: 15px;
+    font-size: 16px;
   }
   .ant-menu-horizontal {
     border-bottom: none !important;
@@ -182,7 +131,10 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-
+  }
+  .article-container {
+    width: 100%;
+    min-height: 70px;
   }
   .article-title {
     align-self: start;
@@ -195,7 +147,7 @@ export default {
   .article-title :hover {
     color: red;
   }
-  .article-content {
+  .article-desc {
     align-self: start;
     margin-bottom: 10px;
     font-size: 14px;
