@@ -3,18 +3,18 @@
     <div class="noticetodo">
       <a-card :body-style="bodystyle">
         <a-icon
+          v-if="leftTitle==='通知'?1:0"
           type="notification"
           style="font-size: 24px;line-height: inherit; margin: 5px 12px 0 4.8px;"
-          v-if="leftTitle==='通知'?1:0"
         />
         <a-icon
-            type="highlight"
-            style="font-size: 24px;line-height: inherit; margin: 5px 12px 0 4.8px;"
-            v-else-if="leftTitle==='待办'?1:0"
+          v-else-if="leftTitle==='待办'?1:0"
+          type="highlight"
+          style="font-size: 24px;line-height: inherit; margin: 5px 12px 0 4.8px;"
         />
         <div class="title">{{ leftTitle }}</div>
         <div class="selector">
-          <a-dropdown :trigger="['click']">
+          <a-dropdown v-if="leftselected" :trigger="['click']">
             <a-menu slot="overlay" @click="lefthandleMenuClick">
               <a-menu-item key="全部">全部</a-menu-item>
               <a-menu-item key="已读">已读</a-menu-item>
@@ -24,6 +24,9 @@
               <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-date-picker v-else style="width: 50%" :placeholder="date" :format="format" @change="onChange">
+            <a-icon slot="suffixIcon" type="smile" />
+          </a-date-picker>
         </div>
         <div class="orderselector">
           <a-button type="link" :style="{ 'opacity': leftselected ? .8 : .3 } " @click="changeSelect(1,'通知')">通知
@@ -32,7 +35,8 @@
           </a-button>
         </div>
       </a-card>
-      <notice ref="notice"></notice>
+      <notice v-if="leftTitle==='通知'?1:0" ref="notice" />
+      <todo v-else ref="todo" />
     </div>
 
     <div class="tasksign">
@@ -101,10 +105,12 @@
 
 <script>
 import Notice from './notice'
+import Todo from './todo'
 
 export default {
   components: {
-    Notice
+    Notice,
+    Todo
   },
   data() {
     return {
@@ -115,6 +121,7 @@ export default {
       rightTitle: '任务',
       leftselected: true,
       rightselected: true,
+      format: 'YYYY-MM-DD',
       bodystyle: {
         padding: '0px',
         display: 'flex',
@@ -124,8 +131,13 @@ export default {
       }
     }
   },
+  computed: {
+    date() {
+      return this.dateFilter()
+    }
+  },
   methods: {
-    lefthandleMenuClick(key) {
+    lefthandleMenuClick(key) { // 左边菜单选择框
       this.leftselectTitle = key.key
       if (key.key === '全部') {
         this.$refs.notice.page.params.type = 0
@@ -146,7 +158,7 @@ export default {
     tasksigMenuClick(key) {
       this.selecttitle = key.key
     },
-    changeSelect(which, data) {
+    changeSelect(which, data) { // 标题切换
       if (which === 1) {
         if (this.leftTitle === data) {
           return false
@@ -162,6 +174,16 @@ export default {
           this.rightselected = !this.rightselected
         }
       }
+    },
+    onChange(date, dateString) { // 更改日期时获取该日期的待办
+      this.$refs.todo.handleInfiniteOnLoad(dateString)
+    },
+    dateFilter() { // 格式化时间
+      var d = new Date()
+      var year = d.getFullYear()
+      var month = d.getMonth() < 9 ? '0' + (d.getMonth() + 1) : '' + (d.getMonth() + 1)
+      var day = d.getDate() < 10 ? '0' + d.getDate() : '' + d.getDate()
+      return (year + '-' + month + '-' + day)
     }
   }
 }
@@ -216,6 +238,9 @@ export default {
     justify-content: flex-start;
     height: auto;
     width: 100%;
+  }
+  .ant-calendar-picker {
+    margin-left: 20px;
   }
 
 </style>

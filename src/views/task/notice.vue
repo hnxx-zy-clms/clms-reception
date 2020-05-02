@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import noticeApi from '@/api/notice'
+import noticeApi from '@/api/tasknotice/notice'
 import infiniteScroll from 'vue-infinite-scroll'
 import { mapGetters } from 'vuex'
 
