@@ -36,7 +36,14 @@ export default {
       data: id
     })
   },
-  getByPage(page) { // 分页查询
+  getCommentList(page) { // 分页查询一级评论
+    return request({
+      url: `/${group_name}/getCommentList`,
+      method: 'post',
+      data: page
+    })
+  },
+  getByPage(page) { // 分页查询二级评论
     return request({
       url: `/${group_name}/getByPage`,
       method: 'post',

@@ -110,7 +110,7 @@ export default {
     margin-bottom: 20px;
   }
   .left-container {
-    width: 100PX;
+    width: 100px;
     height: 888px;
     margin-right: 3px;
     background-color: white;

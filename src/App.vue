@@ -1,6 +1,7 @@
 <template>
   <div>
     <Layout />
+    <a-back-top />
   </div>
 </template>
 
