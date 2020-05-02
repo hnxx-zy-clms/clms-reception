@@ -1,5 +1,6 @@
 <template>
   <a-layout id="components-layout-demo-fixed" class="layout">
+    <a-back-top :visibilityHeight='100' />
     <a-layout-header :style="{height:'59px', background: '#fff', zIndex: 1, width: '100%' }">
       <div class="logo">
         <img src="../assets/logo.png">

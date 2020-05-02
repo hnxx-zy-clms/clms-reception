@@ -8,16 +8,22 @@
       :body-style="{ paddingBottom: '80px' }"
       @close="onClose"
     >
-      <a-radio-group default-value="horizontal" @change="handleFormLayoutChange">
-        <a-radio-button value="horizontal">
-         日报
+      <a-radio-group default-value="0" @change="handleFormLayoutChange">
+        <a-radio-button value="0">
+          日报
         </a-radio-button>
-        <a-radio-button value="vertical">
+        <a-radio-button value="1">
           周报
         </a-radio-button>
       </a-radio-group>
       <a-divider />
-      <a-form :form="form" layout="vertical" hide-required-mark>
+      <a-form
+        :form="form"
+        class="report-form"
+        layout="vertical"
+        hide-required-mark
+      >
+        <a-form-item v-decorator="'reportType'" />
         <a-row :gutter="16">
           <a-col :span="24">
             <a-form-item label="工作内容">
@@ -38,45 +44,46 @@
           <a-col :span="24">
             <a-form-item label="遇到的困难">
               <a-textarea
-                      v-decorator="[
-                  'experience',
+                v-decorator="[
+                  'difficulty',
                   {
-                    rules: [{ required: true, message: 'Please enter experience' }],
+                    rules: [{ required: true, message: 'Please enter difficulty' }],
                   },
                 ]"
-                      :rows="4"
-                      placeholder="please enter experience"
+                :rows="4"
+                placeholder="please enter difficulty"
               />
             </a-form-item>
           </a-col>
-        </a-row>       <a-row :gutter="16">
-        <a-col :span="24">
-          <a-form-item label="解决方法">
-            <a-textarea
-                    v-decorator="[
-                  'experience',
+        </a-row>
+        <a-row :gutter="16">
+          <a-col :span="24">
+            <a-form-item label="解决方法">
+              <a-textarea
+                v-decorator="[
+                  'solution',
                   {
-                    rules: [{ required: true, message: 'Please enter experience' }],
+                    rules: [{ required: true, message: 'Please enter solution' }],
                   },
                 ]"
-                    :rows="4"
-                    placeholder="please enter experience"
-            />
-          </a-form-item>
-        </a-col>
-      </a-row>
+                :rows="4"
+                placeholder="please enter solution"
+              />
+            </a-form-item>
+          </a-col>
+        </a-row>
         <a-row :gutter="16">
           <a-col :span="24">
             <a-form-item label="心得体会">
               <a-textarea
-                      v-decorator="[
+                v-decorator="[
                   'experience',
                   {
                     rules: [{ required: true, message: 'Please enter experience' }],
                   },
                 ]"
-                      :rows="4"
-                      placeholder="please enter experience"
+                :rows="4"
+                placeholder="please enter experience"
               />
             </a-form-item>
           </a-col>
@@ -85,14 +92,14 @@
           <a-col :span="24">
             <a-form-item label="后续计划">
               <a-textarea
-                      v-decorator="[
+                v-decorator="[
                   'plan',
                   {
                     rules: [{ required: true, message: 'Please enter plan' }],
                   },
                 ]"
-                      :rows="4"
-                      placeholder="please enter plan"
+                :rows="4"
+                placeholder="please enter plan"
               />
             </a-form-item>
           </a-col>
@@ -115,16 +122,18 @@
         <a-button :style="{ marginRight: '8px' }" @click="onClose">
           Cancel
         </a-button>
-        <a-button type="primary" @click="onClose">Submit</a-button>
+        <a-button type="primary" html-type="submit" @click="handleSubmit">Submit</a-button>
       </div>
     </a-drawer>
   </div>
 </template>
 <script>
+import ReportApi from '@/api/report/report'
 export default {
   data() {
     return {
-      form: this.$form.createForm(this),
+      form: this.$form.createForm(this, { name: 'report_login' }),
+      reportType: 0,
       visible: false
     }
   },
@@ -134,6 +143,22 @@ export default {
     },
     onClose() {
       this.visible = false
+    },
+    handleSubmit(e) {
+      e.preventDefault()
+      this.form.validateFields((err, values) => {
+        values.reportType = this.reportType
+        if (!err) {
+          ReportApi.save(values).then(res => {
+            location.replace('/report')
+          }).catch(() => {
+            this.visible = false
+          })
+        }
+      })
+    },
+    handleFormLayoutChange(e) {
+      this.reportType = e.target.value
     }
   }
 }

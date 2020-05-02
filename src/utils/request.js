@@ -75,10 +75,24 @@ const err = (error) => {
         }
       }
     } else {
-      notification.error({
-        message: `请求错误 ${status}: ${url}`,
-        description: errorText
-      })
+      if (status === 500) {
+        notification.error({
+          message: `请求错误 ${status}: ${url}`,
+          description: errorText
+        })
+        router.push({ path: `/exception/500` })
+      } else if (status === 404) {
+        notification.error({
+          message: `请求错误 ${status}: ${url}`,
+          description: errorText
+        })
+        router.push({ path: `/exception/404` })
+      } else {
+        notification.error({
+          message: `请求错误 ${status}: ${url}`,
+          description: errorText
+        })
+      }
     }
   } else if (!response) {
     notification.error({

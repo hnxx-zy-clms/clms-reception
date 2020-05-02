@@ -34,7 +34,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #content{
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;

@@ -4,7 +4,7 @@
       v-model="current"
       theme="light"
       mode="horizontal"
-      :style="{ height:'60px', lineHeight: '59px'}"
+      :style="{ height:'59px', lineHeight: '59px'}"
     >
       <template v-for="item in routes">
         <a-menu-item v-if="item.mate.isLoading" :key="item.path">
