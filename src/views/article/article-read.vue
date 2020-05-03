@@ -13,16 +13,35 @@
         <div class="article-item">
           <div class="created-time">{{ article.createdTime }}</div>
           <div class="article-meta">
-            <a-icon type="eye">{{ article.articleRead }}阅读</a-icon>
-            <a-icon type="heart">{{ article.articleCollection }}收藏</a-icon>
-            <a-icon type="like">{{ article.articleGood }}点赞</a-icon>
+            <a-icon type="eye" /> {{ article.articleRead }} 阅读
+            <a-icon type="heart" /> {{ article.articleCollection }} 收藏
+            <a-icon type="like" /> {{ article.articleGood }} 点赞
           </div>
         </div>
         <div class="article-content" v-html="article.articleContent" />
+        <!-- 文章操作 -->
+        <div class="article-action">
+          <div class="article-good">
+            <a-icon type="like" /> 点赞
+          </div>
+          <div class="article-collection">
+            <a-icon type="heart" /> 收藏
+          </div>
+        </div>
       </div>
       <!-- 底部区域,放置评论 -->
       <div class="comment-container">
-        <comment-list />
+        <div class="user-comment">
+          <a-textarea v-model="content" placeholder="请输入内容，不超过300字" :rows="4" />
+          <div class="comment-button">
+            <a-button type="primary">发表评论</a-button>
+            <div v-show="countShow" class="content-count">
+              还能输入 {{ commentContentCount }} 个字符
+            </div>
+          </div>
+        </div>
+        <!-- 评论列表组件 -->
+        <comment-list :article="article" />
       </div>
     </div>
   </div>
@@ -39,18 +58,39 @@ export default {
   },
   data() {
     return {
-      id: 15,
-      article: {}
+      content: '', // 评论文本内容
+      id: '',
+      article: {
+        articleId: ''
+      },
+      countShow: false, // 控制是否显示字符个数提示
+      commentContentCount: 300 // 显示还能输入的字符数量
+    }
+  },
+  watch: {
+    'content': function(newVal, oldVal) {
+      if (this.content.length > 300) {
+        this.content = this.content.substring(0, 300)
+      }
+      if (this.content.length > 0) {
+        this.countShow = true
+      } else {
+        this.countShow = false
+      }
+      const newValLength = newVal ? newVal.length : 0
+      const oldValLength = oldVal ? oldVal.length : 0
+      this.commentContentCount = this.commentContentCount - (newValLength - oldValLength)
     }
   },
   created() {
     this.read()
+    this.article.articleId = this.$route.params.id
   },
   methods: {
     read() {
+      this.id = this.$route.params.id
       articleApi.read(this.id).then(res => {
         this.article = res.data
-        console.log(res)
       })
     }
   }
@@ -106,15 +146,40 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 30px;
+    /* margin-bottom: 10px; */
     margin-top: 10px;
+  }
+  .article-action {
+    display: flex;
+    flex-direction: row;
+    width: 300px;
+    margin: auto;
+    justify-content: space-evenly;
+    font-size: 24px;
   }
   .comment-container {
     display: flex;
     flex-direction: column;
     width: 100%;
     min-height: 200px;
-    border: 1px solid blueviolet;
+    /* border: 1px solid blueviolet; */
     margin-top: 5px;
+  }
+  .user-comment {
+    margin-top: 15px;
+    background-color: #fff;
+    margin-bottom: 10px;
+  }
+  .comment-button {
+    margin: 15px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+  }
+  .content-count {
+    margin-right: 15px;
+  }
+  .ant-divider-horizontal {
+    margin: 2px 0 5px 0 !important;
   }
 </style>

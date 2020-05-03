@@ -103,7 +103,7 @@ const routes = [
     mate: {
       title: '阅读文章',
       icon: 'book',
-      isLoading: true
+      isLoading: false
     }
   },
   {

@@ -85,7 +85,6 @@ export default {
       // 查询类型列表
       typeApi.getList().then(res => {
         this.typeList = res.data
-        console.log(res)
       })
     },
     changeType(val) {
@@ -156,7 +155,9 @@ export default {
     /* border: 1px solid #9c9ea8; */
     /* background-color: blue; */
     /* 上 右 下 左 */
-    padding: 0 5px 5px 5px;
+    /* padding: 0 5px 5px 5px; */
+    margin: 0 3px 0 3px;
+    background-color: white;
   }
   .carousel-img {
     width: 100%;
@@ -167,7 +168,7 @@ export default {
     width: 350px;
     height: 888px;
     /* border: 1px solid #9c9ea8; */
-    background-color: #9c9ea8;
+    background-color: white;
     margin-left: 3px;
   }
 </style>

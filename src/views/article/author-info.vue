@@ -25,14 +25,6 @@
           </div>
         </div>
         <a-divider />
-        <div class="social-container">
-          <div class="social-text">加入我们：</div>
-          <div class="join-item">
-            <a href="#">
-              <img src="http://img.fusheng.xyz/clms-qqgroup-001.png" class="social-icon">
-            </a>
-          </div>
-        </div>
       </div>
     </a-card>
     <a-card title="推荐阅读" :head-style="headStyle">
@@ -112,7 +104,7 @@ export default {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
   }
 
@@ -131,12 +123,5 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-  }
-
-  .join-item {
-    width: 200px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
   }
 </style>

@@ -4,7 +4,9 @@
     <div class="scree-container">
       <!-- 分类标签 -->
       <div class="type-text">
-        <span v-if="type!=null">分类 : {{ type.typeName }}</span>
+        <span v-if="type!=null">分类 : <a-tag color="green">
+          {{ type.typeName }}
+        </a-tag></span>
       </div>
       <!-- 条件列 -->
       <div class="scree-menu">
@@ -81,7 +83,6 @@ export default {
   watch: {
     type: function() {
       this.page.params.articleType = this.type.typeId
-      console.log('xx' + this.page)
       this.getByPage(this.page)
     }
   },
