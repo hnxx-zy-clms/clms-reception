@@ -104,7 +104,6 @@
             </a-form-item>
           </a-col>
         </a-row>
-
       </a-form>
       <div
         :style="{
@@ -132,7 +131,7 @@ import ReportApi from '@/api/report/report'
 export default {
   data() {
     return {
-      form: this.$form.createForm(this, { name: 'report_login' }),
+      form: this.$form.createForm(this, { name: 'report-form' }),
       reportType: 0,
       visible: false
     }
@@ -150,7 +149,9 @@ export default {
         values.reportType = this.reportType
         if (!err) {
           ReportApi.save(values).then(res => {
-            location.replace('/report')
+            this.$emit('getpage')
+            this.$message.success('添加成功！')
+            this.visible = false
           }).catch(() => {
             this.visible = false
           })

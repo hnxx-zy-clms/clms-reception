@@ -1,15 +1,16 @@
 <template>
   <a-row type="flex">
+    <!--    左侧批阅信息-->
     <a-col style="width: 33%;" :span="8" :push="0">
       <a-card style="min-width: 480px;height: 100%">
         <a-tag color="blue">批阅通知</a-tag>
-        <a-timeline :style="{marginTop: '15px' }" pending="加载中...">
-          <a-timeline-item>组长批阅了你的报告 2020-05-01 22:00:00</a-timeline-item>
-          <a-timeline-item>班长批阅了你的报告 2020-05-01 22:00:00</a-timeline-item>
-          <a-timeline-item>教师批阅了你的报告 2020-05-01 22:00:00</a-timeline-item>
+        <a-timeline :style="{marginTop: '15px' }" pending="更多...">
+          <a-timeline-item v-for="(item,i) in minReportInfo" :key="item.reportId">
+            {{ item.updatedTime }} : {{ item.isChecked }} 批阅了 {{ item.createdTime }} 的{{ item.reportType }}</a-timeline-item>
         </a-timeline>
       </a-card>
     </a-col>
+    <!--    中间倒计时-->
     <a-col style="width: 33%;" :span="6" :pull="-5">
       <a-card style="min-width: 480px;height: 100%">
         <a-row :gutter="16" :style="{ background: '#fff', marginTop: '15px' ,marginRight:'15px',marginBottom:'20px'}">
@@ -27,6 +28,7 @@
         </a-row>
       </a-card>
     </a-col>
+    <!--    右侧提示-->
     <a-col style="width: 34%;" :span="6" :push="0">
       <a-card style="min-width: 410px;height: 100%">
         <img
@@ -42,11 +44,16 @@
 </template>
 <script>
 import Moment from 'moment'
+import ReportApi from '@/api/report/report.js'
 
 function getWeekDay() {
   const valDate = new Date().getDay()
-  const difference = valDate - 7
-  return Moment().subtract(difference, 'days').format('YYYY-MM-DD') + ' 22:00:00'
+  if (valDate === 0) {
+    return getFullTime()
+  } else {
+    const difference = valDate - 6
+    return Moment().subtract(difference, 'days').format('YYYY-MM-DD') + ' 22:00:00'
+  }
 }
 
 function getFullTime() {
@@ -58,9 +65,19 @@ function getFullTime() {
 export default {
   data() {
     return {
+      minReportInfo: {},
       deadline: new Date(getWeekDay()).getTime(),
       today: new Date(getFullTime()).getTime()
     }
+  },
+  created() {
+    ReportApi.getMinReportInfo().then(res => {
+      this.minReportInfo = res.data
+      for (var i = 0; i < 3; i++) {
+        this.minReportInfo[i].reportType = this.minReportInfo[i].reportType === 0 ? '日报' : '周报'
+        this.minReportInfo[i].isChecked = this.minReportInfo[i].isChecked === 1 ? '组长' : this.minReportInfo[i].isChecked === 2 ? '班长' : '教师'
+      }
+    })
   },
   methods: {
     onFinish() {

@@ -1,12 +1,11 @@
 import request from '@/utils/request'
-var group_name = 'report'
+var group_name = 'reportMarking'
 
 export default {
-  getByPage(page) { // 前台用户查询
+  getUserMarkingById(id) { // 前台用户根据报告ID查询
     return request({
-      url: `/${group_name}/getByUserId`,
-      method: 'post',
-      data: page
+      url: `/${group_name}/getUserMarkingById/${id}`,
+      method: 'get'
     })
   },
   save(report) { // 保存添加
@@ -27,12 +26,6 @@ export default {
       url: `/${group_name}/update`,
       method: 'put',
       data: report
-    })
-  },
-  getMinReportInfo() {
-    return request({
-      url: `/${group_name}/getMinReportInfo`,
-      method: 'post'
     })
   }
 }
