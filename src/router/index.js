@@ -11,7 +11,8 @@ const ArticleRead = () => import('../views/article/article-read')
 const Chat = () => import('../views/chat')
 const Classes = () => import('../views/classes')
 const Statistics = () => import('../views/statistics')
-const Task = () => import('../views/task')
+const Task = () => import('../views/tasknotice/index')
+const Reply = () => import('../views/tasknotice/reply')
 const Register = () => import('../views/register/index')
 const NotFoundComponent = () => import('../views/exception/404')
 
@@ -107,11 +108,21 @@ const routes = [
     }
   },
   {
-    path: '/task',
+    path: '/tasknotice',
     name: 'Task',
     component: Task,
     mate: {
       title: '任务',
+      icon: 'sound',
+      isLoading: true
+    }
+  },
+  {
+    path: '/reply',
+    name: 'Reply',
+    component: Reply,
+    mate: {
+      title: '任务回复',
       icon: 'sound',
       isLoading: true
     }

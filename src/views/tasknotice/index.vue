@@ -98,7 +98,9 @@
           </a-button>
         </div>
       </a-card>
-      <div style="width: 100%;height: 20px;background-color: wheat;margin-top: 20px" />
+      <div>
+        <Task v-if="rightTitle==='任务'?1:0" ref="task"></Task>
+      </div>
     </div>
   </div>
 </template>
@@ -106,11 +108,13 @@
 <script>
 import Notice from './notice'
 import Todo from './todo'
+import Task from './task'
 
 export default {
   components: {
     Notice,
-    Todo
+    Todo,
+    Task
   },
   data() {
     return {
@@ -154,6 +158,19 @@ export default {
     },
     righthandleMenuClick(key) {
       this.rightselectTitle = key.key
+      if (key.key === '全部') {
+        this.$refs.task.page.params.type = 0
+      }
+      if (key.key === '已完成') {
+        this.$refs.task.page.params.type = 1
+      }
+      if (key.key === '未完成') {
+        this.$refs.task.page.params.type = 2
+      }
+      this.$refs.task.isload = true
+      this.$refs.task.page.currentPage = 1
+      this.$refs.task.data = []
+      this.$refs.task.handleInfiniteOnLoad()
     },
     tasksigMenuClick(key) {
       this.selecttitle = key.key

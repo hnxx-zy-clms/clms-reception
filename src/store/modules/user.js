@@ -1,11 +1,11 @@
 import { login, getInfo } from '../../api/user'
-import { getToken, setToken, removeToken } from '../../utils/auth'
+import { getToken, setToken, removeToken, getUserId, setUserId, removeUserId } from '../../utils/auth'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    userId: '',
+    userId: getUserId(),
     roles: ''
   }
 }
@@ -40,6 +40,8 @@ const actions = {
       login(userInfo).then(res => {
         commit('SET_TOKEN', res.msg)
         setToken(res.msg, userInfo.remember)
+        commit('SET_USERID', res.data.userId)
+        setUserId(res.data.userId, userInfo.remember)
         resolve()
       }).catch(error => {
         reject(error)
@@ -67,6 +69,7 @@ const actions = {
   logout({ commit, state }) {
     return new Promise((resolve) => {
       removeToken()
+      removeUserId()
       resolve()
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
@@ -77,6 +80,7 @@ const actions = {
   resetToken({ commit }) {
     return new Promise(resolve => {
       removeToken()
+      removeUserId()
       commit('RESET_STATE')
       resolve()
     })

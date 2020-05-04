@@ -70,12 +70,6 @@ export default {
     handleInfiniteOnLoad() {
       const data = this.data
       this.loading = true
-      if (data.length > 100) {
-        this.$message.warning('Infinite List loaded all')
-        this.busy = true
-        this.loading = false
-        return
-      }
       noticeApi.getByPage(this.page, this.userId).then(res => {
         this.data = data.concat(res.data.list)
         this.loading = false
