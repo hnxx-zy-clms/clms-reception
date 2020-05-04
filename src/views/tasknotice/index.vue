@@ -100,6 +100,7 @@
       </a-card>
       <div>
         <Task v-if="rightTitle==='任务'?1:0" ref="task"></Task>
+        <Registration v-else></Registration>
       </div>
     </div>
   </div>
@@ -109,12 +110,14 @@
 import Notice from './notice'
 import Todo from './todo'
 import Task from './task'
+import Registration from './registration'
 
 export default {
   components: {
     Notice,
     Todo,
-    Task
+    Task,
+    Registration
   },
   data() {
     return {
