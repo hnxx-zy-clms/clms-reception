@@ -3,7 +3,7 @@
     <a-layout id="content" :style="{display:'flex'}">
       <!--      头部-->
       <a-layout-header :style="{height:'59px', background: '#fff', width: '100%' }">
-        <a-date-picker :style="{background: '#fff', marginRight:'15px' }" :default-value="moment(data, dateFormat)" disabled />第十周
+        <a-date-picker :style="{background: '#fff', marginRight:'15px' }" :default-value="moment(data, dateFormat)" disabled />
       </a-layout-header>
       <!--      中间Tips-->
       <a-layout-content :style="{ background: '#fff', marginTop: '5px'}">

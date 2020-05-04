@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-var group_name = 'reportMarking'
+const group_name = 'reportMarking'
 
 export default {
   getUserMarkingById(id) { // 前台用户根据报告ID查询

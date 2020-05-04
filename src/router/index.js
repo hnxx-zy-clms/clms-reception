@@ -5,6 +5,7 @@ import appConfig from '../app.config'
 const Home = () => import('../views/home/index')
 const About = () => import('../views/about/index')
 const Report = () => import('../views/report/index')
+const ReportMarking = () => import('../views/report/marking')
 const Answer = () => import('../views/answer')
 const Article = () => import('../views/article/index')
 const ArticleRead = () => import('../views/article/article-read')
@@ -45,6 +46,15 @@ const routes = [
       title: '报告',
       icon: 'book',
       isLoading: true
+    }
+  },
+  {
+    path: '/reportMarking',
+    name: 'ReportMarking ',
+    component: ReportMarking,
+    mate: {
+      title: '报告批阅',
+      isLoading: false
     }
   },
   {
@@ -124,7 +134,7 @@ const routes = [
     mate: {
       title: '任务回复',
       icon: 'sound',
-      isLoading: true
+      isLoading: false
     }
   },
   {

@@ -1,6 +1,9 @@
 <template>
   <div>
     <a-button type="primary" @click="showDrawer"> <a-icon type="plus" /> 新建报告 </a-button>
+    <router-link v-if="roles > 0" :to="'/reportMarking'">
+      <a-button type="primary" :style="{marginLeft:'5px'}"> <a-icon type="check-square" /> 批阅报告 </a-button>
+    </router-link>
     <a-drawer
       title="Create a new report"
       :width="720"
@@ -128,6 +131,7 @@
 </template>
 <script>
 import ReportApi from '@/api/report/report'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -135,6 +139,11 @@ export default {
       reportType: 0,
       visible: false
     }
+  },
+  computed: {
+    ...mapGetters([
+      'roles'
+    ])
   },
   methods: {
     showDrawer() {

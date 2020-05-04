@@ -25,6 +25,11 @@
           <a-col :span="24" style="margin-top: 32px;">
             <a-statistic-countdown title="距本周周报截止时间" :value="deadline" format="D 天 H 时 m 分 s 秒" />
           </a-col>
+          <a-col :span="36">
+            <a-tag color="orange" style="margin-top: 16px;height: 36px;">
+              <p style="margin-top: 5px;">时间截止后，不可提交、修改和删除今日报告！</p>
+            </a-tag>
+          </a-col>
         </a-row>
       </a-card>
     </a-col>
@@ -45,13 +50,12 @@
 <script>
 import Moment from 'moment'
 import ReportApi from '@/api/report/report.js'
-
 function getWeekDay() {
   const valDate = new Date().getDay()
   if (valDate === 0) {
     return getFullTime()
   } else {
-    const difference = valDate - 6
+    const difference = valDate - 7
     return Moment().subtract(difference, 'days').format('YYYY-MM-DD') + ' 22:00:00'
   }
 }
@@ -66,8 +70,9 @@ export default {
   data() {
     return {
       minReportInfo: {},
-      deadline: new Date(getWeekDay()).getTime(),
-      today: new Date(getFullTime()).getTime()
+      // .replace(/-/g, '/') 解决ios端获取不到时间戳的问题
+      deadline: new Date(getWeekDay().replace(/-/g, '/')).getTime(),
+      today: new Date(getFullTime().replace(/-/g, '/')).getTime()
     }
   },
   created() {

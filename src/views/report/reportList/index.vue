@@ -41,7 +41,7 @@
         <a-button v-if=" scope.isEnabled === 1" style="margin-bottom: 5px" type="danger" disabled>
           删除报告
         </a-button>
-        <a-popover v-if="scope.isChecked ===1" title="批阅信息">
+        <a-popover v-if="scope.isChecked ===1" placement="leftTop" title="批阅信息">
           <template slot="content">
             <marking :report="scope.reportId" />
           </template>
@@ -83,7 +83,7 @@
   </div>
 </template>
 <script>
-import Marking from '../marking/index'
+import Marking from './marking'
 import ReportApi from '@/api/report/report.js'
 import updateReport from './updateReport'
 const columns = [
