@@ -29,7 +29,7 @@ router.beforeEach((to, from, next) => {
               console.log(store.getters.addRouters)
               // 动态添加可访问路由表
               router.addRoutes(store.getters.addRouters)
-
+              const redirect = decodeURIComponent(from.query.redirect || to.path)
               if (to.path === redirect) {
                 // hack方法 确保addRoutes已完成 ,将replace:true设置为使导航不会留下历史记录
                 next({ ...to, replace: true })
@@ -38,8 +38,6 @@ router.beforeEach((to, from, next) => {
                 next({ path: redirect })
               }
             })
-            const redirect = decodeURIComponent(from.query.redirect || to.path)
-            next({ path: redirect })
           })
           .catch(() => {
             notification.error({
