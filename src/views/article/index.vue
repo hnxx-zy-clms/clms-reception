@@ -1,58 +1,61 @@
 <template>
-  <!-- 文章模块主体容器 -->
-  <div class="article-container">
-    <!-- 左侧容器 - 放文章分类-->
-    <div class="left-container">
-      <!-- 分类列表 -->
-      <ul class="type-list">
-        <li><div href="#" class="type-tag top-type-tag" @click="revocer">分类</div></li>
-        <li v-for="item in typeList" :key="item.typeId">
-          <a href="#" class="type-tag" @click="changeType(item)">{{ item.typeName }}</a>
-        </li>
-      </ul>
-    </div>
-    <!-- 中间容器 - 放文章卡片 -->
-    <div class="center-container">
-      <!-- 文章列表组件 -->
-      <article-list :type="type" />
-    </div>
-    <!-- 右侧容器 - 放推荐与广告-->
-    <div class="right-container">
-      <!-- 走马灯 -->
-      <div class="cneter-carousel">
-        <a-card title="广告位" :head-style="headStyle">
-          <a-carousel autoplay>
-            <div>
-              <img src="@/assets/img/1.jpg" class="carousel-img">
-            </div>
-            <div>
-              <img src="@/assets/img/2.jpg" class="carousel-img">
-            </div>
-            <div>
-              <img src="@/assets/img/3.jpg" class="carousel-img">
-            </div>
-            <div>
-              <img src="@/assets/img/4.jpg" class="carousel-img">
-            </div>
-          </a-carousel>
+  <div>
+    <!-- 文章模块主体容器 -->
+    <div class="article-container">
+      <!-- 左侧容器 - 放文章分类-->
+      <div class="left-container">
+        <!-- 分类列表 -->
+        <ul class="type-list">
+          <li><div href="#" class="type-tag top-type-tag" @click="revocer">分类</div></li>
+          <li v-for="item in typeList" :key="item.typeId">
+            <a href="#" class="type-tag" @click="changeType(item)">{{ item.typeName }}</a>
+          </li>
+        </ul>
+      </div>
+      <!-- 中间容器 - 放文章卡片 -->
+      <div class="center-container">
+        <!-- 文章列表组件 -->
+        <article-list :type="type" />
+      </div>
+      <!-- 右侧容器 - 放推荐与广告-->
+      <div class="right-container">
+        <!-- 走马灯 -->
+        <div class="cneter-carousel">
+          <a-card title="广告位" :head-style="headStyle">
+            <a-carousel autoplay>
+              <div>
+                <img src="@/assets/img/1.jpg" class="carousel-img">
+              </div>
+              <div>
+                <img src="@/assets/img/2.jpg" class="carousel-img">
+              </div>
+              <div>
+                <img src="@/assets/img/3.jpg" class="carousel-img">
+              </div>
+              <div>
+                <img src="@/assets/img/4.jpg" class="carousel-img">
+              </div>
+            </a-carousel>
+          </a-card>
+        </div>
+        <a-card title="推荐阅读" :head-style="headStyle">
+          <a-card title="Inner card title">
+            <a slot="extra" href="#">More</a>
+            Inner Card content
+          </a-card>
+          <a-card title="Inner card title">
+            <a slot="extra" href="#">More</a>
+            Inner Card content
+          </a-card>
+          <a-card title="Inner card title">
+            <a slot="extra" href="#">More</a>
+            Inner Card content
+          </a-card>
         </a-card>
       </div>
-      <a-card title="推荐阅读" :head-style="headStyle">
-        <a-card title="Inner card title">
-          <a slot="extra" href="#">More</a>
-          Inner Card content
-        </a-card>
-        <a-card title="Inner card title">
-          <a slot="extra" href="#">More</a>
-          Inner Card content
-        </a-card>
-        <a-card title="Inner card title">
-          <a slot="extra" href="#">More</a>
-          Inner Card content
-        </a-card>
-      </a-card>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -74,11 +77,13 @@ export default {
       type: {
         typeId: '',
         typeName: ''
-      }
+      },
+      spinning: true
     }
   },
   created() {
     this.getTypeList()
+    this.spinning = false
   },
   methods: {
     getTypeList() {
@@ -105,7 +110,7 @@ export default {
     width: 1200px;
     /* 左右自适应 */
     margin: auto;
-    margin-top: 10px;
+    margin-top: 1px;
     margin-bottom: 20px;
   }
   .left-container {

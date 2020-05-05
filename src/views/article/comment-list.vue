@@ -4,7 +4,7 @@
     <div class="scree-container">
       <!-- 条件列 -->
       <div class="scree-menu">
-        <a-menu v-model="current" mode="horizontal">
+        <a-menu v-model="current" mode="horizontal" @click="changeSort">
           <a-menu-item key="commentTime">最新</a-menu-item>
           <a-menu-item key="commentGood">点赞最多</a-menu-item>
           <a-menu-item key="commentComment">评论最多</a-menu-item>
@@ -23,8 +23,8 @@
             <div class="comment-time">发表于 {{ item.commentTime }}</div>
             <div class="comment-content">{{ item.commentContent }}</div>
           </div>
-          <div class="comment-good"><a-icon type="like" /> {{ item.commentGood }} 点赞</div>
-          <div class="comment-comment"><a-icon type="message" /> {{ item.commentCount }} 评论</div>
+          <div class="comment-good"><a-icon type="like" /> {{ item.commentGood }}</div>
+          <div class="comment-comment"><a-icon type="message" /> {{ item.commentCount }}</div>
         </div>
         <a-collapse key="item.commentId" class="comment-show" :bordered="false" expand-icon-position="right" @change="getCommentChildList(item.commentId)">
           <a-collapse-panel key="item.commentId" :bordered="false">
@@ -41,10 +41,21 @@
               </div>
             </a-card>
             <!-- 二级评论分页 -->
-            <div class="comment-pagination">
+            <div :v-show="item.commentCount > 0 ? true : false " class="comment-pagination">
               <a-pagination show-quick-jumper :default-current="1" align="center" />
             </div>
-          </a-collapse-panel>
+            <!-- 二级评论评论区域 -->
+            <div class="comment-container">
+              <div class="user-comment">
+                <a-textarea v-model="content" placeholder="请输入内容，不超过300字" :rows="2" />
+                <div class="comment-button">
+                  <a-button type="primary" @click="saveComment(item.commentId)">发表评论</a-button>
+                  <div v-show="countShow" class="content-count">
+                    还能输入 {{ commentContentCount }} 个字符
+                  </div>
+                </div>
+              </div>
+            </div></a-collapse-panel>
         </a-collapse>
       </a-card>
 
@@ -63,36 +74,54 @@ export default {
     article: {
       type: Object,
       default: null
+    },
+    page: {
+      type: Object,
+      pageSize: 5,
+      default: null
     }
   },
   data() {
     return {
-      current: ['commentTime'],
-      page: {
-        currentPage: 1,
-        pageSize: 5,
-        totalCount: 0,
-        totalPage: 0,
-        params: {},
-        sortColumn: 'commentTime',
-        sortMethod: 'desc',
-        list: []
+      comment: {
+        commentContent: '',
+        commentArticle: '',
+        commentType: 1,
+        pid: ''
       },
-      commentChildList: []
+      content: '',
+      current: ['commentTime'],
+      commentChildList: [],
+      countShow: false, // 控制是否显示字符个数提示
+      commentContentCount: 300 // 显示还能输入的字符数量
+    }
+  },
+  watch: {
+    'content': function(newVal, oldVal) {
+      if (this.content.length > 300) {
+        this.content = this.content.substring(0, 300)
+      }
+      if (this.content.length > 0) {
+        this.countShow = true
+      } else {
+        this.countShow = false
+      }
+      const newValLength = newVal ? newVal.length : 0
+      const oldValLength = oldVal ? oldVal.length : 0
+      this.commentContentCount = this.commentContentCount - (newValLength - oldValLength)
     }
   },
   created() {
-    this.getCommentList(this.page)
-    console.log('初始化')
+    this.$emit('getCommentList(this.page)')
   },
   methods: {
-    getCommentList() {
-      // this.page.params.commentArticle = this.article.articleId
-      this.page.params.commentArticle = this.article.articleId
-      commentApi.getCommentList(this.page).then(res => {
-        this.page = res.data
-        console.log(res)
-      })
+    pageChange(pageNumber) {
+      this.page.currentPage = pageNumber
+      this.$emit('getCommentList(this.page)')
+    },
+    changeSort(e) {
+      this.page.sortColumn = e.key
+      this.$emit('getCommentList(this.page)')
     },
     // 分页查询二级评论
     getByPage() {
@@ -105,6 +134,16 @@ export default {
     getCommentChildList(val) {
       this.page.params.pid = val
       this.getByPage(this.page)
+    },
+    saveComment(pid) {
+      this.comment.pid = pid
+      this.comment.commentArticle = this.$route.params.id
+      this.comment.commentContent = this.content
+      commentApi.save(this.comment).then(res => {
+        this.getCommentChildList()
+        this.$message.info(res.msg)
+        this.content = ''
+      })
     }
   }
 
@@ -157,11 +196,18 @@ export default {
     font-size: 12px;
     color: #9c9ea8;
   }
+  .comment-good {
+    width: 60px;
+  }
+  .comment-comment {
+    width: 60px;
+  }
   .author-img {
     width: 60px;
     height: 60px;
     border: 5px solid #e5e5e5;
     border-radius: 50%;
+    margin-top: 5px;
   }
   .comment-pagination {
     margin-top: 5px;
@@ -169,5 +215,32 @@ export default {
   .ant-card-bordered {
     margin: auto;
     padding: 0;
+  }
+  .comment-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* border: 1px solid blueviolet; */
+    margin-top: 5px;
+  }
+  .user-comment {
+    margin-top: 15px;
+    background-color: #fff;
+    margin-bottom: 10px;
+  }
+  .comment-button {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+  }
+  .content-count {
+    margin-right: 15px;
+  }
+  .ant-divider-horizontal {
+    margin: 2px 0 5px 0 !important;
+  }
+  .ant-collapse-content {
+    padding: 4px 16px 4px 16px;
   }
 </style>
