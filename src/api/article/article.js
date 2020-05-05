@@ -58,5 +58,12 @@ export default {
       method: 'post',
       data: topparam
     })
+  },
+  getUserArticleCountInfo(userparam) {
+    return request({
+      url: `/${group_name}/getUserArticleCountInfo`,
+      method: 'post',
+      data: userparam
+    })
   }
 }
