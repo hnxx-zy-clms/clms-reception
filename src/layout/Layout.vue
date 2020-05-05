@@ -20,18 +20,8 @@
 <script>
 import SimpleMenu from './menu/Menu'
 import MenuLogin from './menu/MenuLogin'
-import notification from 'ant-design-vue/lib/notification'
 export default {
-  components: { SimpleMenu, MenuLogin },
-  created() {
-    if (this.$store.getters.token !== undefined) {
-      this.$store.dispatch('user/getInfo').catch(() => {
-        notification.error({
-          message: '初始化失败'
-        })
-      })
-    }
-  }
+  components: { SimpleMenu, MenuLogin }
 }
 </script>
 

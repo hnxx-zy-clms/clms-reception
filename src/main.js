@@ -5,6 +5,8 @@ import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 import store from './store'
 
+import './permission' // 权限控制
+
 Vue.use(Antd)
 
 Vue.config.productionTip = false

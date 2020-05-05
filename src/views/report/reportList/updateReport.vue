@@ -115,7 +115,6 @@
 </template>
 <script>
 import ReportApi from '@/api/report/report.js'
-import MarkingApi from '@/api/report/marking'
 export default {
   props: {
     message: {

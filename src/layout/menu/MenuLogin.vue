@@ -19,7 +19,6 @@
 import Login from '@/views/register/login'
 import SearchBox from './downBox/SearchBox'
 import LoginBox from './downBox/LoginBox'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'MenuLogin',
@@ -33,11 +32,6 @@ export default {
       visible: false,
       isLogin: this.$store.getters.token !== undefined
     }
-  },
-  computed: {
-    ...mapGetters([
-      'token'
-    ])
   },
   methods: {
     showModal() {

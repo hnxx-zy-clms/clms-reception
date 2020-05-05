@@ -78,10 +78,10 @@ export default {
   created() {
     ReportApi.getMinReportInfo().then(res => {
       this.minReportInfo = res.data
-      for (var i = 0; i < 3; i++) {
-        this.minReportInfo[i].reportType = this.minReportInfo[i].reportType === 0 ? '日报' : '周报'
-        this.minReportInfo[i].isChecked = this.minReportInfo[i].isChecked === 1 ? '组长' : this.minReportInfo[i].isChecked === 2 ? '班长' : '教师'
-      }
+      this.minReportInfo.forEach(function(element) {
+        element.reportType = element.reportType === 0 ? '日报' : '周报'
+        element.isChecked = element.isChecked === 1 ? '组长' : element.isChecked === 2 ? '班长' : '教师'
+      })
     })
   },
   methods: {

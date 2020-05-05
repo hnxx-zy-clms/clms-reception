@@ -1,11 +1,12 @@
+// 用户操作
 import { login, getInfo } from '../../api/user'
-import { getToken, setToken, removeToken, getUserId, setUserId, removeUserId } from '../../utils/auth'
+import { getToken, setToken, removeToken } from '../../utils/auth'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    userId: getUserId(),
+    userId: '',
     roles: ''
   }
 }
@@ -40,8 +41,6 @@ const actions = {
       login(userInfo).then(res => {
         commit('SET_TOKEN', res.msg)
         setToken(res.msg, userInfo.remember)
-        commit('SET_USERID', res.data.userId)
-        setUserId(res.data.userId, userInfo.remember)
         resolve()
       }).catch(error => {
         reject(error)
@@ -54,11 +53,15 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo().then(res => {
         const { data } = res
-        const { userName, userId, userPositionId } = data
-        commit('SET_NAME', userName)
-        commit('SET_USERID', userId)
-        commit('SET_ROLES', userPositionId)
-        resolve(data)
+        const { user } = data
+        if (user.userPositionId !== null) {
+          commit('SET_ROLES', user.userPositionId)
+        } else {
+          reject(new Error('getInfo: 用户权限不能为空 !'))
+        }
+        commit('SET_NAME', user.userName)
+        commit('SET_USERID', user.userId)
+        resolve(res)
       }).catch(error => {
         reject(error)
       })
@@ -69,7 +72,6 @@ const actions = {
   logout({ commit, state }) {
     return new Promise((resolve) => {
       removeToken()
-      removeUserId()
       resolve()
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
@@ -80,7 +82,6 @@ const actions = {
   resetToken({ commit }) {
     return new Promise(resolve => {
       removeToken()
-      removeUserId()
       commit('RESET_STATE')
       resolve()
     })

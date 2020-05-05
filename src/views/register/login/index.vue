@@ -72,7 +72,7 @@ export default {
         if (!err) {
           this.spinning = true
           this.$store.dispatch('user/login', values).then(() => {
-            location.assign('/')
+            this.$router.go(0)
           }).catch(() => {
             this.spinning = false
           })

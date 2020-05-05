@@ -2,6 +2,8 @@ const getters = {
   token: state => state.user.token,
   name: state => state.user.name,
   roles: state => state.user.roles,
-  userId: state => state.user.userId
+  userId: state => state.user.userId,
+  routers: state => state.settings.routers,
+  addRouters: state => state.settings.addRouters
 }
 export default getters

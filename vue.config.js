@@ -41,7 +41,7 @@ module.exports = {
         target: `http://localhost:8080`,
         // 如果要代理 websockets
         // ws: true,
-        // 将主机标头的原点更改为目标URL,如果设置成true：发送请求头中host会设置成target
+        // 将主机标头的原点更改为目标URL,如果设置成true：发送请求头中host会设置成target·
         changeOrigin: false,
         pathRewrite: {
           '^': ''
