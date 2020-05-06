@@ -6,7 +6,7 @@
     :dropdown-style="{ width: '200px' }"
     size="large"
     style="width: 200px"
-    placeholder="input here"
+    placeholder="请输入内容"
     option-label-prop="value"
   >
     <template slot="dataSource">

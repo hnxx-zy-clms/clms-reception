@@ -2,7 +2,7 @@
   <div>
     <a-menu
       v-model="current"
-      theme="light"
+      theme="dark"
       mode="horizontal"
       :style="{ height:'59px', lineHeight: '59px'}"
     >

@@ -1,6 +1,8 @@
 <template>
   <a-dropdown placement="bottomCenter">
-    <a-badge :count="1"><a-avatar shape="square" icon="user" /></a-badge>
+    <a-badge :count="1"><a-avatar shape="square" style="color: #f56a00; backgroundColor: #fde3cf">
+      {{ name }}
+    </a-avatar></a-badge>
     <a-menu slot="overlay">
       <a-menu-item>
         <a href="#">个人主页</a>
@@ -17,9 +19,14 @@
 
 <script>
 import notification from 'ant-design-vue/lib/notification'
-
+import { mapGetters } from 'vuex'
 export default {
   name: 'LoginBox',
+  computed: {
+    ...mapGetters([
+      'name'
+    ])
+  },
   methods: {
     logout(e) {
       e.preventDefault()

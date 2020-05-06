@@ -8,7 +8,6 @@ import appConfig from './app.config'
 
 NProgress.configure({ showSpinner: false }) // NProgress配置
 
-
 const defaultRoutePath = '/'
 
 router.beforeEach((to, from, next) => {
