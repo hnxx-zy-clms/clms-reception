@@ -27,7 +27,7 @@ const codeMessage = {
 
 // 创建 axios 实例
 const service = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' ? './' : '/', // api base_url
+  baseURL: process.env.NODE_ENV === 'production' ? '/prod-api/' : '/', // api base_url
   timeout: 10000 // 请求超时时间
 })
 

@@ -12,7 +12,7 @@ module.exports = {
   /* 在cli3中，
       npm run serve/yarn run serve时会把process.env.NODE_ENV设置为development；
         npm run build时会把process.env.NODE_ENV设置为production；*/
-  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  publicPath: '/',
   /* 输出文件目录：在npm run build时，生成文件的目录名称 */
   outputDir: 'dist',
   /* 放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录 */
@@ -39,10 +39,8 @@ module.exports = {
     proxy: {
       '': {
         target: `http://localhost:8080`,
-        // 如果要代理 websockets
-        // ws: true,
-        // 将主机标头的原点更改为目标URL,如果设置成true：发送请求头中host会设置成target·
-        changeOrigin: false,
+        secure: false, // false为http访问，true为https访问
+        changeOrigin: true, // 是否跨域
         pathRewrite: {
           '^': ''
         }
