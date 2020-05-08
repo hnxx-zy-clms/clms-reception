@@ -1,14 +1,18 @@
 <template>
   <a-dropdown placement="bottomCenter">
-    <a-badge :count="1"><a-avatar shape="square" style="color: #f56a00; backgroundColor: #fde3cf">
-      {{ name }}
-    </a-avatar></a-badge>
-    <a-menu slot="overlay">
+    <a href="/userInfo">
+      <a-avatar shape="square" style="color: #f56a00; backgroundColor: #fde3cf">
+        {{ name }}
+      </a-avatar>
+    </a>
+    <a-menu slot="overlay" :style="{marginTop:'10px'}">
       <a-menu-item>
-        <a href="#">个人主页</a>
+        <a href="/userInfo">
+          个人主页
+        </a>
       </a-menu-item>
       <a-menu-item>
-        <a href="#">账号管理</a>
+        <a href="/profile">账号管理</a>
       </a-menu-item>
       <a-menu-item>
         <a @click="logout">退出登录</a>

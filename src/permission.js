@@ -12,7 +12,7 @@ const defaultRoutePath = '/'
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // 开始进度条
-  document.title = to.name + ' - ' + appConfig.title
+  document.title = to.name === null ? appConfig.title : to.name + ' - ' + appConfig.title
   if (store.getters.token) {
     /* 有令牌 */
     if (to.path === '/register') {

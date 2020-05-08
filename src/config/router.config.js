@@ -159,13 +159,5 @@ export const constantRouterMap = [
     mate: {
       isLoading: false
     }
-  },
-  {
-    path: '*',
-    name: 'NotFound',
-    component: NotFoundComponent,
-    mate: {
-      isLoading: false
-    }
   }
 ]

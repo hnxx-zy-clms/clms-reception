@@ -17,7 +17,10 @@ const actions = {
   GenerateRoutes({ commit }, menus) {
     return new Promise(resolve => {
       const accessedRouters = filterAsyncRouter(menus)
-      console.log(accessedRouters)
+      const notFoundRouter = {
+        path: '*', redirect: '/exception/404', hidden: true
+      }
+      accessedRouters.push(notFoundRouter)
       commit('SET_ROUTERS', accessedRouters)
       resolve()
     })
