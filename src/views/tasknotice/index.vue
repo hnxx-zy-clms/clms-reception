@@ -219,21 +219,24 @@ export default {
     height: 550px;
     flex-direction: column;
     width: 408px;
+    margin-left: 30px;
   }
-
   .tasksign {
     width: 808px;
     height: 550px;
-    margin-left: 30px;
+    margin-left: 60px;
     display: flex;
     flex-direction: column;
   }
 
   .title {
     font-size: 16px;
-    width: 32px;
+    width: 35px;
     margin: 0 12px 0 10px;
     font-family: Verdana, Geneva, Microsoft YaHei, Microsoft JhengHei, Helvetica Neue, sans-serif;
+  }
+  .orderselector {
+    width: 90px;
   }
 
   .selector {

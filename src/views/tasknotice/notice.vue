@@ -28,6 +28,7 @@
       </div>
     </a-list>
     <a-modal title="通知详情" v-model="visible" @ok="hideModal" okText="确认" cancelText="取消">
+      <a-spin :spinning="spinning"/>
       <pre style="white-space: pre-wrap;">{{notice.noticeContent}}</pre>
     </a-modal>
   </div>
@@ -58,7 +59,8 @@ export default {
       dataindex: '',
       loading: false,
       busy: false,
-      visible: false // 控制弹窗
+      spinning: false,
+      visible: false, // 控制弹窗
     }
   },
   computed: {
@@ -81,8 +83,10 @@ export default {
         this.visible = false
         return
       } else {
+        this.spinning = true
         noticeApi.setRead(this.notice.noticeId, this.userId).then(res => {
           this.data[this.dataindex].ifRead = true
+          this.spinning = false
           this.visible = false
         })
       }
@@ -105,7 +109,7 @@ export default {
     border-radius: 4px;
     overflow: auto;
     padding: 8px 24px;
-    height: 480px;
+    height: 525px;
     margin-top: 20px;
   }
 

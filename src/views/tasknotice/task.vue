@@ -85,11 +85,8 @@ export default {
     },
     taskreply(index) {
       const taskid = this.data[index].taskId
-      if (this.data[index].taskUser == null) {
-        this.$router.push({ path: 'reply', query: { taskid: taskid }}) // 未完成跳转
-      } else {
-        this.$router.push({ path: 'reply', query: { taskid: taskid }}) // 已完成跳转
-      }
+      const taskcontent = this.data[index].taskContent
+      this.$router.push({ path: 'reply', query: { taskid, taskcontent }})
     }
   }
 }
@@ -100,7 +97,7 @@ export default {
     border: 1px solid #e8e8e8;
     border-radius: 4px;
     overflow: auto;
-    height: 480px;
+    height: 525px;
     margin-top: 20px;
   }
   .demo-infinite-container::-webkit-scrollbar {
@@ -127,7 +124,7 @@ export default {
     background-color: white;
     width: 391px;
     height: 164px;
-    margin: 0 10px 10px 0px;
+    margin: 0 5px 10px 0px;
     cursor: pointer;
   }
   .title {

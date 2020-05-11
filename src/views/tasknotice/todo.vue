@@ -125,7 +125,7 @@ export default {
     border-radius: 4px;
     overflow: auto;
     padding: 8px 24px;
-    height: 480px;
+    height: 485px;
     margin-top: 20px;
   }
   .demo-infinite-container::-webkit-scrollbar {
