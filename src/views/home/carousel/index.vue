@@ -7,13 +7,13 @@
     >
       <a-icon type="left-circle" />
     </div>
-    <div slot="nextArrow"  class="custom-slick-arrow" style="right: 10px">
+    <div slot="nextArrow" class="custom-slick-arrow" style="right: 10px">
       <a-icon type="right-circle" />
     </div>
-    <div><h3>1</h3></div>
-    <div><h3>2</h3></div>
-    <div><h3>3</h3></div>
-    <div><h3>4</h3></div>
+    <div><img src="http://175.24.9.127:8888/group1/M00/00/00/rxgJf1678fmAK6WnAGWKeEmZSWs922.jpg"></div>
+    <div><img src="http://175.24.9.127:8888/group1/M00/00/00/rBEABV6745qAIT-XAADLWerupHQ437.jpg"></div>
+    <div><img src="http://175.24.9.127:8888/group1/M00/00/00/rxgJf1678fmAK6WnAGWKeEmZSWs922.jpg"></div>
+    <div><img src="http://175.24.9.127:8888/group1/M00/00/00/rBEABV6745qAIT-XAADLWerupHQ437.jpg"></div>
   </a-carousel>
 </template>
 <script>

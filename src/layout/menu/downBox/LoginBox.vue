@@ -1,9 +1,11 @@
 <template>
   <a-dropdown placement="bottomCenter">
     <a href="/userInfo">
-      <a-avatar shape="square" style="color: #f56a00; backgroundColor: #fde3cf">
-        {{ name }}
-      </a-avatar>
+      <a-avatar
+        shape="square"
+        :src="userIcon"
+        style="color: #f56a00; backgroundColor: #fde3cf"
+      />
     </a>
     <a-menu slot="overlay" :style="{marginTop:'10px'}">
       <a-menu-item>
@@ -28,7 +30,7 @@ export default {
   name: 'LoginBox',
   computed: {
     ...mapGetters([
-      'name'
+      'name', 'userIcon'
     ])
   },
   methods: {
