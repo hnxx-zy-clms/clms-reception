@@ -1,6 +1,15 @@
 <template>
   <a-spin :spinning="spinning">
+    <a-radio-group default-value="false" :style="{marginBottom:'25px'}" @change="handleFormLayoutChange">
+      <a-radio-button value="false">
+        密码登录
+      </a-radio-button>
+      <a-radio-button value="true">
+        短信登录
+      </a-radio-button>
+    </a-radio-group>
     <a-form
+      v-if="smsLogin"
       id="components-form-demo-normal-login"
       :form="form"
       class="login-form"
@@ -12,7 +21,8 @@
             'username',
             { rules: [{ required: true, message: 'Please input your username!' }] },
           ]"
-          placeholder="Username"
+          size="large"
+          placeholder="用户名/手机号"
         >
           <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
         </a-input>
@@ -23,8 +33,9 @@
             'password',
             { rules: [{ required: true, message: 'Please input your Password!' }] },
           ]"
+          size="large"
           type="password"
-          placeholder="Password"
+          placeholder="密码"
         >
           <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
         </a-input>
@@ -47,18 +58,23 @@
         <a-button type="primary" html-type="submit" class="login-form-button">
           Log in
         </a-button>
-        <a-divider>快速登录</a-divider>
-        <a-icon :style="{ fontSize: '40px', marginLeft:'46%' }" type="github" />
       </a-form-item>
     </a-form>
+    <sms-login v-else />
+    <a-divider>快速登录</a-divider>
+    <a-icon :style="{ fontSize: '40px', marginLeft:'46%' }" type="github" />
   </a-spin>
 </template>
 
 <script>
-
+import SmsLogin from './smsLogin'
 export default {
+  components: {
+    SmsLogin
+  },
   data() {
     return {
+      smsLogin: true,
       spinning: false
     }
   },
@@ -66,6 +82,9 @@ export default {
     this.form = this.$form.createForm(this, { name: 'normal_login' })
   },
   methods: {
+    handleFormLayoutChange(e) {
+      this.smsLogin = !this.smsLogin
+    },
     handleSubmit(e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {

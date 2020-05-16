@@ -1,5 +1,5 @@
 // 用户操作
-import { login, getInfo } from '../../api/user'
+import { login, getInfo, smsLogin } from '../../api/user'
 import { getToken, setToken, removeToken } from '../../utils/auth'
 
 const getDefaultState = () => {
@@ -39,7 +39,7 @@ const mutations = {
 }
 
 const actions = {
-  // 用户登录
+  // 用户密码登录
   login({ commit }, userInfo) {
     return new Promise((resolve, reject) => {
       login(userInfo).then(res => {
@@ -51,7 +51,18 @@ const actions = {
       })
     })
   },
-
+  // 用户短信登录
+  smsLogin({ commit }, userInfo) {
+    return new Promise((resolve, reject) => {
+      smsLogin(userInfo).then(res => {
+        commit('SET_TOKEN', res.msg)
+        setToken(res.msg, userInfo.remember)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   // 获取用户信息
   getInfo({ commit }) {
     return new Promise((resolve, reject) => {

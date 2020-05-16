@@ -10,7 +10,15 @@ export function login(data) {
     }]
   })
 }
-
+export function smsLogin(data) {
+  return request({
+    url: 'authentication/mobile?' + `mobile=` + data.mobile + '&smsCode=' + data.smsCode,
+    method: 'post',
+    transformResponse: [function(data) {
+      return JSON.parse(data)
+    }]
+  })
+}
 export function getSmsCaptcha(parameter) {
   return request({
     url: api.SendSms,
@@ -27,6 +35,16 @@ export function getInfo(params) {
       'Content-Type': 'application/json;charset=UTF-8'
     },
     params
+  })
+}
+
+export function SmsCaptcha(mobile) {
+  return request({
+    url: '/code/sms?mobile=' + mobile + '',
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
   })
 }
 
