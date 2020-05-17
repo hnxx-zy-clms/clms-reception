@@ -20,11 +20,20 @@
       </div>
     </div>
     <!-- 文案列表容器 -->
-    <div class="article-list-container">
+    <div
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(255, 255, 255, 0.8)"
+      style="height: 750px"
+    >
       <!-- 文章卡片 -->
-      <a-card v-for="item in page.list" :key="item.articleId">
+      <a-card v-for="item in page.list" :key="item.articleId" :body-style="articleBodyStyle" class="article-card">
         <div class="article-main">
-          <router-link :to="'/articleRead/'+item.articleId" class="article-container">
+          <div v-if="item.articleImage" class="article-image">
+            <img :src="item.articleImage" class="article-cover">
+          </div>
+          <router-link :to="'/articleRead/'+item.articleId" :class="item.articleImage ? 'image-article' : 'article-container'">
             <!-- 文章标题 -->
             <div class="article-title">{{ item.articleTitle }}</div>
             <div class="article-desc">{{ item.articleDesc }}</div>
@@ -50,9 +59,15 @@
         </div>
       </a-card>
     </div>
-    <div class="article-pagination">
-      <a-pagination :show-total="total => `共 ${total} 条`" show-quick-jumper :default-current="1" :total="page.totalCount" align="center" @change="pageChange" />
-    </div>
+    <el-pagination
+      align="center"
+      class="pagination"
+      :current-page="page.currentPage"
+      :page-size="page.pageSize"
+      layout="total, prev, pager, next, jumper"
+      :total="page.totalCount"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
@@ -68,6 +83,9 @@ export default {
   data() {
     return {
       current: ['createdTime'],
+      articleBodyStyle: {
+        padding: '18px'
+      },
       page: {
         currentPage: 1,
         pageSize: 5,
@@ -77,31 +95,52 @@ export default {
         sortColumn: 'createdTime',
         sortMethod: 'desc',
         list: []
-      }
+      },
+      loading: false,
+      pageShow: false
     }
   },
   watch: {
     type: function() {
       this.page.params.articleType = this.type.typeId
       this.getByPage(this.page)
+    },
+    page: function() {
+      this.loading = false
     }
   },
   created() {
     this.getByPage()
   },
   methods: {
-    pageChange(pageNumber) {
-      this.page.currentPage = pageNumber
-      this.getByPage()
-    },
     getByPage() {
+      this.loading = true
       articleApi.getByPage(this.page).then(res => {
         this.page = res.data
         console.log(res)
       })
     },
+    // 每页大小改变 参数 value 为每页大小(pageSize)
+    handleSizeChange(val) {
+      this.page.pageSize = val
+      // 重新请求,刷新页面
+      this.getByPage()
+    },
+    // 当前页跳转 参数 value 当前页(currentPage)
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+      this.getByPage()
+    },
+    // 条件排序 e 和 val 都行
     changeSort(e) {
-      this.page.sortColumn = e.key
+      if (e.order) {
+        this.page.sortColumn = e.prop
+        this.page.sortMethod = e.order
+      } else {
+        this.page.sortColumn = ''
+        this.page.sortMethod = 'asc'
+      }
+      this.$message.success('操作成功!')
       this.getByPage()
     }
   }
@@ -130,12 +169,12 @@ export default {
   }
   .article-main {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
   }
   .article-container {
     width: 100%;
-    min-height: 70px;
+    min-height: 100px;
   }
   .article-title {
     align-self: start;
@@ -175,11 +214,29 @@ export default {
     flex-direction: row;
     justify-content: space-around;
   }
+  .article-image {
+    width: 230px;
+    height:110px;
+    margin-right: 20px;
+  }
+  .article-cover {
+    width: 100%;
+    height:110px;
+    border-radius: 5px;
+  }
+
   .author-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+  }
+  .image-article {
+    width: 550px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
   }
   .author-img {
     width: 36px;
@@ -192,7 +249,11 @@ export default {
   .article-other i{
     margin-left: 10px;
   }
-  .article-pagination {
-    margin-top: 15px;
+  .pagination {
+    margin-top: 20px;
+  }
+  .article-card {
+    margin-bottom: 1px;
+    border-radius: 5px;
   }
 </style>

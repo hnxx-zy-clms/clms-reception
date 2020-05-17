@@ -77,13 +77,11 @@ export default {
       type: {
         typeId: '',
         typeName: ''
-      },
-      spinning: true
+      }
     }
   },
   created() {
     this.getTypeList()
-    this.spinning = false
   },
   methods: {
     getTypeList() {
@@ -168,7 +166,6 @@ export default {
     width: 100%;
     height: 100%;
   }
-
   .right-container  {
     width: 350px;
     height: 888px;

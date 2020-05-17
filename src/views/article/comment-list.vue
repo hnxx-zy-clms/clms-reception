@@ -40,14 +40,10 @@
                 </div>
               </div>
             </a-card>
-            <!-- 二级评论分页 -->
-            <div :v-show="item.commentCount > 0 ? true : false " class="comment-pagination">
-              <a-pagination show-quick-jumper :default-current="1" align="center" />
-            </div>
             <!-- 二级评论评论区域 -->
             <div class="comment-container">
               <div class="user-comment">
-                <a-textarea v-model="content" placeholder="请输入内容，不超过300字" :rows="2" />
+                <a-textarea v-model="content" placeholder="请输入内容，不超过300字" :rows="1" />
                 <div class="comment-button">
                   <a-button type="primary" @click="saveComment(item.commentId)">发表评论</a-button>
                   <div v-show="countShow" class="content-count">
@@ -55,7 +51,8 @@
                   </div>
                 </div>
               </div>
-            </div></a-collapse-panel>
+            </div>
+          </a-collapse-panel>
         </a-collapse>
       </a-card>
 
@@ -143,6 +140,7 @@ export default {
         this.getCommentChildList()
         this.$message.info(res.msg)
         this.content = ''
+        this.$emit('getCommentList')
       })
     }
   }
@@ -200,7 +198,7 @@ export default {
     width: 60px;
   }
   .comment-comment {
-    width: 60px;
+    width: 120px;
   }
   .author-img {
     width: 60px;

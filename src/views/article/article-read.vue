@@ -8,7 +8,14 @@
     <!-- 右侧容器,文章内容 -->
     <div class="right-container">
       <!-- 中间区域,放置文章 -->
-      <div class="article-container">
+      <div
+        v-loading="loading"
+        class="article-container"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(255, 255, 255, 0.8)"
+        style="min-height: 520px"
+      >
         <div class="article-title">{{ article.articleTitle }}</div>
         <div class="article-item">
           <div class="created-time">{{ article.createdTime }}</div>
@@ -34,14 +41,14 @@
         <div class="user-comment">
           <a-textarea v-model="content" placeholder="请输入内容，不超过300字" :rows="4" />
           <div class="comment-button">
-            <a-button type="primary">发表评论</a-button>
+            <a-button type="primary" @click="saveComment(content)">发表评论</a-button>
             <div v-show="countShow" class="content-count">
               还能输入 {{ commentContentCount }} 个字符
             </div>
           </div>
         </div>
         <!-- 评论列表组件 -->
-        <comment-list :article="article" />
+        <comment-list :article="article" :page="page" />
       </div>
     </div>
   </div>
@@ -51,6 +58,7 @@
 import CommentList from '@/views/article/comment-list'
 import ArticleInfo from './author-info'
 import articleApi from '@/api/article/article'
+import commentApi from '@/api/article/comment'
 export default {
   components: {
     CommentList,
@@ -58,11 +66,28 @@ export default {
   },
   data() {
     return {
+      page: {
+        currentPage: 1,
+        pageSize: 5,
+        totalCount: 0,
+        totalPage: 0,
+        params: {},
+        sortColumn: 'commentTime',
+        sortMethod: 'desc',
+        list: []
+      },
+      comment: {
+        commentContent: '',
+        commentArticle: '',
+        commentType: 0,
+        pid: 0
+      },
       content: '', // 评论文本内容
       id: '',
       article: {
         articleId: ''
       },
+      loading: false,
       countShow: false, // 控制是否显示字符个数提示
       commentContentCount: 300 // 显示还能输入的字符数量
     }
@@ -85,12 +110,32 @@ export default {
   created() {
     this.read()
     this.article.articleId = this.$route.params.id
+    this.getCommentList()
   },
   methods: {
     read() {
+      this.loading = true
       this.id = this.$route.params.id
       articleApi.read(this.id).then(res => {
         this.article = res.data
+        this.loading = false
+      })
+    },
+    getCommentList() {
+      this.page.params.commentArticle = this.article.articleId
+      commentApi.getCommentList(this.page).then(res => {
+        this.page = res.data
+        console.log(res)
+      })
+    },
+    // 添加文章评论
+    saveComment(content) {
+      this.comment.commentArticle = this.id
+      this.comment.commentContent = this.content
+      commentApi.save(this.comment).then(res => {
+        this.getCommentList()
+        this.$message.info(res.msg)
+        this.content = ''
       })
     }
   }
@@ -147,7 +192,7 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     /* margin-bottom: 10px; */
-    margin-top: 10px;
+    margin-top: 25px;
   }
   .article-action {
     display: flex;
