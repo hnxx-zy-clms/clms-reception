@@ -2,17 +2,20 @@
   <div>
     <a-layout id="content" :style="{display:'flex'}">
       <!--      头部-->
-      <a-layout-header :style="{height:'59px', background: '#fff', width: '100%' }">
-        <a-date-picker :style="{background: '#fff', marginRight:'15px' }" :default-value="moment(data, dateFormat)" disabled />
-      </a-layout-header>
+      <a-layout-content :style="{height:'250px', background: '#fff', width: '100%' }">
+        <img
+          :style="{height:'250px',width: '100%' }"
+          src="http://175.24.45.179/group1/M00/00/00/rBEABV7ClwOAItYoAAv3qZuHQAQ354.png"
+        >
+      </a-layout-content>
       <!--      中间Tips-->
-      <a-layout-content :style="{ background: '#fff', marginTop: '5px'}">
+      <a-layout-content :style="{margin: '0 25px', background: '#fff', marginTop: '10px'}">
         <page-tips />
         <a-divider :style="{ marginTop: '1px' }" />
         <add-report :style="{marginLeft:'15px',marginBottom:'20px' }" @getpage=" getaddpage" />
       </a-layout-content>
       <!--      中间报告内容-->
-      <a-layout-content :style="{ background: '#fff', marginTop: '5px' }">
+      <a-layout-content :style="{margin: '0 25px 25px 25px', background: '#fff', marginTop: '5px' }">
         <report-list ref="child" :style="{ background: '#fff', marginTop: '15px',marginLeft:'15px',marginBottom:'20px' }" />
       </a-layout-content>
     </a-layout>

@@ -1,13 +1,11 @@
 <template>
   <a-dropdown placement="bottomCenter">
-    <a href="/userInfo">
       <a-avatar
         shape="square"
         :src="userIcon"
-        style="color: #f56a00; backgroundColor: #fde3cf"
+        style="margin-bottom:5px;color: #f56a00; backgroundColor: #fde3cf"
       />
-    </a>
-    <a-menu slot="overlay" :style="{marginTop:'10px'}">
+    <a-menu slot="overlay" :style="{marginTop:'5px'}">
       <a-menu-item>
         <a href="/userInfo">
           个人主页

@@ -4,7 +4,7 @@
     <a-col style="width: 33%;" :span="8" :push="0">
       <a-card style="min-width: 480px;height: 100%">
         <a-tag color="blue">批阅通知</a-tag>
-        <a-timeline :style="{marginTop: '15px' }" pending="更多...">
+        <a-timeline :style="{marginTop: '15px' }">
           <a-timeline-item v-for="(item,i) in minReportInfo" :key="item.reportId">
             {{ item.updatedTime }} : {{ item.isChecked }} 批阅了 {{ item.createdTime }} 的{{ item.reportType }}</a-timeline-item>
         </a-timeline>
@@ -35,12 +35,12 @@
     </a-col>
     <!--    右侧提示-->
     <a-col style="width: 34%;" :span="6" :push="0">
-      <a-card style="min-width: 410px;height: 100%">
+      <a-card style="min-width: 410px;height: 100%;">
         <img
           slot="cover"
           alt="example"
           style="height: 200px"
-          src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+          src="http://175.24.45.179/group1/M00/00/00/rBEABV7CWTCAI9VvAAKrM0mh1YI537.jpg"
         >
         <a-card-meta title="每日一句" description="路在脚下，更在心中。" />
       </a-card>
@@ -94,5 +94,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

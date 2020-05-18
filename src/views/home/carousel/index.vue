@@ -10,10 +10,10 @@
     <div slot="nextArrow" class="custom-slick-arrow" style="right: 10px">
       <a-icon type="right-circle" />
     </div>
-    <div><img src="http://175.24.9.127:8888/group1/M00/00/00/rxgJf1678fmAK6WnAGWKeEmZSWs922.jpg"></div>
-    <div><img src="http://175.24.9.127:8888/group1/M00/00/00/rBEABV6745qAIT-XAADLWerupHQ437.jpg"></div>
-    <div><img src="http://175.24.9.127:8888/group1/M00/00/00/rxgJf1678fmAK6WnAGWKeEmZSWs922.jpg"></div>
-    <div><img src="http://175.24.9.127:8888/group1/M00/00/00/rBEABV6745qAIT-XAADLWerupHQ437.jpg"></div>
+    <div><img :style="{height:'350px',width: '100%' }" src="http://175.24.9.127:8888/group1/M00/00/00/rxgJf1678fmAK6WnAGWKeEmZSWs922.jpg"></div>
+    <div><img :style="{height:'350px',width: '100%' }" src="http://175.24.45.179/group1/M00/00/00/rBEABV61XfqAPhV3AAJLTj2s19g377.jpg"></div>
+    <div><img :style="{height:'350px',width: '100%' }" src="http://175.24.9.127:8888/group1/M00/00/00/rxgJf1678fmAK6WnAGWKeEmZSWs922.jpg"></div>
+    <div><img :style="{height:'350px',width: '100%' }" src="http://175.24.45.179/group1/M00/00/00/rBEABV61XfqAPhV3AAJLTj2s19g377.jpg"></div>
   </a-carousel>
 </template>
 <script>

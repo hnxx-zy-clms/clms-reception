@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-button type="primary" @click="showDrawer"> <a-icon type="plus" /> 新建报告 </a-button>
+    <a-button @click="showDrawer" :style="{background:'#87d068',color:'#fff'}"> <a-icon type="plus" /> 新建报告 </a-button>
     <router-link v-if="roles > 0" :to="'/reportMarking'">
       <a-button type="primary" :style="{marginLeft:'5px'}"> <a-icon type="check-square" /> 批阅报告 </a-button>
     </router-link>
