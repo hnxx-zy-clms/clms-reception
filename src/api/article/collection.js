@@ -34,5 +34,11 @@ export default {
       url: `/${group_name}/getList`,
       method: 'get'
     })
+  },
+  getCollection(aid) { // 获取当前用户点赞情况是否收藏
+    return request({
+      url: `/${group_name}/getCollection/${aid}`,
+      method: 'get'
+    })
   }
 }

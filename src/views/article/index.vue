@@ -3,7 +3,7 @@
     <!-- 文章模块主体容器 -->
     <div class="article-container">
       <!-- 左侧容器 - 放文章分类-->
-      <div class="left-container">
+      <div v-loading="loading" class="left-container">
         <!-- 分类列表 -->
         <ul class="type-list">
           <li><div href="#" class="type-tag top-type-tag" @click="revocer">分类</div></li>
@@ -77,7 +77,8 @@ export default {
       type: {
         typeId: '',
         typeName: ''
-      }
+      },
+      loading: false
     }
   },
   created() {
@@ -86,8 +87,10 @@ export default {
   methods: {
     getTypeList() {
       // 查询类型列表
+      this.loading = true
       typeApi.getList().then(res => {
         this.typeList = res.data
+        this.loading = false
       })
     },
     changeType(val) {
@@ -105,7 +108,7 @@ export default {
     display: flex;
     flex-direction: row;
     height: 888px;
-    width: 1200px;
+    width: 1300px;
     /* 左右自适应 */
     margin: auto;
     margin-top: 1px;

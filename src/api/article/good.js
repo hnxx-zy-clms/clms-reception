@@ -3,7 +3,7 @@ var group_name = 'good'
 export default {
   save(good) { // 添加，保存
     return request({
-      url: `/${group_name}/doGood`,
+      url: `/${group_name}/save`,
       method: 'post',
       data: good
     })
@@ -15,11 +15,17 @@ export default {
       data: id
     })
   },
-  get(id) { // 根据id查询
+  getList(id) { // 根据用户id查询
     return request({
-      url: `/${group_name}/get/${id}`,
+      url: `/${group_name}/getList/${id}`,
       method: 'get',
       data: id
+    })
+  },
+  getGood(aid) { // 获取当前用户点赞情况是否点赞
+    return request({
+      url: `/${group_name}/getGood/${aid}`,
+      method: 'get'
     })
   },
   getByPage(page) { // 分页查询

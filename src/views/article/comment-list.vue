@@ -1,66 +1,6 @@
 <template>
   <div>
-    <!-- 筛选栏容器 -->
-    <div class="scree-container">
-      <!-- 条件列 -->
-      <div class="scree-menu">
-        <a-menu v-model="current" mode="horizontal" @click="changeSort">
-          <a-menu-item key="commentTime">最新</a-menu-item>
-          <a-menu-item key="commentGood">点赞最多</a-menu-item>
-          <a-menu-item key="commentComment">评论最多</a-menu-item>
-        </a-menu>
-      </div>
-    </div>
-    <!-- 评论列表容器 -->
-    <div class="comment-list-container">
-      <a-card v-for="item in page.list" :key="item.commentId" style="width: 100%">
-        <div class="comment-main">
-          <div class="comment-header">
-            <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
-          </div>
-          <div class="comment-container">
-            <div class="comment-user">{{ item.commentUser }}</div>
-            <div class="comment-time">发表于 {{ item.commentTime }}</div>
-            <div class="comment-content">{{ item.commentContent }}</div>
-          </div>
-          <div class="comment-good"><a-icon type="like" /> {{ item.commentGood }}</div>
-          <div class="comment-comment"><a-icon type="message" /> {{ item.commentCount }}</div>
-        </div>
-        <a-collapse key="item.commentId" class="comment-show" :bordered="false" expand-icon-position="right" @change="getCommentChildList(item.commentId)">
-          <a-collapse-panel key="item.commentId" :bordered="false">
-            <a-card v-for="item2 in commentChildList" :key="item2.commentId" style="width: 90%">
-              <div class="comment-main">
-                <div class="comment-header">
-                  <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
-                </div>
-                <div class="comment-container">
-                  <div class="comment-user">{{ item2.commentUser }}</div>
-                  <div class="comment-time">发表于 {{ item2.commentTime }}</div>
-                  <div class="comment-content">{{ item2.commentContent }}</div>
-                </div>
-              </div>
-            </a-card>
-            <!-- 二级评论评论区域 -->
-            <div class="comment-container">
-              <div class="user-comment">
-                <a-textarea v-model="content" placeholder="请输入内容，不超过300字" :rows="1" />
-                <div class="comment-button">
-                  <a-button type="primary" @click="saveComment(item.commentId)">发表评论</a-button>
-                  <div v-show="countShow" class="content-count">
-                    还能输入 {{ commentContentCount }} 个字符
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a-collapse-panel>
-        </a-collapse>
-      </a-card>
-
-    </div>
-    <!-- 一级评论分页 -->
-    <div class="comment-pagination">
-      <a-pagination :show-total="total => `共 ${total} 条`" show-quick-jumper :default-current="1" :total="page.totalCount" align="center" />
-    </div>
+    xx
   </div>
 </template>
 
