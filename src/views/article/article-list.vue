@@ -33,7 +33,7 @@
           <div v-if="item.articleImage" class="article-image">
             <img :src="item.articleImage" class="article-cover">
           </div>
-          <router-link :to="'/articleRead/'+item.articleId" :class="item.articleImage ? 'image-article' : 'article-container'">
+          <router-link :to="'articleRead/'+item.articleId" :class="item.articleImage ? 'image-article' : 'article-container'">
             <!-- 文章标题 -->
             <div class="article-title">{{ item.articleTitle }}</div>
             <div class="article-desc">{{ item.articleDesc }}</div>
@@ -48,10 +48,10 @@
               <div class="article-meta">
                 <div class="created-time">{{ item.createdTime }}</div>
                 <div class="article-other">
-                  <a-icon type="eye" /> {{ item.articleRead }}
-                  <a-icon type="heart" /> {{ item.articleCollection }}
-                  <a-icon type="like" /> {{ item.articleGood }}
-                  <a-icon type="message" /> {{ item.articleComment }}
+                  <a-icon class="action-icon" type="eye" /><span class="count-num"> {{ item.articleRead }}</span>
+                  <a-icon class="action-icon" type="heart" /><span class="count-num"> {{ item.articleCollection }}</span>
+                  <a-icon class="action-icon" type="like" /><span class="count-num"> {{ item.articleGood }}</span>
+                  <a-icon class="action-icon" type="message" /><span class="count-num"> {{ item.articleComment }}</span>
                 </div>
               </div>
             </div>
@@ -82,6 +82,8 @@ export default {
   },
   data() {
     return {
+      isGood: false, // 判断是否已经点赞
+      isCollection: false, // 判断是否已经收藏
       current: ['createdTime'],
       articleBodyStyle: {
         padding: '18px'
@@ -148,6 +150,9 @@ export default {
 </script>
 
 <style scoped>
+  .count-num {
+    color: #349edf;
+  }
   .scree-container {
     display: flex;
     flex-direction: row;
@@ -175,6 +180,9 @@ export default {
   .article-container {
     width: 100%;
     min-height: 100px;
+  }
+  .action-icon :hover {
+    color: #349edf;
   }
   .article-title {
     align-self: start;

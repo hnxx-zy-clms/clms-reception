@@ -78,7 +78,7 @@ export default {
       this.comment.commentContent = this.content
       commentApi.save(this.comment).then(res => {
         this.getCommentChildList()
-        this.$message.info(res.msg)
+        this.$message.success(res.msg)
         this.content = ''
         this.$emit('getCommentList')
       })

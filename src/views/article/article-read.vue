@@ -20,9 +20,9 @@
         <div class="article-item">
           <div class="created-time">发表时间: {{ article.createdTime }}</div>
           <div class="article-meta">
-            <a-icon type="eye" /> {{ article.articleRead }} 阅读
-            <a-icon type="heart" /> {{ article.articleCollection }} 收藏
-            <a-icon type="like" /> {{ article.articleGood }} 点赞
+            <a-icon class="action-icon" type="eye" /><span class="count-num"> {{ article.articleRead }} 阅读</span>
+            <a-icon class="action-icon" type="heart" /><span class="count-num"> {{ article.articleCollection }} 收藏</span>
+            <a-icon class="action-icon" type="like" /><span class="count-num"> {{ article.articleGood }} 点赞</span>
           </div>
         </div>
         <div class="article-content" v-html="article.articleContent" />
@@ -209,7 +209,7 @@ export default {
       // 点赞
       if (!this.isGood) {
         goodApi.save(this.good).then(res => {
-          this.$message.info(res.msg)
+          this.$message.success(res.msg)
           this.getGood()
         })
       } else {
@@ -220,7 +220,7 @@ export default {
       // 收藏
       if (!this.isCollection) {
         collectionApi.save(this.collection).then(res => {
-          this.$message.info(res.msg)
+          this.$message.success(res.msg)
           this.getCollection()
         })
       } else {
@@ -233,7 +233,7 @@ export default {
       this.comment.commentContent = this.content
       commentApi.save(this.comment).then(res => {
         this.getCommentList()
-        this.$message.info(res.msg)
+        this.$message.success(res.msg)
         this.content = ''
       })
     },
@@ -257,6 +257,13 @@ export default {
 </script>
 
 <style scoped>
+  .count-num {
+    color: #349edf;
+    margin-right: 5px;
+  }
+  .action-icon :hover {
+    color: #349edf;
+  }
   .read-container {
     display: flex;
     flex-direction: row;
@@ -325,6 +332,8 @@ export default {
     display: flex;
     flex-direction: row;
     width: 300px;
+    min-height: 200px;
+    line-height: 200px;
     margin: auto;
     justify-content: space-evenly;
     font-size: 24px;
