@@ -111,7 +111,7 @@ export default {
     width: 1300px;
     /* 左右自适应 */
     margin: auto;
-    margin-top: 1px;
+    margin-top: 10px;
     margin-bottom: 20px;
   }
   .left-container {
@@ -150,7 +150,7 @@ export default {
     text-align: center;
     line-height: 32px;
     color: rgb(112,105,89);
-    margin-top: 1px;
+    margin-top: 5px;
   }
   .type-list a:hover {
     background-color:rgb(255,46,47);
