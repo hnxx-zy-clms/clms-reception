@@ -96,8 +96,8 @@ export default {
     border: 1px solid #e8e8e8;
     border-radius: 4px;
     overflow: auto;
-    height: 525px;
-    margin-top: 20px;
+    height: 53rem;
+    margin-top: 2%;
   }
   .demo-infinite-container::-webkit-scrollbar {
     width: 4px; /*height: 4px;*/
@@ -121,7 +121,7 @@ export default {
   }
   .ant-card-grid {
     background-color: white;
-    width: 391px;
+    width: 49%;
     height: 164px;
     margin: 0 5px 10px 0px;
     cursor: pointer;

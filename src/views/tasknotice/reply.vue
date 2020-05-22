@@ -173,7 +173,7 @@ export default {
 <style scoped>
   .ant-card-bordered {
     width: 90%;
-    margin-left: 50px;
+    margin-left: 5%;
   }
   .pre {
     white-space: pre-line;
