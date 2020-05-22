@@ -8,17 +8,17 @@
     <a-list :data-source="data">
       <a-card-grid slot="renderItem" slot-scope="item,index" @click="taskreply(index)">
         <div class="title">{{ item.taskTitle }}</div>
-        <div class="content">{{ item.taskContent }}</div>
+        <div class="content" v-html="item.taskContent" />
         <div class="des">
-          {{ item.userName + '发布于' + item.pushedTime }}
+          <span class="nowarp">{{ item.userName + '发布于' + item.pushedTime }}</span>
           <div class="statu">
             <div class="statuitem" :class="[item.taskUser?'finishcolor':'processcolor']" />
-            <span v-if="item.taskUser">已完成</span>
-            <span v-else>未完成</span>
+            <span class="nowarp" v-if="item.taskUser">已完成</span>
+            <span class="nowarp" v-else>未完成</span>
             <template v-for="(level,index) in item.taskUser">
               <div :key="index" class="statuitem" :class="[!level == 0?'finishcolor':'processcolor']" />
-              <span v-if="!level == 0" :key="index+1">已批阅</span>
-              <span v-else :key="index+2">未批阅</span>
+              <span class="nowarp" v-if="!level == 0" :key="index+1">已批阅</span>
+              <span class="nowarp" v-else :key="index+2">未批阅</span>
             </template>
           </div>
         </div>
@@ -85,8 +85,7 @@ export default {
     },
     taskreply(index) {
       const taskid = this.data[index].taskId
-      const taskcontent = this.data[index].taskContent
-      this.$router.push({ path: 'reply', query: { taskid, taskcontent }})
+      this.$router.push({ path: 'reply', query: { taskid }})
     }
   }
 }
@@ -132,6 +131,9 @@ export default {
     margin-bottom: 8px;
     color: #0366D6;
     font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .content {
     height: 60px;
@@ -160,5 +162,8 @@ export default {
   }
   .processcolor {
     background-color: yellow;
+  }
+  .nowarp {
+    white-space: nowrap;
   }
 </style>

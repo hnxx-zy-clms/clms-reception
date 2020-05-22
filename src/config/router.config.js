@@ -118,7 +118,7 @@ export const constantRouterMap = [
   },
   {
     path: '/reply',
-    name: 'Reply',
+    name: 'reply',
     component: Reply,
     mate: {
       title: '任务回复',

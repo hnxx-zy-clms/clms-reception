@@ -4,7 +4,7 @@
       <a-button slot="extra" type="link" @click="showModal">今日签到</a-button>
       <a-divider>本周签到情况</a-divider>
       <div v-for="(item, index) in weekRegistration" :key="index" class="situation">
-        <span>周{{ week[index] }}：</span>
+        <span>周{{ weekSign[index] }}：</span>
         在第
         <a-tag v-for="(classes, index) in signClass(item.signClass)" :key="index" color="#2db7f5">
           {{ classes }}
@@ -53,7 +53,8 @@ export default {
         signClass: '',
         signTime: ''
       },
-      week: ['一', '二', '三', '四', '五', '六'],
+      week: ['日', '一', '二', '三', '四', '五', '六'],
+      weekSign: [],
       weekRegistration: '',
       loading: false,
       visible: false,
@@ -96,6 +97,10 @@ export default {
     getRegistration() { // 获取本周签到
       registrationApi.getRegistration(this.userId).then(res => {
         this.weekRegistration = res.data
+        this.weekRegistration.forEach((i, index) => {
+          this.weekSign[index] = this.week[new Date(Date.parse(i.signTime)).getDay()]
+          console.log(this.weekSign[index])
+        })
       })
     },
     showModal() {
