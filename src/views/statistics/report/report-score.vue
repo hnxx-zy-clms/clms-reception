@@ -3,91 +3,125 @@
     <!-- <h2>
       <button @click="makeit">查看分数</button>
     </h2> -->
-    <div id="c4"></div>
+    <div id="c4" />
   </div>
 </template>
 
 <script>
-import G2 from "@antv/g2";
-import { Chart } from "@antv/g2";
+import { mapGetters } from 'vuex'
+import G2 from '@antv/g2'
+import { Chart } from '@antv/g2'
+import reportApi from '@/api/report/marking.js'
 export default {
-  name: "Top3",
+  name: 'Top3',
   data() {
     return {
       chart: null,
+      scorepage: {
+        pageSize: 20,
+        currentPage: 1,
+        params: {
+          userName: this.name
+        }
+      },
       data: [
-        { day: "4-1", name: "平均", score: 7 },
-        { day: "4-1", name: "张三", score: 6 },
-        { day: "4-2", name: "平均", score: 6 },
-        { day: "4-2", name: "张三", score: 7 },
-        { day: "4-3", name: "平均", score: 8 },
-        { day: "4-3", name: "张三", score: 7.5 },
-        { day: "4-4", name: "平均", score: 7.5 },
-        { day: "4-4", name: "张三", score: 8.5 },
-        { day: "4-5", name: "平均", score: 8.5 },
-        { day: "4-5", name: "张三", score: 9 },
-        { day: "4-6", name: "平均", score: 8 },
-        { day: "4-6", name: "张三", score: 8 },
-        { day: "4-7", name: "平均", score: 7.5 },
-        { day: "4-7", name: "张三", score: 6 }
+        // { day: '4-1', name: '平均', score: 7 },
+        // { day: '4-1', name: '张三', score: 6 },
+        // { day: '4-2', name: '平均', score: 6 },
+        // { day: '4-2', name: '张三', score: 7 },
+        // { day: '4-3', name: '平均', score: 8 },
+        // { day: '4-3', name: '张三', score: 7.5 },
+        // { day: '4-4', name: '平均', score: 7.5 },
+        // { day: '4-4', name: '张三', score: 8.5 },
+        // { day: '4-5', name: '平均', score: 8.5 },
+        // { day: '4-5', name: '张三', score: 9 },
+        // { day: '4-6', name: '平均', score: 8 },
+        // { day: '4-6', name: '张三', score: 8 },
+        // { day: '4-7', name: '平均', score: 7.5 },
+        // { day: '4-7', name: '张三', score: 6 }
       ]
-    };
+    }
   },
-  mounted(){
+  computed: {
+    ...mapGetters([
+      'name'
+    ])
+  },
+  watch: {
+    data(b, a) {
+      this.chart.changeData(b)
+      this.chart.render()
+    }
+  },
+  mounted() {
     this.initComponent()
   },
+  created() {
+    this.getMarkingScore()
+  },
   methods: {
- 
+    getMarkingScore() {
+      console.log('name' + this.scorepage.params.userName)
+      reportApi
+        .getMarkingScore(this.scorepage)
+        .then(res => {
+          this.data = res.data.list
+          console.log(res.data.list)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
     initComponent() {
-
       const chart = new Chart({
-        container: "c4",
+        container: 'c4',
         autoFit: true,
         height: 310
-      });
+      })
 
-      chart.data(this.data);
+      chart.data(this.data)
 
       chart.scale({
-        day: {
+        type: {
           range: [0, 1]
         },
-        score: {
+        value: {
           min: 0,
           max: 10,
           nice: true
         }
-      });
+      })
 
       chart.tooltip({
         showCrosshairs: true,
         shared: true
-      });
+      })
 
-      chart.axis("score", {
+      chart.axis('value', {
         label: {
           formatter: val => {
-            return val;
+            return val
           }
         }
-      });
+      })
 
       chart
         .line()
-        .position("day*score")
-        .color("name")
-        .shape("smooth");
+        .position('type*value')
+        .color('state')
+        .shape('smooth')
 
       chart
         .point()
-        .position("day*score")
-        .color("name")
-        .shape("circle");
+        .position('type*value')
+        .color('state')
+        .shape('circle')
 
-      chart.render();
+      chart.render()
+      this.chart = chart
     }
   }
-};
+}
 </script>
 
 <style scoped>

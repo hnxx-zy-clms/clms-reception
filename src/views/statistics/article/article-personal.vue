@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div id="c2"></div>
+    <div id="c2" />
   </div>
 </template>
 
 <script>
-import G2 from "@antv/g2";
-import DataSet from "@antv/data-set";
-import { Chart } from "@antv/g2";
+import G2 from '@antv/g2'
+import DataSet from '@antv/data-set'
+import { Chart } from '@antv/g2'
 import articleApi from '@/api/article/article'
 export default {
   data() {
@@ -15,10 +15,10 @@ export default {
       chart: null,
       userparam: {
         params: {
-          articleAuthor: "code-fusheng"
+          articleAuthor: 'admin'
         },
-        sortColumn: "article_type",
-        sortMethod: "desc"
+        sortColumn: 'article_type',
+        sortMethod: 'desc'
       },
       data: [
         // { name: "c", articleCounts: 7 },
@@ -32,73 +32,73 @@ export default {
         // { item: "c++", 发表篇数: 6 },
         // { name: "linux", articleCounts: 5 }
       ]
-    };
+    }
   },
   watch: {
     data(b, a) {
       // this.chart.changeData(b);
       this.initComponent()
-      //this.chart.render();
+      // this.chart.render();
     }
   },
   mounted() {
     // this.initComponent();
   },
   created() {
-     this.getData()
+    this.getData()
   },
   methods: {
-     getData() {
+    getData() {
       articleApi.getUserArticleCountInfo(this.userparam).then(res => {
-         console.log('before', this.data)
-        this.data = res.data.list;
+        console.log('before', this.data)
+        this.data = res.data.list
         console.log(this.data)
-      });
+      })
     },
     initComponent() {
-      const { DataView } = DataSet;
+      const { DataView } = DataSet
 
-      const dv = new DataView().source(this.data);
+      const dv = new DataView().source(this.data)
 
       dv.transform({
-        type: "fold",
-        fields: ["articleCounts"], // 展开字段集
-        key: "user", // key字段
-        value: "score" // value字段
-      });
+        type: 'fold',
+        fields: ['articleCounts'], // 展开字段集
+        key: 'user', // key字段
+        value: 'score' // value字段
+      })
 
       const chart = new Chart({
-        container: "c2",
+        container: 'c2',
         autoFit: true,
         height: 310
-      });
+      })
 
-      chart.data(dv.rows);
+      chart.data(dv.rows)
 
-      chart.scale("score", {
+      chart.scale('score', {
         min: 0,
         nice: true
-      });
+      })
 
-      chart.coordinate("polar", {
+      chart.coordinate('polar', {
         radius: 0.8
-      });
+      })
 
       chart.tooltip({
         shared: true,
-        showCrosshairs: true, //显示辅助虚线
+        showCrosshairs: true, // 显示辅助虚线
         crosshairs: {
           line: {
             style: {
-              lineDash: [4, 4], //一组描述交替绘制线段和间距长度的数字
-              stroke: "#333" //虚线颜色
+              lineDash: [4, 4], // 一组描述交替绘制线段和间距长度的数字
+              stroke: '#333' // 虚线颜色
             }
           }
         }
-      });
+      })
 
-      //坐标轴设置
-      chart.axis("name", {
+      // 坐标轴设置
+      chart.axis('name', {
         line: null,
         tickLine: null,
         grid: {
@@ -108,51 +108,51 @@ export default {
             }
           }
         }
-      });
+      })
 
-      chart.axis("score", {
+      chart.axis('score', {
         line: null,
         tickLine: null,
         grid: {
           line: {
-            type: "line",
+            type: 'line',
             style: {
               lineDash: null
             }
           }
         }
-      });
+      })
 
-      //设置蓝线的粗细
+      // 设置蓝线的粗细
       chart
         .line()
-        .position("name*score")
-        .color("user")
-        .size(1);
+        .position('name*score')
+        .color('user')
+        .size(1)
 
-      //设置点的大小
+      // 设置点的大小
       chart
         .point()
-        .position("name*score")
-        .color("user")
-        .shape("circle")
+        .position('name*score')
+        .color('user')
+        .shape('circle')
         .size(3)
         .style({
-          stroke: "#fff",
+          stroke: '#fff',
           lineWidth: 1,
           fillOpacity: 1
-        });
+        })
 
       chart
         .area()
-        .position("name*score")
-        .color("user");
+        .position('name*score')
+        .color('user')
 
       this.chart = chart
-      chart.render();
+      chart.render()
     }
   }
-};
+}
 </script>
 
 <style scoped>

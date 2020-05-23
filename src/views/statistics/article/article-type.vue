@@ -1,14 +1,14 @@
 <template>
   <!-- <div> -->
-  <div id="c1"></div>
+  <div id="c1" />
   <!-- <div id="c1"></div> -->
   <!-- </div> -->
 </template>
 
 <script>
-import G2 from "@antv/g2";
-import { Chart } from "@antv/g2";
-import typeApi from "@/api/article/type";
+import G2 from '@antv/g2'
+import { Chart } from '@antv/g2'
+import typeApi from '@/api/article/type'
 
 export default {
   data() {
@@ -16,10 +16,9 @@ export default {
       //   chart: null,
       chart1: null,
       typeparam: {
-        sortColumn: "type_count",
-        sortMethod: "desc"
+        sortColumn: 'type_count',
+        sortMethod: 'desc'
       },
-    
       mydata: [
         // { name: "SpringBoot", typeCounts: 30, percent: 0.4 },
         // { name: "Java", typeCounts: 21, percent: 0.21 },
@@ -28,59 +27,57 @@ export default {
         // { name: "MySql", typeCounts: 9, percent: 0.09 }
       ],
       top: []
-    };
+    }
   },
   watch: {
     mydata(b, a) {
-      this.chart1.changeData(b);
-      this.chart1.render();
+      this.chart1.changeData(b)
+      this.chart1.render()
     }
   },
   mounted() {
-    this.initComponent();
+    this.initComponent()
   },
 
   created() {
-    this.getData();
+    this.getData()
   },
   methods: {
 
     getData() {
       typeApi.getArticleTypeCountInfo(this.typeparam).then(res => {
-        this.mydata = res.data.list;
-        
-      });
+        this.mydata = res.data.list
+      })
     },
-    
     initComponent() {
       const chart1 = new Chart({
-        container: "c1",
+        container: 'c1',
         autoFit: true,
         height: 250
-      });
+      })
 
-      chart1.data(this.mydata);
+      chart1.data(this.mydata)
 
-      chart1.scale("typeCounts", {
+      chart1.scale('typeCounts', {
         nice: true
-      });
+      })
 
       chart1.tooltip({
         showMarkers: false
-      });
+      })
 
-      chart1.interaction("active-region");
+      chart1.interaction('active-region')
 
       chart1
         .interval()
-        .position("name*typeCounts")
-        .color("name");
+        .position('name*typeCounts')
+        .color('name')
 
       this.chart1 = chart1
-      chart1.render();
+      chart1.render()
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -97,6 +94,6 @@ export default {
   height: 200px;
   width: 300px;
   margin-right: 10px;
-  float: right; 
+  float: right;
 } */
 </style>

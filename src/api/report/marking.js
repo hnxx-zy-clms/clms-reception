@@ -27,5 +27,12 @@ export default {
       method: 'put',
       data: report
     })
+  },
+  getMarkingScore(page) {
+    return request({
+      url: `/${group_name}/getMarkingScore`,
+      method: 'post',
+      data: page
+    })
   }
 }

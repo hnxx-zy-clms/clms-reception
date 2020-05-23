@@ -6,6 +6,7 @@ import 'ant-design-vue/dist/antd.css'
 import store from './store'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import G2 from '@antv/g2'
 
 import './permission' // 权限控制
 
