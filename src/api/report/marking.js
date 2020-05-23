@@ -22,11 +22,11 @@ export default {
       data: page
     })
   },
-  save(report) { // 保存添加
+  setGroupMarkings(markings) { // 保存添加
     return request({
-      url: `/${group_name}/save`,
+      url: `/${group_name}/setGroupMarkings`,
       method: 'post',
-      data: report
+      data: markings
     })
   },
   delete(id) { // 根据id删除

@@ -9,14 +9,17 @@
         >
       </a-layout-content>
       <!--      中间Tips-->
-      <a-layout-content :style="{margin: '0 25px', background: '#fff', marginTop: '10px'}">
+      <a-layout-content v-if="roles !==3 " :style="{margin: '0 25px', background: '#fff', marginTop: '10px'}">
         <page-tips />
         <a-divider :style="{ marginTop: '1px' }" />
         <add-report :style="{marginLeft:'15px',marginBottom:'20px' }" @getpage=" getaddpage" />
       </a-layout-content>
       <!--      中间报告内容-->
-      <a-layout-content :style="{margin: '0 25px 25px 25px', background: '#fff', marginTop: '5px' }">
+      <a-layout-content v-if="roles !==3 " :style="{margin: '0 25px 25px 25px', background: '#fff', marginTop: '5px' }">
         <report-list ref="child" :style="{ background: '#fff', marginTop: '15px',marginLeft:'15px',marginBottom:'20px' }" />
+      </a-layout-content>
+      <a-layout-content v-else :style="{margin: '5px 15px 15px 15px'}">
+        <marking />
       </a-layout-content>
     </a-layout>
   </div>
@@ -26,17 +29,25 @@ import moment from 'moment'
 import AddReport from './addReport'
 import ReportList from './reportList'
 import PageTips from './pageTips'
+import { mapGetters } from 'vuex'
+import Marking from './marking'
 export default {
   components: {
     AddReport,
     ReportList,
-    PageTips
+    PageTips,
+    Marking
   },
   data() {
     this.dateFormat = 'YYYY-MM-DD'
     return {
       data: new Date()
     }
+  },
+  computed: {
+    ...mapGetters([
+      'roles'
+    ])
   },
   methods: {
     moment,
