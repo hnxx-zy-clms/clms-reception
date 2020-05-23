@@ -1,22 +1,80 @@
 <template>
-  <div id='c3' />
+  <!-- <p>用户ID: {{ userId }}</p> -->
+  <div id="c3" />
 </template>
 
 <script>
+import moment from 'moment'
+import userApi from '@/api/user/userInfo.js'
+import reportApi from '@/api/report/report.js'
+import { mapGetters } from 'vuex'
 import G2 from '@antv/g2'
 import { Chart } from '@antv/g2'
 export default {
-
   data() {
     return {
+      userIds: '',
       chart: null,
-      data: [{ type: '第一组', value: 80 }]
+      // today: new Date(),
+      page: {
+        pageSize: 20,
+        currentPage: 1,
+        params: {
+          reportType: 0,
+          userClassesId: 1,
+          userGroupId: 2,
+          isClasses: 0,
+          time: moment(new Date()).format('YYYY-MM-DD')
+        }
+      },
+      data: [{ type: '', value: 0 }]
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'userId'
+    ])
+  },
+  watch: {
+    data(b, a) {
+      this.chart.changeData(b)
+      // console.log("wisdom", b)
+      this.chart.render()
     }
   },
   mounted() {
     this.initComponent()
   },
+  created() {
+    // this.getUserGroup()
+    // var d = new Date()
+    console.log('jintianderiqishi', moment(new Date()).format('YYYY-MM-DD'))
+    this.getUserGroupReport()
+    this.userIds = this.userId
+  },
   methods: {
+    // getUserGroup() {
+    //   userApi
+    //     .getUserGroup(3)
+    //     .then(res => {
+    //       console.log('小组', res)
+    //       this.data.type = res
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    getUserGroupReport() {
+      reportApi
+        .getUserReportInfo(this.page)
+        .then(res => {
+          this.data = res.data.list
+          console.log(res.data.list)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
     initComponent() {
       const chart = new Chart({
         container: 'c3',
@@ -106,7 +164,7 @@ export default {
           view.interaction('element-active')
         }
       })
-
+      this.chart = chart
       chart.render()
     }
   }

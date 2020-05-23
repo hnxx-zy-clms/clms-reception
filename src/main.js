@@ -12,6 +12,7 @@ import './permission' // 权限控制
 
 Vue.use(Antd)
 Vue.use(ElementUI)
+Vue.use(require('vue-moment'))
 
 Vue.config.productionTip = false
 
