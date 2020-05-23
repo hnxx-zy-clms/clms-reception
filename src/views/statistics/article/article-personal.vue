@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import G2 from '@antv/g2'
 import DataSet from '@antv/data-set'
 import { Chart } from '@antv/g2'
@@ -15,7 +16,7 @@ export default {
       chart: null,
       userparam: {
         params: {
-          articleAuthor: 'admin'
+          articleAuthor: 'code-fusheng'
         },
         sortColumn: 'article_type',
         sortMethod: 'desc'
@@ -34,6 +35,11 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapGetters([
+      'name'
+    ])
+  },
   watch: {
     data(b, a) {
       // this.chart.changeData(b);
@@ -46,6 +52,7 @@ export default {
   },
   created() {
     this.getData()
+    this.userparam.params.articleAuthor = this.name
   },
   methods: {
     getData() {

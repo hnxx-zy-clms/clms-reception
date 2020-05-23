@@ -4,8 +4,13 @@
       <el-col :span="8">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span>这里能写啥</span>
+            <span class="visit">网站访问量</span>
+            <el-button type="success" plain>今日访问量：666</el-button>
+            <el-button type="warning">总访问量：6666</el-button>
           </div>
+          <!-- <el-button type="success" plain>今日访问量：666</el-button>
+          <el-button type="warning">总访问量：6666</el-button> -->
+          <web-visits />
         </el-card>
       </el-col>
       <el-col :span="8">
@@ -87,6 +92,7 @@ import ReportGroup from '@/views/statistics/report/report-group'
 import ReportScore from '@/views/statistics/report/report-score'
 import ClassSex from '@/views/statistics/class/class-sex'
 import ClassClasses from '@/views/statistics/class/class-classes'
+import WebVisits from '@/views/statistics/visits/web-visits'
 export default {
   components: {
     ArticleType,
@@ -94,7 +100,8 @@ export default {
     ReportGroup,
     ReportScore,
     ClassSex,
-    ClassClasses
+    ClassClasses,
+    WebVisits
   },
 
   data() {
@@ -154,15 +161,12 @@ export default {
   padding: 10px 0;
   background-color: #f9fafc;
 }
-
 .text {
   font-size: 14px;
 }
-
 .item {
   margin-bottom: 18px;
 }
-
 .clearfix:before,
 .clearfix:after {
   display: table;
@@ -174,13 +178,7 @@ export default {
 .ranktable {
   width: 430px;
   height: 250px;
-
-  /* text-align: center; */
 }
-
-/* .myarticlechart{
-  background-color: red;
-} */
 .articletypecount {
   position: relative;
   float: left;
@@ -189,8 +187,7 @@ export default {
 .table-box-card {
   height: 250px;
 }
-
-/* .box-card {
-    width: 480px;
-  } */
+.visit{
+  padding-right: 20px;
+}
 </style>

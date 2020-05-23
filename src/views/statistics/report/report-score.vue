@@ -21,7 +21,7 @@ export default {
         pageSize: 20,
         currentPage: 1,
         params: {
-          userName: this.name
+          userName: ''
         }
       },
       data: [
@@ -58,10 +58,10 @@ export default {
   },
   created() {
     this.getMarkingScore()
+    this.scorepage.params.userName = this.name
   },
   methods: {
     getMarkingScore() {
-      console.log('name' + this.scorepage.params.userName)
       reportApi
         .getMarkingScore(this.scorepage)
         .then(res => {
