@@ -57,7 +57,7 @@
     <!--    底部分页栏-->
     <a-pagination
       v-model="page.currentPage"
-      :style="{ marginTop:'20px',marginLeft:'40%' }"
+      :style="{ marginTop:'20px',marginLeft:'45%' }"
       :show-total="total => `共 ${total} 条`"
       size="small"
       :page-size="page.pageSize"

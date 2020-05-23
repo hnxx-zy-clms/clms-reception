@@ -7,6 +7,7 @@
     </div>
     <!-- 右侧容器,文章内容 -->
     <div class="right-container">
+      <a-button class="go-back" @click="goBack()">返回</a-button>
       <!-- 中间区域,放置文章 -->
       <div
         v-loading="loading"
@@ -251,6 +252,9 @@ export default {
     handleCurrentChange(val) {
       this.page.currentPage = val
       this.getCommentList(this.page)
+    },
+    goBack() {
+      this.$router.go(-1)
     }
   }
 }

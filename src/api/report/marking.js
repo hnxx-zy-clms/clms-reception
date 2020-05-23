@@ -8,6 +8,20 @@ export default {
       method: 'get'
     })
   },
+  getNotMarkingReport(page) { // 查询当前用户未批阅报告
+    return request({
+      url: `/${group_name}/getNotMarkingReport`,
+      method: 'post',
+      data: page
+    })
+  },
+  getMarkingReport(page) { // 查询当前用户已批阅报告
+    return request({
+      url: `/${group_name}/getMarkingReport`,
+      method: 'post',
+      data: page
+    })
+  },
   save(report) { // 保存添加
     return request({
       url: `/${group_name}/save`,
@@ -21,11 +35,11 @@ export default {
       method: 'delete'
     })
   },
-  update(report) { // 修改更新
+  update(marking) { // 修改更新
     return request({
       url: `/${group_name}/update`,
       method: 'put',
-      data: report
+      data: marking
     })
   },
   getMarkingScore(page) {

@@ -21,6 +21,7 @@
       <div class="right-container">
         <!-- 走马灯 -->
         <div class="cneter-carousel">
+          <a-button class="do-article">创作中心</a-button>
           <a-card title="广告位" :head-style="headStyle">
             <a-carousel autoplay>
               <div>
@@ -175,6 +176,18 @@ export default {
     /* border: 1px solid #9c9ea8; */
     background-color: white;
     margin-left: 3px;
+  }
+  .do-article {
+    width: 100%;
+    height: 40px;
+    /* border: 1px solid blue; */
+    line-height: 40px;
+    background-color: #ca0c16;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 10px;
   }
 </style>
 

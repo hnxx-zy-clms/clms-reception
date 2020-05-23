@@ -3,6 +3,7 @@ const Home = () => import('../views/home/index')
 const About = () => import('../views/about/index')
 const Report = () => import('../views/report/index')
 const Answer = () => import('../views/answer')
+const QuestionInfo = () => import('../views/answer/question-info')
 const Article = () => import('../views/article/index')
 const ArticleRead = () => import('../views/article/article-read')
 const Chat = () => import('../views/chat')
@@ -87,6 +88,16 @@ export const constantRouterMap = [
     }
   },
   {
+    path: '/questionInfo/:id',
+    name: 'Question',
+    component: QuestionInfo,
+    mate: {
+      title: '问题详情',
+      icon: 'book',
+      isLoading: false
+    }
+  },
+  {
     path: '/article',
     name: 'Article',
     component: Article,
@@ -118,7 +129,7 @@ export const constantRouterMap = [
   },
   {
     path: '/reply',
-    name: 'Reply',
+    name: 'reply',
     component: Reply,
     mate: {
       title: '任务回复',

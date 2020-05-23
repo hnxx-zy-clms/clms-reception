@@ -14,7 +14,7 @@
         <div class="single-left">
           <div class="noticeTitle">{{item.noticeTitle}}</div>
           <div class="nameTime">
-            <div style="margin-right: 20px;">
+            <div style="margin-right: 20%;">
               {{item.userName}}
             </div>
             <div>
@@ -45,7 +45,7 @@ export default {
     return {
       page: {
         currentPage: 1, // 当前页
-        pageSize: 10, // 每页显示条数
+        pageSize: 13, // 每页显示条数
         totalPage: 0, // 总页数
         totalCount: 0, // 总条数
         params: {
@@ -60,7 +60,7 @@ export default {
       loading: false,
       busy: false,
       spinning: false,
-      visible: false, // 控制弹窗
+      visible: false // 控制弹窗
     }
   },
   computed: {
@@ -109,8 +109,8 @@ export default {
     border-radius: 4px;
     overflow: auto;
     padding: 8px 24px;
-    height: 525px;
-    margin-top: 20px;
+    height: 53rem;
+    margin-top: 4%;
   }
 
   .demo-loading-container {
@@ -139,6 +139,7 @@ export default {
     justify-content: flex-start;
     align-items: flex-start;
     cursor: pointer;
+    height: 10%;
   }
   .single-left {
     display: flex;

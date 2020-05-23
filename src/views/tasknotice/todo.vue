@@ -20,7 +20,7 @@
         <a-list-item slot="renderItem" slot-scope="item,index" :class="{'todoContent':item.did}">
           <a-list-item-meta :description="item.comContent">
             <a-radio v-if="item.did" slot="avatar" size="large" checked />
-            <a-radio v-else slot="avatar" size="large" :checked="checked" @click="setDid(index)" />
+            <a-radio v-else slot="avatar" size="large" :checked="checked" @click="showModal(index)" />
           </a-list-item-meta>
           <div>
             <a-icon type="close" @click="deleteTodo(index)" />
@@ -31,6 +31,18 @@
         </div>
       </a-list>
     </div>
+
+    <a-modal
+      title="完成待办"
+      :visible="visible"
+      :confirm-loading="confirmLoading"
+      ok-text="确认"
+      cancel-text="取消"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
+      <p> 确定完成了该代办吗？ </p>
+    </a-modal>
   </div>
 </template>
 
@@ -51,7 +63,10 @@ export default {
         comContent: ''
       },
       date: '', // 时间
-      checked: false // 单选框是否选中
+      checkindex: null, // 选中的待办
+      checked: false, // 单选框是否选中
+      visible: false,
+      confirmLoading: false
     }
   },
   computed: {
@@ -85,22 +100,23 @@ export default {
         })
       })
     },
-    setDid(index) {
-      const _this = this
-      this.$confirm({
-        title: '完成待办',
-        content: '确定完成了该代办吗',
-        onOk() {
-          todoApi.setDid(_this.data[index].comId).then(res => {
-            _this.data[index].did = true
-            _this.$message.info('修改成功')
-            _this.visible = false
-          })
-        },
-        onCancel() {
-          _this.checked = false
-        }
+    handleOk() {
+      this.confirmLoading = true
+      todoApi.setDid(this.data[this.checkindex].comId).then(res => {
+        this.confirmLoading = false
+        this.data[this.checkindex].did = true
+        this.$message.info('修改成功')
+        this.checkindex = null
+        this.visible = false
       })
+    },
+    showModal(index) {
+      this.checkindex = index
+      this.visible = true
+    },
+    handleCancel() {
+      this.visible = false
+      this.checkindex = null
     },
     dateFilter() { // 格式化时间
       var d = new Date()
