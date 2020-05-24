@@ -1,18 +1,32 @@
 <template>
-    <li class="chat-message">
-        <i :style="{backgroundColor:rgbColor}">{{item.sender[0]}}</i>
-        <span>{{item.sender}}</span>
-        <p>{{item.content}}</p>
+    <li class="chat-message" v-if="message.type==='CHAT'">
+        <i :style="{backgroundColor:rgbColor}">{{message.sender[0]}}</i>
+        <span>{{message.sender}}</span>
+        <p>{{message.content}}</p>
+        <!-- <a-avatar
+                 shape="square"
+                 :src="userIcon"
+                 style="color: #f56a00; backgroundColor: #fde3cf;height: 42px;width: 42px"
+         />
+         <span>   {{message.sender}}</span>
+         <span>   {{message.content}}</span>-->
+    </li>
+    <li class="event-message-join" v-else-if="message.type==='JOIN'">
+        <span>欢迎 {{message.sender}}  进入聊天室</span>
+    </li>
+    <li class="event-message-leave" v-else-if="message.type==='LEAVE'">
+        <span>{{message.sender}} 离开聊天室</span>
+    </li>
+    <li class="event-message-error" v-else="item.type==='ERROR'">
+        <span>{{message.sender}}</span>
+        <span>     {{message.content}}</span>
     </li>
 </template>
 
 <script>
     export default {
         props: {
-            item: {
-                type: Object,
-                default: null
-            },
+            message: Object
         },
         data() {
             return {
@@ -20,33 +34,48 @@
                     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
                     '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
                 ],
-                rgbColor: '#ff85af'
+                rgbColor: '#2196F3',
+                // userIcon: this.$store.getters.userIcon,
             }
         },
         methods: {
-            getAvatarColor(messageSender) {
-                var hash = 0;
-                for (var i = 0; i < messageSender.length; i++) {
+            getAvatarColor() {
+                let messageSender = message.sender
+                console.log(this.rgbColor)
+                let hash = 0;
+                for (let i = 0; i < messageSender.length; i++) {
                     hash = 31 * hash + messageSender.charCodeAt(i);
                 }
+                let index = Math.abs(hash % this.colors.length);
+                return index
 
-                var index = Math.abs(hash % this.colors.length);
-                rgbColor = this.colors[index];
             }
         },
         mounted() {
-
         }
-
-
     }
 </script>
 
 <style scoped>
-    .event-message {
+    .event-message-join {
         width: 100%;
         text-align: center;
         clear: both;
+        color: #108ee9;
+    }
+
+    .event-message-leave {
+        width: 100%;
+        text-align: center;
+        clear: both;
+        color: #878d99;
+    }
+
+    .event-message-error {
+        width: 100%;
+        text-align: center;
+        clear: both;
+        color: red;
     }
 
     .chat-message {
