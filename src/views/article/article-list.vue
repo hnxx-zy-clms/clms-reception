@@ -119,7 +119,6 @@ export default {
       this.loading = true
       articleApi.getByPage(this.page).then(res => {
         this.page = res.data
-        console.log(res)
       })
     },
     // 每页大小改变 参数 value 为每页大小(pageSize)
@@ -135,13 +134,7 @@ export default {
     },
     // 条件排序 e 和 val 都行
     changeSort(e) {
-      if (e.order) {
-        this.page.sortColumn = e.prop
-        this.page.sortMethod = e.order
-      } else {
-        this.page.sortColumn = ''
-        this.page.sortMethod = 'asc'
-      }
+      this.page.sortColumn = e.key
       this.$message.success('操作成功!')
       this.getByPage()
     }
@@ -196,13 +189,15 @@ export default {
     color: red;
   }
   .article-desc {
+    width: 100%;
     align-self: start;
     margin-bottom: 10px;
     font-size: 14px;
     color: #9c9ea8;
     line-height: 22px;
-    max-height: 90px;
+    /* max-height: 90px; */
     /* 超出隐藏 */
+    white-space: nowrap;
     overflow: hidden;
     /* 超出部分省略号 */
     text-overflow: ellipsis;

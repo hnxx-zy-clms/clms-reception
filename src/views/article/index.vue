@@ -15,10 +15,11 @@
       <!-- 中间容器 - 放文章卡片 -->
       <div class="center-container">
         <!-- 文章列表组件 -->
-        <article-list :type="type" />
+        <article-list ref="articlelist" :type="type" />
       </div>
       <!-- 右侧容器 - 放推荐与广告-->
       <div class="right-container">
+        <el-button type="primary" class="write-article" icon="el-icon-edit" @click="openAddDialog">发表文章</el-button>
         <!-- 走马灯 -->
         <div class="cneter-carousel">
           <a-card title="广告位" :head-style="headStyle">
@@ -54,16 +55,21 @@
         </a-card>
       </div>
     </div>
+    <!-- 添加弹窗 -->
+    <el-dialog width="80%" title="创作文章" :visible.sync="addDialog">
+      <article-write @closeAddDialog="closeAddDialog" @freshen="freshen" />
+    </el-dialog>
   </div>
-
 </template>
 
 <script>
 import ArticleList from '@/views/article/article-list'
+import ArticleWrite from '@/views/article/article-write'
 import typeApi from '@/api/article/type'
 export default {
   components: {
-    ArticleList
+    ArticleList,
+    ArticleWrite
   },
   data() {
     return {
@@ -78,6 +84,7 @@ export default {
         typeId: '',
         typeName: ''
       },
+      addDialog: false, // 控制添加弹窗显示
       loading: false
     }
   },
@@ -98,6 +105,19 @@ export default {
     },
     revocer() {
       this.type = {}
+    },
+    // 模块功能组件
+    openAddDialog() {
+      // 打开添加弹窗
+      this.addDialog = true
+    },
+    closeAddDialog() {
+      // 关闭添加弹窗
+      this.addDialog = false
+    },
+    // 刷新
+    freshen() {
+      this.$refs.articlelist.getByPage()
     }
   }
 }
@@ -111,7 +131,7 @@ export default {
     width: 1300px;
     /* 左右自适应 */
     margin: auto;
-    margin-top: 1px;
+    margin-top: 10px;
     margin-bottom: 20px;
   }
   .left-container {
@@ -150,7 +170,7 @@ export default {
     text-align: center;
     line-height: 32px;
     color: rgb(112,105,89);
-    margin-top: 1px;
+    margin-top: 5px;
   }
   .type-list a:hover {
     background-color:rgb(255,46,47);
@@ -175,6 +195,9 @@ export default {
     /* border: 1px solid #9c9ea8; */
     background-color: white;
     margin-left: 3px;
+  }
+  .write-article {
+    width: 100%;
   }
 </style>
 

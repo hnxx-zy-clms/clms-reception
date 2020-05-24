@@ -133,7 +133,7 @@ export default {
         padding: '0px',
         display: 'flex',
         alignItems: 'center',
-        height: '42px',
+        height: '3rem',
         width: '100%'
       }
     }
@@ -213,18 +213,18 @@ export default {
     display: flex;
     position: relative;
     justify-content: flex-start;
+    margin-top: 1%;
   }
 
   .noticetodo {
-    height: 550px;
-    flex-direction: column;
-    width: 408px;
-    margin-left: 30px;
+    height: 100%;
+    width: 30%;
+    margin-left: 2rem;
   }
   .tasksign {
-    width: 808px;
-    height: 550px;
-    margin-left: 60px;
+    width: 62%;
+    height: 100%;
+    margin-left: 3%;
     display: flex;
     flex-direction: column;
   }
@@ -256,12 +256,6 @@ export default {
     opacity: 1 !important;
   }
 
-  .ant-card {
-    display: flex;
-    justify-content: flex-start;
-    height: auto;
-    width: 100%;
-  }
   .ant-calendar-picker {
     margin-left: 20px;
   }

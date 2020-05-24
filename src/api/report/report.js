@@ -34,5 +34,12 @@ export default {
       url: `/${group_name}/getMinReportInfo`,
       method: 'post'
     })
+  },
+  getUserReportInfo(report) {
+    return request({
+      url: `/${group_name}/getUserReportInfo`,
+      method: 'post',
+      data: report
+    })
   }
 }

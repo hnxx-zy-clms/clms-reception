@@ -9,6 +9,12 @@ export default {
       data: page
     })
   },
+  getTaskContent(taskid) { // 获取任务内容
+    return request({
+      url: `/${group_name}/gettask/${taskid}`,
+      method: 'get'
+    })
+  },
   getTaskReply(taskid, userid) { // 获取学生任务回复内容
     return request({
       url: `/${group_name}/getTaskReply/${taskid}/${userid}`,
@@ -20,6 +26,13 @@ export default {
       url: `/${group_name}/saveReply`,
       method: 'post',
       data: reply
+    })
+  },
+  deleteFile(fileUrl) {
+    return request({
+      url: `/upload/deleteFile`,
+      method: 'post',
+      data: { baseUrl: fileUrl }
     })
   }
 }

@@ -8,5 +8,11 @@ export default {
       method: 'put',
       data: user
     })
+  },
+  getUserGroup(userId) { // 分页查询
+    return request({
+      url: `/user/selectByGroup/${userId}`,
+      method: 'post'
+    })
   }
 }

@@ -7,6 +7,7 @@
     </div>
     <!-- 右侧容器,文章内容 -->
     <div class="right-container">
+      <el-button class="go-back" icon="el-icon-back" @click="goBack()">返回</el-button>
       <!-- 中间区域,放置文章 -->
       <div
         v-loading="loading"
@@ -180,12 +181,10 @@ export default {
       this.page.params.commentArticle = this.article.articleId
       commentApi.getCommentList(this.page).then(res => {
         this.page = res.data
-        console.log(res)
       })
     },
     getGood() {
       goodApi.getGood(this.article.articleId).then(res => {
-        console.log(res)
         const flag = res.data
         if (flag === 0) {
           this.isGood = false
@@ -196,7 +195,6 @@ export default {
     },
     getCollection() {
       collectionApi.getCollection(this.article.articleId).then(res => {
-        console.log(res)
         const flag = res.data
         if (flag === 0) {
           this.isCollection = false
@@ -251,6 +249,9 @@ export default {
     handleCurrentChange(val) {
       this.page.currentPage = val
       this.getCommentList(this.page)
+    },
+    goBack() {
+      this.$router.go(-1)
     }
   }
 }
@@ -282,7 +283,6 @@ export default {
     min-height: 1200px;
     margin-right: 3px;
   }
-
   .right-container {
     display: flex;
     flex-direction: column;
@@ -295,7 +295,7 @@ export default {
     overflow:hidden;
     display: flex;
     flex-direction: column;
-    width: 840px;
+    width: 100%;
     min-height: 500px;
     background-color: white;
     /* border: 1px solid yellow; */
@@ -304,6 +304,8 @@ export default {
   }
   .article-content {
     margin-top: 10px;
+    height: 1000px;
+    overflow: auto;
 
   }
   .article-content img {
@@ -423,5 +425,15 @@ export default {
     /* 标识当前是否已点赞，是否已收藏 */
     color: red !important;
   }
-
+  .do-article {
+    width: 100%;
+    height: 40px;
+    /* border: 1px solid blue; */
+    line-height: 40px;
+    background-color: #ca0c16;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+  }
 </style>
