@@ -8,6 +8,12 @@
 <script>
 import Layout from './layout/Layout'
 export default {
+  // 组件页面刷新变量
+  provide() {
+    return {
+      reload: this.reload
+    }
+  },
   components: {
     Layout
   }

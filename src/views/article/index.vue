@@ -15,13 +15,13 @@
       <!-- 中间容器 - 放文章卡片 -->
       <div class="center-container">
         <!-- 文章列表组件 -->
-        <article-list :type="type" />
+        <article-list ref="articlelist" :type="type" />
       </div>
       <!-- 右侧容器 - 放推荐与广告-->
       <div class="right-container">
+        <el-button type="primary" class="write-article" icon="el-icon-edit" @click="openAddDialog">发表文章</el-button>
         <!-- 走马灯 -->
         <div class="cneter-carousel">
-          <a-button class="do-article">创作中心</a-button>
           <a-card title="广告位" :head-style="headStyle">
             <a-carousel autoplay>
               <div>
@@ -55,16 +55,21 @@
         </a-card>
       </div>
     </div>
+    <!-- 添加弹窗 -->
+    <el-dialog width="80%" title="创作文章" :visible.sync="addDialog">
+      <article-write @closeAddDialog="closeAddDialog" @freshen="freshen" />
+    </el-dialog>
   </div>
-
 </template>
 
 <script>
 import ArticleList from '@/views/article/article-list'
+import ArticleWrite from '@/views/article/article-write'
 import typeApi from '@/api/article/type'
 export default {
   components: {
-    ArticleList
+    ArticleList,
+    ArticleWrite
   },
   data() {
     return {
@@ -79,6 +84,7 @@ export default {
         typeId: '',
         typeName: ''
       },
+      addDialog: false, // 控制添加弹窗显示
       loading: false
     }
   },
@@ -99,6 +105,19 @@ export default {
     },
     revocer() {
       this.type = {}
+    },
+    // 模块功能组件
+    openAddDialog() {
+      // 打开添加弹窗
+      this.addDialog = true
+    },
+    closeAddDialog() {
+      // 关闭添加弹窗
+      this.addDialog = false
+    },
+    // 刷新
+    freshen() {
+      this.$refs.articlelist.getByPage()
     }
   }
 }
@@ -177,17 +196,8 @@ export default {
     background-color: white;
     margin-left: 3px;
   }
-  .do-article {
+  .write-article {
     width: 100%;
-    height: 40px;
-    /* border: 1px solid blue; */
-    line-height: 40px;
-    background-color: #ca0c16;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
   }
 </style>
 

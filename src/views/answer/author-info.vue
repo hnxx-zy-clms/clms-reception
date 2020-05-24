@@ -1,6 +1,5 @@
 <template>
   <div>
-    <a-button class="do-question">我要提问</a-button>
     <!-- 我的问答 -->
     <div class="my-answer-container">
       <a-card hoverable>

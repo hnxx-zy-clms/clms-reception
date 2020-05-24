@@ -17,7 +17,7 @@
       element-loading-text="拼命加载中"
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(255, 255, 255, 0.8)"
-      style="height: 1000px"
+      style="min-height: 520px"
     >
       <!-- 问题卡片 -->
       <a-card v-for="item in page.list" :key="item.questionId" class="question-card">
@@ -96,7 +96,6 @@ export default {
       this.loading = true
       questionApi.getByPage(this.page).then(res => {
         this.page = res.data
-        console.log(res)
         this.loading = false
       })
     },
@@ -144,6 +143,7 @@ export default {
     margin-bottom: 3px;
   }
   .question-description {
+    max-width: 600px;
     font-size: 16px;
     overflow: hidden;
     text-overflow: ellipsis;

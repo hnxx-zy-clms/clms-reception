@@ -5,23 +5,31 @@
       <!-- 左侧容器 - 放置问题列表 -->
       <div class="left-container">
         <!-- 问题列表组件 -->
-        <question-list />
+        <question-list ref="questionlist" />
       </div>
       <!-- 右侧容器 - 我的问答 -->
       <div class="right-container">
+        <el-button type="primary" class="write-question" icon="el-icon-edit" @click="openAddDialog">我要提问</el-button>
         <author-info />
       </div>
     </div>
+
+    <!-- 添加弹窗 -->
+    <el-dialog width="80%" title="发表问题" :visible.sync="addDialog">
+      <question-write ref="questionwrite" @closeAddDialog="closeAddDialog" @freshen="freshen" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import QuestionList from '@/views/answer/question-list'
 import AuthorInfo from '@/views/answer/author-info'
+import QuestionWrite from './question-write'
 export default {
   components: {
     QuestionList,
-    AuthorInfo
+    AuthorInfo,
+    QuestionWrite
   },
   data() {
     return {
@@ -31,7 +39,23 @@ export default {
         lineHeight: '15px',
         borderLeft: '5px solid #409eff'
       },
+      addDialog: false, // 控制添加弹窗显示
       loading: false
+    }
+  },
+  methods: {
+    // 模块功能组件
+    openAddDialog() {
+      // 打开添加弹窗
+      this.addDialog = true
+    },
+    closeAddDialog() {
+      // 关闭添加弹窗
+      this.addDialog = false
+    },
+    freshen() {
+      this.$refs.questionlist.getByPage()
+      console.log('父组件执行了刷新')
     }
   }
 
@@ -57,5 +81,8 @@ export default {
     /* border: 1px solid green; */
     width: 350px;
     margin-left: 5px;
+  }
+  .write-question {
+    width: 100%;
   }
 </style>
