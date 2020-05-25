@@ -17,12 +17,12 @@
       <a-divider>任务内容</a-divider>
       <div class="taskContent" v-html="task.taskContent" />
       <div v-if="task.fileName" class="taskFile">
-        <a :href="task.fileUrl+'?filename='+task.fileName"><el-button type="primary">下载附件<i class="el-icon-upload el-icon--right" /></el-button></a>
+        <a :href="task.fileUrl+'?filename='+task.fileName" v-if="task.fileUrl"><el-button type="primary">下载附件<i class="el-icon-upload el-icon--right" /></el-button></a>
       </div>
       <a-divider>回复内容</a-divider>
       <div v-if="type==1">
         <div class="replyContent" v-html="reply.replyContent" />
-        <a :href="reply.fileUrl+'?filename='+reply.fileName"><el-button type="primary">下载附件<i class="el-icon-upload el-icon--right" /></el-button></a>
+        <a :href="reply.fileUrl+'?filename='+reply.fileName" v-if="reply.fileUrl"><el-button type="primary">下载附件<i class="el-icon-upload el-icon--right" /></el-button></a>
       </div>
       <template v-else>
         <editor :catch-data="catchData" :content="sendReply.replyContent" />

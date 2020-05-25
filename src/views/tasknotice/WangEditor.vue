@@ -28,7 +28,7 @@ export default {
       this.catchData(this.editorContent) // 把这个html通过catchData的方法传入父组件
     }
     /* 'http://localhost:8066/upload/uploadImage'*/
-    this.editor.customConfig.uploadImgServer = process.env.VUE_APP_UPLOAD_URL2
+    this.editor.customConfig.uploadImgServer = process.env.VUE_APP_UPLOAD_URL_IMAGE
     this.editor.customConfig.uploadImgHeaders = {
       'Authorization': getToken()
     }
