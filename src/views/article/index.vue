@@ -22,8 +22,8 @@
         <el-button type="primary" class="write-article" icon="el-icon-edit" @click="openAddDialog">发表文章</el-button>
         <!-- 走马灯 -->
         <div class="cneter-carousel">
-          <a-card title="广告位" :head-style="headStyle">
-            <a-carousel autoplay>
+          <a-card title="广告位" :head-style="headStyle" :body-style="adStyle">
+            <a-carousel autoplay effect="fade">
               <div>
                 <img src="@/assets/img/1.jpg" class="carousel-img">
               </div>
@@ -39,20 +39,25 @@
             </a-carousel>
           </a-card>
         </div>
-        <a-card title="推荐阅读" :head-style="headStyle">
-          <a-card title="Inner card title">
-            <a slot="extra" href="#">More</a>
-            Inner Card content
+        <div class="recom-read">
+          <a-card title="推荐阅读" :head-style="headStyle" :body-style="recomStyle">
+            <div
+              class=" recom-list"
+            >
+              <a-card v-for="item in page.list" :key="item.articleId" :body-style="recomStyle" class="article-card">
+                <div class="article-main">
+                  <div v-if="item.articleImage" class="article-image">
+                    <img :src="item.articleImage" class="article-cover">
+                  </div>
+                  <router-link :to="'articleRead/'+item.articleId" class="item.articleImage ? 'image-article' : 'no-image-article'">
+                    <!-- 文章标题 -->
+                    <div class="article-title">{{ item.articleTitle }}</div>
+                  </router-link>
+                </div>
+              </a-card>
+            </div>
           </a-card>
-          <a-card title="Inner card title">
-            <a slot="extra" href="#">More</a>
-            Inner Card content
-          </a-card>
-          <a-card title="Inner card title">
-            <a slot="extra" href="#">More</a>
-            Inner Card content
-          </a-card>
-        </a-card>
+        </div>
       </div>
     </div>
     <!-- 添加弹窗 -->
@@ -66,6 +71,7 @@
 import ArticleList from '@/views/article/article-list'
 import ArticleWrite from '@/views/article/article-write'
 import typeApi from '@/api/article/type'
+import articleApi from '@/api/article/article'
 export default {
   components: {
     ArticleList,
@@ -79,10 +85,26 @@ export default {
         lineHeight: '15px',
         borderLeft: '5px solid #409eff'
       },
+      adStyle: {
+        padding: '10px'
+      },
+      recomStyle: {
+        padding: '5px'
+      },
       typeList: [],
       type: {
         typeId: '',
         typeName: ''
+      },
+      page: {
+        currentPage: 1,
+        pageSize: 15,
+        totalCount: 0,
+        totalPage: 0,
+        params: {},
+        sortColumn: 'articleRead',
+        sortMethod: 'desc',
+        list: []
       },
       addDialog: false, // 控制添加弹窗显示
       loading: false
@@ -90,6 +112,7 @@ export default {
   },
   created() {
     this.getTypeList()
+    this.getRecomRead()
   },
   methods: {
     getTypeList() {
@@ -118,12 +141,27 @@ export default {
     // 刷新
     freshen() {
       this.$refs.articlelist.getByPage()
+    },
+    // 推荐阅读列表 阅读最多
+    getRecomRead() {
+      articleApi.getByPage(this.page).then(res => {
+        this.page = res.data
+        console.log(res)
+      })
     }
   }
 }
 </script>
 
 <style scoped>
+  /* 滚动条的宽度 */
+  ::-webkit-scrollbar {
+    width: 2px;
+  }
+  /* 滚动条滑块样式 */
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(226, 243, 247) !important;
+  }
   .article-container {
     display: flex;
     flex-direction: row;
@@ -135,7 +173,7 @@ export default {
     margin-bottom: 20px;
   }
   .left-container {
-    width: 100px;
+    width: 120px;
     height: 888px;
     margin-right: 3px;
     background-color: white;
@@ -143,7 +181,9 @@ export default {
     flex-direction: column;
   }
   .type-list {
+    overflow: auto;
     list-style: none;
+    width: 100%;
     padding: 0;
   }
   .type-tag {
@@ -157,6 +197,8 @@ export default {
     margin-bottom: 2px;
   }
   .top-type-tag {
+    /* position: fixed; */
+    cursor: pointer;
     color: rgb(255, 255, 255);
     background-color: rgb(255,46,47);
     font-size: 16px;
@@ -198,6 +240,59 @@ export default {
   }
   .write-article {
     width: 100%;
+  }
+  .recom-list {
+    height: 520px;
+    width: 338px;
+    overflow: auto;
+  }
+  .article-main {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .author-img {
+    width: 36px;
+    height: 36px;
+    margin-right: 15px;
+  }
+  .article-author {
+    font-size: 16px;
+  }
+  .article-title {
+    height: 42px;
+    max-width: 324px;
+    align-self: start;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* 强制div文本换行 */
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
+  }
+  .article-image {
+    width: 65px;
+    height:45px;
+    margin-right: 10px;
+  }
+  .article-cover {
+    width: 65px;
+    height:45px;
+    border-radius: 5px;
+  }
+  .image-article {
+    width: 550px;
+    min-height: 45px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+  .no-image-article {
+    width: 100%;
+    min-height: 45px;
   }
 </style>
 

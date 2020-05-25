@@ -227,7 +227,6 @@ export default {
     height:110px;
     border-radius: 5px;
   }
-
   .author-container {
     display: flex;
     flex-direction: row;
@@ -235,11 +234,15 @@ export default {
     align-items: center;
   }
   .image-article {
-    width: 550px;
+    width: 562px;
     min-height: 100px;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+  }
+  .article-container {
+    min-width: 812px;
+    min-height: 110px;
   }
   .author-img {
     width: 36px;

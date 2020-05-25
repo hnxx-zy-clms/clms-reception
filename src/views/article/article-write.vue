@@ -1,8 +1,8 @@
 <template>
   <div class="write-article-container">
     <!--添加表单  -->
-    <el-form ref="addForm" :model="article" label-width="80px" size="mini">
-      <el-form-item label="标题" style="width: 80%">
+    <el-form ref="addForm" :model="article" label-width="40px" size="mini">
+      <el-form-item label="标题" style="width: 50%">
         <el-input v-model="article.articleTitle" />
       </el-form-item>
       <el-form-item label="分类">

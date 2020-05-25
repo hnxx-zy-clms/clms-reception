@@ -3,7 +3,7 @@
   <div class="read-container">
     <!-- 左侧容器,作者信息介绍 -->
     <div class="left-container">
-      <author-info />
+      <author-info :autohr="article.articleAuthor" />
     </div>
     <!-- 右侧容器,文章内容 -->
     <div class="right-container">
@@ -44,7 +44,7 @@
       <!-- 底部区域,放置评论 -->
       <div class="do-comment-container">
         <div class="user-comment">
-          <a-textarea v-model="content" placeholder="请输入内容，不超过300字" :rows="4" />
+          <a-textarea v-model="content" placeholder="请输入内容，不超过300字" :rows="3" />
           <div class="comment-button">
             <a-button type="primary" @click="saveComment(content)">发表评论</a-button>
             <div v-show="countShow" class="content-count">
@@ -66,7 +66,7 @@
         </div>
         <!-- 评论列表容器 -->
         <div class="comment-list-container">
-          <a-card v-for="item in page.list" :key="item.commentId" style="width: 100%">
+          <a-card v-for="item in page.list" :key="item.commentId" :body-style="commentStyle" style="width: 100%">
             <div class="comment-main">
               <div class="comment-header">
                 <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
@@ -108,6 +108,9 @@ export default {
   },
   data() {
     return {
+      commentStyle: {
+        padding: '10px'
+      },
       user: this.$store.getters.getUser,
       isGood: false, // 判断是否已经点赞
       isCollection: false, // 判断是否已经收藏
@@ -268,26 +271,26 @@ export default {
   .read-container {
     display: flex;
     flex-direction: row;
-    min-height: 1200px;
+    min-height: 900px;
     width: 1200px;
     /* border: 1px solid red; */
     /* 左右自适应 */
     margin: auto;
     margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   .left-container {
     display: flex;
     flex-direction: column;
     width: 350px;
-    min-height: 1200px;
+    min-height: 900px;
     margin-right: 3px;
   }
   .right-container {
     display: flex;
     flex-direction: column;
     width: 850px;
-    min-height: 1200px;
+    min-height: 900px;
     margin-left: 3px;
     /* border: 1px solid green; */
   }
@@ -304,9 +307,8 @@ export default {
   }
   .article-content {
     margin-top: 10px;
-    height: 1000px;
+    max-height: 1000px;
     overflow: auto;
-
   }
   .article-content img {
     vertical-align: middle;
@@ -415,7 +417,7 @@ export default {
     margin-top: 5px;
   }
   .comment-pagination {
-    margin-top: 5px;
+    margin-top: 10px;
   }
   .meta-active {
     /* 标识当前是否已点赞，是否已收藏 */
@@ -435,5 +437,15 @@ export default {
     text-align: center;
     font-size: 14px;
     color: #fff;
+  }
+  /* 滚动条的宽度 */
+  ::-webkit-scrollbar {
+    width: 2px;
+    height: 10px;
+  }
+  /* 滚动条滑块样式 */
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(121, 216, 240);
+    border-radius: 3px;
   }
 </style>

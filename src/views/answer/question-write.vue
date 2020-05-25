@@ -1,11 +1,13 @@
 <template>
   <div class="write-question-container">
     <!--添加表单  -->
-    <el-form ref="addForm" :model="question" label-width="80px" size="mini">
-      <el-form-item label="描述">
-        <el-input v-model="question.questionDescription" type="textarea" />
+    <el-form ref="addForm" :model="question" size="mini">
+      <a-divider>问题描述</a-divider>
+      <el-form-item>
+        <el-input v-model="question.questionDescription" type="textarea" rows="1" />
       </el-form-item>
-      <el-form-item label="内容">
+      <a-divider>问题内容</a-divider>
+      <el-form-item>
         <tinymce v-model="question.questionContent" type="textarea" />
       </el-form-item>
       <el-form-item>
