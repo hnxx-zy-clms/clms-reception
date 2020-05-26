@@ -12,50 +12,49 @@
     </div>
     <!-- 问题列表 -->
     <div
-      v-loading="loading"
       class="question-list"
-      element-loading-text="拼命加载中"
-      element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(255, 255, 255, 0.8)"
       style="min-height: 520px"
     >
-      <!-- 问题卡片 -->
-      <a-card v-for="item in page.list" :key="item.questionId" class="question-card">
-        <div>
-          <router-link :to="'questionInfo/'+item.questionId" class="question-main">
-            <!-- 左侧提问人头像 flex-start -->
-            <div class="question-author-img">
-              <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
+      <a-spin :spinning="loading" style="height: 888px">
+        <div class="spin-content">
+          <!-- 问题卡片 -->
+          <a-card v-for="item in page.list" :key="item.questionId" class="question-card">
+            <div>
+              <router-link :to="'questionInfo/'+item.questionId" class="question-main">
+                <!-- 左侧提问人头像 flex-start -->
+                <div class="question-author-img">
+                  <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
+                </div>
+                <!-- 右侧问题主体 space-between link位置 -->
+                <div class="question-container">
+                  <!-- 上层信息 row -->
+                  <div class="question-top-content">
+                    <!-- 问题状态标记 -->
+                    <div class="question-mark">
+                      <a-tag v-if="item.questionMark===0" color="red">未解答</a-tag>
+                      <a-tag v-if="item.questionMark===1" color="green">已解答</a-tag>
+                    </div>
+                    <!-- 问题标题/描述 -->
+                    <div class="question-description">{{ item.questionDescription }}</div>
+                  </div>
+                  <!-- 下层信息 -->
+                  <div class="question-bottom-content">
+                    <div class="question-meta">
+                      <div class="author-name">{{ item.questionAuthor }}</div>
+                      <!-- <div class="author-type">学生</div> -->
+                      <div class="question-time">{{ item.questionTime }}</div>
+                    </div>
+                    <div class="question-action">
+                      <a-icon class="action-icon" type="like" /><span class="count-num"> {{ item.questionGood }} </span>
+                      <a-icon class="action-icon" type="message" /><span class="count-num"> {{ item.answerCount }} </span>
+                    </div>
+                  </div>
+                </div>
+              </router-link>
             </div>
-            <!-- 右侧问题主体 space-between link位置 -->
-            <div class="question-container">
-              <!-- 上层信息 row -->
-              <div class="question-top-content">
-                <!-- 问题状态标记 -->
-                <div class="question-mark">
-                  <a-tag v-if="item.questionMark===0" color="red">未解答</a-tag>
-                  <a-tag v-if="item.questionMark===1" color="green">已解答</a-tag>
-                </div>
-                <!-- 问题标题/描述 -->
-                <div class="question-description">{{ item.questionDescription }}</div>
-              </div>
-              <!-- 下层信息 -->
-              <div class="question-bottom-content">
-                <div class="question-meta">
-                  <div class="author-name">{{ item.questionAuthor }}</div>
-                  <!-- <div class="author-type">学生</div> -->
-                  <div class="question-time">{{ item.questionTime }}</div>
-                </div>
-                <div class="question-action">
-                  <a-icon class="action-icon" type="like" /><span class="count-num"> {{ item.questionGood }} </span>
-                  <a-icon class="action-icon" type="message" /><span class="count-num"> {{ item.answerCount }} </span>
-                </div>
-              </div>
-            </div>
-          </router-link>
-
+          </a-card>
         </div>
-      </a-card>
+      </a-spin>
     </div>
     <el-pagination
       align="center"

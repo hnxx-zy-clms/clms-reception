@@ -20,44 +20,43 @@
       </div>
     </div>
     <!-- 文案列表容器 -->
-    <div
-      v-loading="loading"
-      element-loading-text="拼命加载中"
-      element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(255, 255, 255, 0.8)"
-      style="height: 750px"
-    >
-      <!-- 文章卡片 -->
-      <a-card v-for="item in page.list" :key="item.articleId" :body-style="articleBodyStyle" class="article-card">
-        <div class="article-main">
-          <div v-if="item.articleImage" class="article-image">
-            <img :src="item.articleImage" class="article-cover">
-          </div>
-          <router-link :to="'articleRead/'+item.articleId" :class="item.articleImage ? 'image-article' : 'article-container'">
-            <!-- 文章标题 -->
-            <div class="article-title">{{ item.articleTitle }}</div>
-            <div class="article-desc">{{ item.articleDesc }}</div>
-            <div class="article-bottom">
-              <div class="author-container">
-                <div class="author-header">
-                  <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
-                </div>
-                <div class="article-author">作者：{{ item.articleAuthor }}</div>
+    <div>
+      <a-spin :spinning="loading" style="height: 750px">
+        <div class="spin-content">
+          <!-- 文章卡片 -->
+          <a-card v-for="item in page.list" :key="item.articleId" :body-style="articleBodyStyle" class="article-card">
+            <div class="article-main">
+              <div v-if="item.articleImage" class="article-image">
+                <img :src="item.articleImage" class="article-cover">
               </div>
-              <!-- 文章标签 -->
-              <div class="article-meta">
-                <div class="created-time">{{ item.createdTime }}</div>
-                <div class="article-other">
-                  <a-icon class="action-icon" type="eye" /><span class="count-num"> {{ item.articleRead }}</span>
-                  <a-icon class="action-icon" type="heart" /><span class="count-num"> {{ item.articleCollection }}</span>
-                  <a-icon class="action-icon" type="like" /><span class="count-num"> {{ item.articleGood }}</span>
-                  <a-icon class="action-icon" type="message" /><span class="count-num"> {{ item.articleComment }}</span>
+              <router-link :to="'articleRead/'+item.articleId" :class="item.articleImage ? 'image-article' : 'article-container'">
+                <!-- 文章标题 -->
+                <div class="article-title">{{ item.articleTitle }}</div>
+                <div class="article-desc">{{ item.articleDesc }}</div>
+                <div class="article-bottom">
+                  <div class="author-container">
+                    <div class="author-header">
+                      <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
+                    </div>
+                    <div class="article-author">作者：{{ item.articleAuthor }}</div>
+                  </div>
+                  <!-- 文章标签 -->
+                  <div class="article-meta">
+                    <div class="created-time">{{ item.createdTime }}</div>
+                    <div class="article-other">
+                      <a-icon class="action-icon" type="eye" /><span class="count-num"> {{ item.articleRead }}</span>
+                      <a-icon class="action-icon" type="heart" /><span class="count-num"> {{ item.articleCollection }}</span>
+                      <a-icon class="action-icon" type="like" /><span class="count-num"> {{ item.articleGood }}</span>
+                      <a-icon class="action-icon" type="message" /><span class="count-num"> {{ item.articleComment }}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </router-link>
             </div>
-          </router-link>
+          </a-card>
         </div>
-      </a-card>
+      </a-spin>
+
     </div>
     <el-pagination
       align="center"
@@ -147,6 +146,7 @@ export default {
     color: #349edf;
   }
   .scree-container {
+    width: 850px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
