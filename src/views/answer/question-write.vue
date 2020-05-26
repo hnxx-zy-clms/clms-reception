@@ -20,7 +20,7 @@
 
 <script>
 import questionApi from '@/api/answer/question'
-import Tinymce from '@/components/Tinymce/index'
+import Tinymce from '@/views/common/Tinymce/index'
 export default {
   // 注册组件
   components: {

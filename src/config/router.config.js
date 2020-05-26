@@ -13,6 +13,7 @@ const Task = () => import('../views/tasknotice/index')
 const Reply = () => import('../views/tasknotice/reply')
 const Register = () => import('../views/register/index')
 const NotFoundComponent = () => import('../views/exception/404')
+const Search = () => import('../views/search/index')
 
 /**
  * 基础路由
@@ -114,6 +115,16 @@ export const constantRouterMap = [
     mate: {
       title: '阅读文章',
       icon: 'book',
+      isLoading: false
+    }
+  },
+  {
+    path: '/search/index',
+    name: 'Search',
+    component: Search,
+    mate: {
+      title: '搜索',
+      icon: 'search',
       isLoading: false
     }
   },

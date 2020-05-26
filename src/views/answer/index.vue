@@ -55,7 +55,6 @@ export default {
     },
     freshen() {
       this.$refs.questionlist.getByPage()
-      console.log('父组件执行了刷新')
     }
   }
 
@@ -76,6 +75,7 @@ export default {
     /* border: 1px solid red; */
     width: 850px;
     margin-right: 5px;
+    background-color: white;
   }
   .right-container {
     /* border: 1px solid green; */

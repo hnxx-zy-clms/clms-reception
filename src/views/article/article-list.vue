@@ -56,7 +56,6 @@
           </a-card>
         </div>
       </a-spin>
-
     </div>
     <el-pagination
       align="center"
