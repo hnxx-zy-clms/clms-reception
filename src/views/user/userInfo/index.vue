@@ -22,7 +22,7 @@ export default {
       headers: { // 上传文件的请求头
         Authorization: this.$store.getters.token
       },
-      uploadUrl: process.env.VUE_APP_UPLOAD_URL,
+      uploadUrl: process.env.VUE_APP_UPLOAD_URL_IMAGE ,
       imageUrl: this.$store.getters.userIcon,
       user: {
         userId: '',

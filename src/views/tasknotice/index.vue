@@ -213,6 +213,7 @@ export default {
     display: flex;
     position: relative;
     justify-content: flex-start;
+    margin-bottom: 1%;
     margin-top: 1%;
   }
 

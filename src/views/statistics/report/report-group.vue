@@ -22,7 +22,7 @@ export default {
         params: {
           reportType: 0,
           userClassesId: 1,
-          userGroupId: 2,
+          userGroupId: 1,
           isClasses: 0,
           time: moment(new Date()).format('YYYY-MM-DD')
         }

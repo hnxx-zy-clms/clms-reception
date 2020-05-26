@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <a-skeleton :style="{minWidth:'225px'}" :paragraph="{ rows: 4}" :loading="loading" active>
     <a-comment>
       <a slot="author">{{ reportMarking.groupName }} {{ reportMarking.groupLeaderScore }} 分</a>
       <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
@@ -30,7 +30,7 @@
         <span>{{ reportMarking.teacherTime }}</span>
       </a-tooltip>
     </a-comment>
-  </div>
+  </a-skeleton>
 </template>
 
 <script>
@@ -44,6 +44,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       reportMarking: {}
     }
   },
@@ -54,6 +55,7 @@ export default {
     getUserMarkingById(reportId) {
       MarkingApi.getUserMarkingById(reportId).then(res => {
         this.reportMarking = res.data
+        this.loading = false
       })
     }
   }
