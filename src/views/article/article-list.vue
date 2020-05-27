@@ -255,7 +255,7 @@ export default {
     margin-left: 10px;
   }
   .pagination {
-    margin-top: 20px;
+    margin-top: 25px;
   }
   .article-card {
     margin-bottom: 1px;
