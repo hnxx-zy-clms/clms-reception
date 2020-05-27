@@ -16,15 +16,15 @@
     </div>
     <div class="search-content">
       <div class="card-list">
-        <a-spin :spinning="loading" style="height: 100%">
+        <a-spin :spinning="loading" style="min-height: 300px">
           <div class="spin-content">
             <div v-if="(current+'') == 'article'">
               <!-- 文章卡片 -->
-              <article-card :page="searchPage" />
+              <article-card :page="searchPage" @baseSearch="baseSearch" />
             </div>
             <!-- 问答卡片 -->
             <div v-if="(current+'') == 'answer'">
-              <answer-card :page="searchPage" />
+              <answer-card :page="searchPage" @baseSearch="baseSearch" />
             </div>
           </div>
         </a-spin>
@@ -53,7 +53,7 @@ export default {
       searchPage: {
         keyword: '测试',
         pageNo: 1,
-        pageSize: 15,
+        pageSize: 10,
         params: 'articleTitle',
         // params: 'questionDescription',
         index: 'clms_article_index',

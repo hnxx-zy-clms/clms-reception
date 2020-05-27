@@ -55,7 +55,7 @@
                       <div v-if="item.articleImage" class="article-image">
                         <img :src="item.articleImage" class="article-cover">
                       </div>
-                      <router-link :to="'articleRead/'+item.articleId" class="item.articleImage ? 'image-article' : 'no-image-article'">
+                      <router-link :to="{ path: '/articleRead/' + item.articleId}" class="item.articleImage ? 'image-article' : 'no-image-article'">
                         <!-- 文章标题 -->
                         <div class="article-title">{{ item.articleTitle }}</div>
                       </router-link>

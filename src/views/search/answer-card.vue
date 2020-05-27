@@ -2,7 +2,7 @@
   <div>
     <a-card v-for="item in page.list" :key="item.questionId" class="question-card">
       <div>
-        <router-link :to="'questionInfo/'+item.questionId" class="question-main">
+        <router-link :to="{ path: '/questionRead/' + item.questionId}" class="question-main">
           <!-- 左侧提问人头像 flex-start -->
           <div class="question-author-img">
             <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">

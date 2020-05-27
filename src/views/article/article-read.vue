@@ -3,7 +3,7 @@
   <div class="read-container">
     <!-- 左侧容器,作者信息介绍 -->
     <div class="left-container">
-      <author-info :autohr="article.articleAuthor" />
+      <author-info :autohr="author" />
     </div>
     <!-- 右侧容器,文章内容 -->
     <div class="right-container">
@@ -108,6 +108,7 @@ export default {
   },
   data() {
     return {
+      author: '',
       commentStyle: {
         padding: '10px'
       },
@@ -177,6 +178,7 @@ export default {
       this.id = this.$route.params.id
       articleApi.read(this.id).then(res => {
         this.article = res.data
+        this.author = res.data.articleAuthor
         this.loading = false
       })
     },

@@ -5,7 +5,8 @@
         <div v-if="item.articleImage" class="article-image">
           <img :src="item.articleImage" class="article-cover">
         </div>
-        <router-link :to="'articleRead/'+item.articleId" :class="item.articleImage ? 'image-article' : 'article-container'">
+        <!-- <router-link :to="'articleRead/'+item.articleId" append :class="item.articleImage ? 'image-article' : 'article-container'"> -->
+        <router-link :to="{ path: '/articleRead/' + item.articleId}" append :class="item.articleImage ? 'image-article' : 'article-container'">
           <!-- 文章标题 -->
           <div class="article-title" v-html="item.articleTitle" />
           <div class="article-desc">{{ item.articleDesc }}</div>
@@ -34,7 +35,10 @@
 </template>
 
 <script>
+// import searchApi from '@/api/search/search'
+import infiniteScroll from 'vue-infinite-scroll'
 export default {
+  directives: { infiniteScroll },
   props: {
     page: {
       type: Object,
@@ -45,14 +49,42 @@ export default {
     return {
       cardBodyStyle: {
         padding: '18px'
-      }
+      },
+      searchPage: {
+        keyword: '',
+        pageNo: 1,
+        pageSize: 10,
+        params: 'articleTitle',
+        index: 'clms_article_index',
+        list: []
+      },
+      data: [],
+      loading: false,
+      busy: false
+    }
+  },
+  created() {
+    this.data = this.page.list
+    this.searchPage.pageNo = this.page.pageNo
+  },
+  methods: {
+    handleInfiniteOnLoad() {
+      // this.loading = true
+      // this.searchPage.pageNo += 1
+      // this.searchPage.keyword = this.page.keyword
+      // this.searchPage.pageNo++
+      // searchApi.baseSearch(this.searchPage).then(res => {
+      //   this.loading = false
+      //   console.log(res)
+      // })
+      // this.loading = false
     }
   }
 }
 </script>
 
 <style scoped>
-    .article-main {
+  .article-main {
     display: flex;
     flex-direction: row;
     align-items: center;

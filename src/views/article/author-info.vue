@@ -35,7 +35,7 @@
               <div v-if="item.articleImage" class="article-image">
                 <img :src="item.articleImage" class="article-cover">
               </div>
-              <router-link :to="'articleRead/'+item.articleId" class="item.articleImage ? 'image-article' : 'no-image-article'">
+              <router-link :to="{ path: '/articleRead/' + item.articleId}" class="item.articleImage ? 'image-article' : 'no-image-article'">
                 <!-- 文章标题 -->
                 <div class="article-title">{{ item.articleTitle }}</div>
               </router-link>
@@ -69,11 +69,11 @@ export default {
       },
       page: {
         currentPage: 1,
-        pageSize: 15,
+        pageSize: 10,
         totalCount: 0,
         totalPage: 0,
         params: {
-          articleAuthor: ''
+          articleAuthor: 'admin'
         },
         sortColumn: 'articleRead',
         sortMethod: 'desc',
@@ -83,6 +83,8 @@ export default {
   },
   created() {
     this.getRecomRead()
+    this.page.params.articleAuthor = this.author
+    console.log(this.author)
   },
   methods: {
     // 推荐阅读列表 阅读最多
@@ -164,7 +166,7 @@ export default {
   }
   .recom-list {
     /* max-height: 780px; */
-    min-height: 700px;
+    min-height: 600px;
     width: 338px;
     overflow: auto;
   }
