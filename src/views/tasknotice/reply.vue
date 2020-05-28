@@ -35,14 +35,17 @@
           :before-remove="beforeMove"
           :on-remove="handleRemove"
           :on-success="uploadSuccess"
+          :before-upload="beforeUpload"
           :file-list="newFileList"
           :limit="1"
           :on-exceed="overmaxFile"
           :auto-upload="true"
         >
           <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+          <a-spin tip="上传中" :spinning="spinningFile">
+          </a-spin>
         </el-upload>
-        <a-button type="link" @click="submitReply()">提交</a-button>
+        <a-button type="link" @click="submitReply()" :disabled="spinningFile">提交</a-button>
       </template>
       <a-spin :spinning="spinning" />
     </a-card>
@@ -63,11 +66,12 @@ export default {
       type: 1,
       taskid: this.$route.query.taskid,
       task: '',
-      reply: '',
+      reply: '', // 服务器获取的回复内容
       sendReply: {
-        replyContent: ''
+        replyContent: '' // 提交的回复内容
       },
       spinning: false,
+      spinningFile: false,
       uploadUrl: process.env.VUE_APP_UPLOAD_URL_FILE,
       header: { Authorization: getToken() }
     }
@@ -80,7 +84,6 @@ export default {
         list[0].url = this.reply.fileUrl
         return list
       } else {
-        console.log('0' + 's')
         return undefined
       }
     },
@@ -128,6 +131,11 @@ export default {
       this.sendReply.taskId = this.taskid
       this.sendReply.userId = this.userId
       this.spinning = true
+      if (this.sendReply.replyContent === '' || this.sendReply.replyContent == null) {
+        this.spinning = false
+        this.$message.warning('请填写内容')
+        return
+      }
       taskApi.submitReply(this.sendReply).then(res => {
         this.spinning = false
         this.$router.go(0)
@@ -139,7 +147,11 @@ export default {
     uploadSuccess(response, file, fileList) {
       this.sendReply.fileUrl = response.data
       this.sendReply.fileName = file.name
+      this.spinningFile = false
       this.$message.success('上传成功')
+    },
+    beforeUpload(file) {
+      this.spinningFile = true
     },
     beforeMove(file, fileList) {
       if (typeof file.response !== 'undefined') {
@@ -161,6 +173,7 @@ export default {
       }
     },
     handleRemove(fileList) {
+      this.spinningFile = false
       this.fileList = fileList
     },
     overmaxFile(file, fileList) {
