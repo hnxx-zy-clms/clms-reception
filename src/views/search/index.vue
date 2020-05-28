@@ -116,7 +116,7 @@ export default {
     /* 1.居中对齐 以(水平)中轴为参照对齐 【子元素垂直居中】 */
     align-items: center;
     /* 线性渐变 */
-    background-image: linear-gradient(to right,#acddd9,#98bbdb);
+    background-image: linear-gradient(to right,#e8f1f1,#d2dde7);
   }
   .search-icon {
     width: 300px;
@@ -141,7 +141,7 @@ export default {
     100% {
         background-position: -100%  0;
     }
-}
+  }
   .search-box {
     width: 300px;
     height: 50px;
@@ -154,7 +154,7 @@ export default {
   .search-content {
     display: flex;
     width: 80%;
-    min-height: 500px;
+    min-height: 690px;
     max-height: 900px;
     overflow: auto;
     justify-content: center;

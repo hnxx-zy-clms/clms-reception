@@ -117,6 +117,7 @@ export default {
   }
   .question-list {
     width: 100%;
+    height: 1000px;
     /* border: 1px solid green; */
   }
   .question-main {
@@ -173,6 +174,6 @@ export default {
     color: #349edf;
   }
   .question-pagination {
-      margin-top: 20px;
+      margin-top: 10px;
   }
 </style>

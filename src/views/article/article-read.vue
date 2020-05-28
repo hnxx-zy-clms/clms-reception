@@ -7,39 +7,34 @@
     </div>
     <!-- 右侧容器,文章内容 -->
     <div class="right-container">
-      <el-button class="go-back" icon="el-icon-back" @click="goBack()">返回</el-button>
+      <a-button class="go-back" icon="el-icon-back" @click="goBack()">返回</a-button>
       <!-- 中间区域,放置文章 -->
-      <div
-        v-loading="loading"
-        class="article-container"
-        element-loading-text="拼命加载中"
-        element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(255, 255, 255, 0.8)"
-        style="min-height: 520px"
-      >
-        <div class="article-title">{{ article.articleTitle }}</div>
-        <div class="article-item">
-          <div class="created-time">发表时间: {{ article.createdTime }}</div>
-          <div class="article-meta">
-            <a-icon class="action-icon" type="eye" /><span class="count-num"> {{ article.articleRead }} 阅读</span>
-            <a-icon class="action-icon" type="heart" /><span class="count-num"> {{ article.articleCollection }} 收藏</span>
-            <a-icon class="action-icon" type="like" /><span class="count-num"> {{ article.articleGood }} 点赞</span>
+      <div class="article-container">
+        <a-spin :spinning="loading" style="min-height: 400px">
+          <div class="article-title">{{ article.articleTitle }}</div>
+          <div class="article-item">
+            <div class="created-time">发表时间: {{ article.createdTime }}</div>
+            <div class="article-meta">
+              <a-icon class="action-icon" type="eye" /><span class="count-num"> {{ article.articleRead }} 阅读</span>
+              <a-icon class="action-icon" type="heart" /><span class="count-num"> {{ article.articleCollection }} 收藏</span>
+              <a-icon class="action-icon" type="like" /><span class="count-num"> {{ article.articleGood }} 点赞</span>
+            </div>
           </div>
-        </div>
-        <div class="article-content" v-html="article.articleContent" />
-        <!-- 文章操作 -->
-        <div class="article-action">
-          <div class="article-good">
-            <a href="javascript:void(0);" :class="isGood ? 'article-good meta-active' : 'article-good'" @click="saveGoods">
-              <a-icon type="like" /> 点赞
-            </a>
+          <div class="article-content" v-html="article.articleContent" />
+          <!-- 文章操作 -->
+          <div class="article-action">
+            <div class="article-good">
+              <a href="javascript:void(0);" :class="isGood ? 'article-good meta-active' : 'article-good'" @click="saveGoods">
+                <a-icon type="like" /> 点赞
+              </a>
+            </div>
+            <div class="article-collection">
+              <a href="javascript:void(0);" :class="isCollection ? 'article-collection meta-active' : 'article-collection'" @click="saveCollection">
+                <a-icon type="heart" /> 收藏
+              </a>
+            </div>
           </div>
-          <div class="article-collection">
-            <a href="javascript:void(0);" :class="isCollection ? 'article-collection meta-active' : 'article-collection'" @click="saveCollection">
-              <a-icon type="heart" /> 收藏
-            </a>
-          </div>
-        </div>
+        </a-spin>
       </div>
       <!-- 底部区域,放置评论 -->
       <div class="do-comment-container">

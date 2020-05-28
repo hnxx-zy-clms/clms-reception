@@ -3,7 +3,7 @@
   <!-- 问题阅读主体容器 -->
   <div class="question-container">
     <div class="left-container">
-      <el-button icon="el-icon-back" class="go-back" @click="goBack()">返回</el-button>
+      <a-button icon="el-icon-back" class="go-back" @click="goBack()">返回</a-button>
       <div
         v-loading="loading"
         element-loading-text="拼命加载中"
@@ -73,13 +73,7 @@
             </a-menu>
           </div>
           <!-- 答复列表 -->
-          <div
-            v-loading="loading"
-            class="answer-list"
-            element-loading-text="拼命加载中"
-            element-loading-spinner="el-icon-loading"
-            element-loading-background="rgba(255, 255, 255, 0.8)"
-          >
+          <div class="answer-list">
             <!-- 答复卡片 -->
             <a-card v-for="item in page.list" :key="item.answerId" class="answer-card">
               <div class="answer-main">
@@ -397,7 +391,6 @@ export default {
   .answer-pagination {
       margin-top: 20px;
   }
-
   .meta-active {
     /* 标识当前是否已点赞，是否已收藏 */
     color: red;

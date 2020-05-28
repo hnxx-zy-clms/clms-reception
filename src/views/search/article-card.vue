@@ -66,19 +66,6 @@ export default {
   created() {
     this.data = this.page.list
     this.searchPage.pageNo = this.page.pageNo
-  },
-  methods: {
-    handleInfiniteOnLoad() {
-      // this.loading = true
-      // this.searchPage.pageNo += 1
-      // this.searchPage.keyword = this.page.keyword
-      // this.searchPage.pageNo++
-      // searchApi.baseSearch(this.searchPage).then(res => {
-      //   this.loading = false
-      //   console.log(res)
-      // })
-      // this.loading = false
-    }
   }
 }
 </script>
