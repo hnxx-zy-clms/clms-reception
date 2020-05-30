@@ -57,3 +57,10 @@ export function logout() {
     }
   })
 }
+
+export function isLogin() {
+  return request({
+    url: '/isLogin',
+    method: 'post',
+  })
+}
