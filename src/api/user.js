@@ -37,6 +37,12 @@ export function getInfo(params) {
     params
   })
 }
+export function getUserById(id) {
+  return request({
+    url: '/getUserById/' + id,
+    method: 'get'
+  })
+}
 
 export function SmsCaptcha(mobile) {
   return request({

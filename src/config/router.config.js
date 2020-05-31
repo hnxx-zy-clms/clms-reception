@@ -14,6 +14,7 @@ const Reply = () => import('../views/tasknotice/reply')
 const Register = () => import('../views/register/index')
 const NotFoundComponent = () => import('../views/exception/404')
 const Search = () => import('../views/search/index')
+const Video = () => import('../views/video/index')
 
 /**
  * 基础路由
@@ -136,6 +137,16 @@ export const constantRouterMap = [
       title: '任务',
       icon: 'sound',
       isLoading: true
+    }
+  },
+  {
+    path: '/tilltill',
+    name: 'TillTill',
+    component: Video,
+    mate: {
+      title: 'TillTill',
+      icon: 'sound',
+      isLoading: false
     }
   },
   {
