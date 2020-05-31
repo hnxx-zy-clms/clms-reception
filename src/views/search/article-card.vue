@@ -13,7 +13,7 @@
           <div class="article-bottom">
             <div class="author-container">
               <div class="author-header">
-                <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
+                <img class="author-img" :src="item.userIcon" alt="">
               </div>
               <div class="article-author">作者：{{ item.articleAuthor }}</div>
             </div>
@@ -154,6 +154,7 @@ export default {
     width: 36px;
     height: 36px;
     margin-right: 15px;
+    border-radius: 50%;
   }
   .article-author {
     font-size: 16px;

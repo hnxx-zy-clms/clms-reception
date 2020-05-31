@@ -21,7 +21,7 @@
             <div class="question-main">
               <!-- 左侧提问人头像 flex-start -->
               <div class="question-author-img">
-                <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
+                <img class="author-img" :src="question.userIcon" alt="">
               </div>
               <!-- 右侧问题主体 space-between link位置 -->
               <div class="question-left-main">
@@ -79,7 +79,7 @@
               <div class="answer-main">
                 <!-- 左侧答复人头像 flex-start -->
                 <div class="answer-author-img">
-                  <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
+                  <img class="author-img" :src="item.userIcon" alt="">
                 </div>
                 <!-- 右侧答复主体 space-between link位置 -->
                 <div class="answer-container">

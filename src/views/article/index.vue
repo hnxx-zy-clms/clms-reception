@@ -69,9 +69,9 @@
       </div>
     </div>
     <!-- 添加弹窗 -->
-    <a-modal width="80%" title="创作文章" :visible="addDialog" @cancel="handleCancel">
-      <article-write ref="questionwrite" @closeAddDialog="closeAddDialog" @freshen="freshen" />
-    </a-modal>
+    <el-dialog width="80%" title="创作文章" :visible.sync="addDialog">
+      <article-write @closeAddDialog="closeAddDialog" @freshen="freshen" />
+    </el-dialog>
   </div>
 </template>
 
@@ -123,9 +123,6 @@ export default {
     this.getRecomRead()
   },
   methods: {
-    handleCancel(e) {
-      this.addDialog = false
-    },
     getTypeList() {
       // 查询类型列表
       this.loading = true

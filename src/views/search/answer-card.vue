@@ -5,7 +5,7 @@
         <router-link :to="{ path: '/questionInfo/' + item.questionId}" class="question-main">
           <!-- 左侧提问人头像 flex-start -->
           <div class="question-author-img">
-            <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
+            <img class="author-img" :src="item.userIcon" alt="">
           </div>
           <!-- 右侧问题主体 space-between link位置 -->
           <div class="question-container">

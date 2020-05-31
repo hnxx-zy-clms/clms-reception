@@ -3,7 +3,7 @@
   <div class="read-container">
     <!-- 左侧容器,作者信息介绍 -->
     <div class="left-container">
-      <author-info :autohr="author" />
+      <author-info :article="article" />
     </div>
     <!-- 右侧容器,文章内容 -->
     <div class="right-container">
@@ -64,7 +64,7 @@
           <a-card v-for="item in page.list" :key="item.commentId" :body-style="commentStyle" style="width: 100%">
             <div class="comment-main">
               <div class="comment-header">
-                <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
+                <img class="author-img" :src="item.userIcon" alt="">
               </div>
               <div class="comment-container">
                 <div class="comment-user">{{ item.commentUser }}</div>

@@ -2,9 +2,9 @@
   <div>
     <!-- 左侧个人信息展示卡片 -->
     <a-card class="my-back-card" title="作者信息" :head-style="headStyle" hoverable>
-      <img src="http://img.fusheng.xyz/code-fusheng.jpg" class="my-header">
+      <img :src="article.userIcon" class="my-header">
       <div class="my-bottom-container">
-        <div class="my-nickname">{{ author }}</div>
+        <div class="my-nickname">{{ article.articleAuthor }}</div>
         <div class="my-signature">忍一时越想越气，退一步越想越亏</div>
         <a-divider />
         <div class="social-container">
@@ -51,8 +51,8 @@
 import articleApi from '@/api/article/article'
 export default {
   props: {
-    author: {
-      type: String,
+    article: {
+      type: Object,
       default: null
     }
   },

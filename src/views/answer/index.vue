@@ -15,9 +15,9 @@
     </div>
 
     <!-- 添加弹窗 -->
-    <a-modal width="80%" title="发表问题" :visible="addDialog" @cancel="handleCancel">
+    <el-dialog width="80%" title="发表问题" :visible.sync="addDialog">
       <question-write ref="questionwrite" @closeAddDialog="closeAddDialog" @freshen="freshen" />
-    </a-modal>
+    </el-dialog>
   </div>
 </template>
 
@@ -44,9 +44,6 @@ export default {
     }
   },
   methods: {
-    handleCancel(e) {
-      this.addDialog = false
-    },
     // 模块功能组件
     openAddDialog() {
       // 打开添加弹窗

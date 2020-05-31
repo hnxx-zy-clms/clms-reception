@@ -26,6 +26,9 @@
             <div v-if="(current+'') == 'answer'">
               <answer-card :page="searchPage" @baseSearch="baseSearch" />
             </div>
+            <a-button style="width: 100%" :loading="searchLoading" @click="searchMore()">
+              加载更多
+            </a-button>
           </div>
         </a-spin>
       </div>
@@ -47,13 +50,14 @@ export default {
       cardBodyStyle: {
         padding: '18px'
       },
+      searchLoading: false,
       loading: false,
       current: ['article'],
       keyword: this.$route.query.keyword,
       searchPage: {
         keyword: '测试',
         pageNo: 1,
-        pageSize: 10,
+        pageSize: 1,
         params: 'articleTitle',
         // params: 'questionDescription',
         index: 'clms_article_index',
@@ -74,6 +78,29 @@ export default {
         this.searchPage = res.data
         this.loading = false
         console.log(res)
+      })
+    },
+    searchMore() {
+      this.searchLoading = true
+      this.searchPage.pageNo += 1
+      searchApi.baseSearch(this.searchPage).then(res => {
+        if (res.data.list.length < this.searchPage.pageSize) {
+          this.$message.success('当前是最后一页了!')
+        }
+        const dataList = res.data.list
+        dataList.forEach(item => {
+          console.log(item.articleId)
+          this.searchPage.list.push(item)
+        })
+        // this.searchPage.list.concat(res.data.list)
+        // this.searchPage.list.push(res.data.list)
+        this.searchLoading = false
+        console.log(res)
+        console.log(this.searchPage.list)
+        const testList = this.searchPage.list
+        testList.forEach(item => {
+          console.log(item.articleId)
+        })
       })
     },
     // 改变搜索对象
