@@ -15,56 +15,24 @@
       <h3 :style="{fontWeight:'800',margin:'20px 35px 0px 35px'}">班级日常</h3>
       <a-card-meta :style="{fontWeight:'800',margin:'0px 35px 15px 35px'}" description="Activity" />
       <a-row :style="{ margin:'0 10px 35px 10px',background: '#fff'}">
-        <a-col style="width: 33%;" :span="6" :push="0">
-          <a-card style="min-width: 420px" @click="routerTo(1)">
-            <img
-              slot="cover"
-              alt="example"
-              style="height: 200px"
-              src="http://175.24.45.179/group1/M00/00/00/rBEABV61XfqAPhV3AAJLTj2s19g377.jpg"
-            >
-            <div
-              style="position:absolute;width:100px;height:100px;color:#FFFFFF;z-index:2;left:10px;bottom:30px;"
-            >
-              <a-icon type="play-square" /> 1,000
-              <a-icon type="like" /> 123
-            </div>
-            <a-card-meta :style="{margin:'0px 0px 0px 20px'}" title="晨跑" description="新校区 7:00AM" />
-          </a-card>
-        </a-col>
-        <a-col style="width: 33%;" :span="6" :push="0">
-          <a-card style="min-width: 420px;height: 100%;" @click="routerTo(2)">
-            <img
-              slot="cover"
-              alt="example"
-              style="height: 200px"
-              src="http://175.24.45.179/group1/M00/00/00/rBEABV7CWTCAI9VvAAKrM0mh1YI537.jpg"
-            >
-            <div
-              style="position:absolute;width:100px;height:100px;color:#FFFFFF;z-index:2;left:10px;bottom:30px;"
-            >
-              <a-icon type="play-square" /> 1,854
-              <a-icon type="like" /> 123
-            </div>
-            <a-card-meta :style="{margin:'0px 0px 0px 20px'}" title="知识讲座" description="国会 18:00PM" />
-          </a-card>
-        </a-col>
-        <a-col style="width: 34%;" :span="6" :push="0">
-          <a-card style="min-width: 420px;height: 100%;" @click="routerTo(3)">
-            <img
-              slot="cover"
-              alt="example"
-              style="height: 200px"
-              src="http://175.24.45.179/group1/M00/00/00/rBEABV61XfqAPhV3AAJLTj2s19g377.jpg"
-            >
-            <div
-              style="position:absolute;width:100px;height:100px;color:#FFFFFF;z-index:2;left:10px;bottom:30px;"
-            >
-              <a-icon type="play-square" /> 1,441
-              <a-icon type="like" /> 127
-            </div>
-            <a-card-meta :style="{margin:'0px 0px 0px 30px'}" title="项目总结大会" description="知行楼 18:00PM" />
-          </a-card>
+        <a-col v-for="item in recommendVideoTop" :key="item" style="width: 33%;" :span="6" :push="0">
+          <router-link :to="'tilltill/'+item.videoId">
+            <a-card style="min-width: 420px">
+              <img
+                      slot="cover"
+                      alt="example"
+                      style="height: 200px"
+                      :src="item.coverUrl"
+              >
+              <div
+                      style="position:absolute;width:100px;height:100px;color:#FFFFFF;z-index:2;left:10px;bottom:30px;"
+              >
+                <a-icon type="play-square" /> {{ item.playVolume }}
+                <a-icon type="like" /> {{ item.like }}
+              </div>
+              <a-card-meta :style="{margin:'0px 0px 0px 20px'}" :title="item.title" :description="item.url +' · '+item.createdTime" />
+            </a-card>
+          </router-link>
         </a-col>
       </a-row>
     </a-layout-content>
@@ -72,59 +40,27 @@
       <a-button :style="{ float: 'right',fontSize:'15px'}" type="link">
         更多
       </a-button>
-      <h3 :style="{fontWeight:'800',margin:'20px 35px 0px 35px'}">优秀作品</h3>
+      <h3 :style="{fontWeight:'800',margin:'20px 35px 0px 35px'}">教学视频资料</h3>
       <a-card-meta :style="{fontWeight:'800',margin:'0px 35px 15px 35px'}" description="Outstanding works" />
       <a-row :style="{ margin:'0 10px 35px 10px',background: '#fff'}">
-        <a-col style="width: 33%;" :span="6" :push="0">
-          <a-card style="min-width: 420px" @click="routerTo(4)">
-            <img
-              slot="cover"
-              alt="example"
-              style="height: 200px"
-              src="http://175.24.45.179/group1/M00/00/00/rBEABV7CWTCAI9VvAAKrM0mh1YI537.jpg"
-            >
-            <div
-              style="position:absolute;width:100px;height:100px;color:#FFFFFF;z-index:2;left:10px;bottom:30px;"
-            >
-              <a-icon type="play-square" /> 1,225
-              <a-icon type="like" /> 12
-            </div>
-            <a-card-meta :style="{margin:'0px 0px 0px 20px'}" title="北斗导航项目" description="一款优秀的导航软件" />
-          </a-card>
-        </a-col>
-        <a-col style="width: 33%;" :span="6" :push="0">
-          <a-card style="min-width: 420px;height: 100%;" @click="routerTo(5)">
-            <img
-              slot="cover"
-              alt="example"
-              style="height: 200px"
-              src="http://175.24.45.179/group1/M00/00/00/rBEABV61XfqAPhV3AAJLTj2s19g377.jpg"
-            >
-            <div
-              style="position:absolute;width:100px;height:100px;color:#FFFFFF;z-index:2;left:10px;bottom:30px;"
-            >
-              <a-icon type="play-square" /> 1,000
-              <a-icon type="like" /> 123
-            </div>
-            <a-card-meta :style="{margin:'0px 0px 0px 20px'}" title="风电控制系统" description="优秀的物联网应用" />
-          </a-card>
-        </a-col>
-        <a-col style="width: 34%;" :span="6" :push="0">
-          <a-card style="min-width: 420px;height: 100%;" @click="routerTo(6)">
-            <img
-              slot="cover"
-              alt="example"
-              style="height: 200px"
-              src="http://175.24.45.179/group1/M00/00/00/rBEABV7CWTCAI9VvAAKrM0mh1YI537.jpg"
-            >
-            <div
-              style="position:absolute;width:100px;height:100px;color:#FFFFFF;z-index:2;left:10px;bottom:30px;"
-            >
-              <a-icon type="play-square" /> 1,000
-              <a-icon type="like" /> 123
-            </div>
-            <a-card-meta :style="{margin:'0px 0px 0px 30px'}" title="财务大数据分析工具" description="拥有优秀的处理数据能力" />
-          </a-card>
+        <a-col v-for="item in recommendVideoBottom" :key="item" style="width: 33%;" :span="6" :push="0">
+          <router-link :to="'tilltill/'+item.videoId">
+            <a-card style="min-width: 420px">
+              <img
+                slot="cover"
+                alt="example"
+                style="height: 200px"
+                :src="item.coverUrl"
+              >
+              <div
+                style="position:absolute;width:100px;height:100px;color:#FFFFFF;z-index:2;left:10px;bottom:30px;"
+              >
+                <a-icon type="play-square" /> {{ item.playVolume }}
+                <a-icon type="like" /> {{ item.like }}
+              </div>
+              <a-card-meta :style="{margin:'0px 0px 0px 20px'}" :title="item.title" :description="item.url +' · '+item.createdTime" />
+            </a-card>
+          </router-link>
         </a-col>
       </a-row>
     </a-layout-content>
@@ -151,16 +87,28 @@
 
 <script>
 import Carousel from './carousel'
+import VideoApi from '@/api/video/video.js'
 export default {
   components: {
     Carousel
   },
+  data() {
+    return {
+      recommendVideoTop: [],
+      recommendVideoBottom: []
+    }
+  },
+  created() {
+    VideoApi.recommendVideo('测试类别1', 3).then(res => {
+      this.recommendVideoTop = res.data
+    })
+    VideoApi.recommendVideo('测试类别2', 3).then(res => {
+      this.recommendVideoBottom = res.data
+    })
+  },
   methods: {
     more() {
-      this.$router.push('/tilltill')
-    },
-    routerTo(id) {
-      this.$router.push({ name: 'TillTill', params: { videoId: id }})
+      this.$router.push('/tilltill/1')
     }
   }
 }

@@ -14,5 +14,24 @@ export default {
       method: 'post',
       data: page
     })
+  },
+  getVideoCommentParentById(id) { // 查询视频评论
+    return request({
+      url: `/videoComment/getVideoCommentParentById/${id}`,
+      method: 'get'
+    })
+  },
+  setVideoComment(videoComment) { // 添加视频评论
+    return request({
+      url: `/videoComment/setVideoComment`,
+      method: 'post',
+      data: videoComment
+    })
+  },
+  recommendVideo(id, type) { // 获取推荐视频
+    return request({
+      url: `/video/recommendVideo/${id}/${type}`,
+      method: 'get'
+    })
   }
 }

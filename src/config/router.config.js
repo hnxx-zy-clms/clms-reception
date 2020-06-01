@@ -140,7 +140,7 @@ export const constantRouterMap = [
     }
   },
   {
-    path: '/tilltill',
+    path: '/tilltill/:videoId',
     name: 'TillTill',
     component: Video,
     mate: {

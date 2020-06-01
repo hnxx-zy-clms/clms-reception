@@ -13,7 +13,7 @@
           <a-tag v-else color="red">
             今日日报提交截止
           </a-tag>
-          <a-tag v-if="week === 7 && day > 22" color="red">
+          <a-tag v-if=" day > 22  && week === 7 " color="red">
             本周周报提交截止
           </a-tag>
           <a-tag v-else color="blue">

@@ -38,24 +38,25 @@
               <div class="scree-menu">
                 <a-menu v-model="current" :style="{background: '#F0F2F5'}" mode="horizontal" @click="changeSort">
                   <a-menu-item key="Good">按热度排序</a-menu-item>
-                  <a-menu-item key="createdTime">按时间排序</a-menu-item>
+                  <a-menu-item key="Time">按时间排序</a-menu-item>
                 </a-menu>
               </div>
               <div :style="{ float:'left'}">
-                <a-avatar :size="64" :style="{ margin:'20px 20px'}" :src="this.userIcon" />
+                <a-avatar :size="64" :style="{ margin:'20px 20px'}" :src="userIcon" />
               </div>
               <div>
                 <a-textarea
+                  v-model="videoCommentContent"
                   :style="{float:'left',margin:'20px 20px',maxWidth:'70%'}"
                   placeholder="请自觉遵守互联网相关的政策法规，严禁发布色情、暴力和发动的言论！"
                   :auto-size="{ minRows: 3, maxRows: 5 }"
                 />
-                <a-button type="primary" :style="{height:'70px',float:'left',margin:'20px 0px'}">发表评论</a-button>
+                <a-button type="primary" :style="{height:'70px',float:'left',margin:'20px 0px'}" @click="primaryCommentTop">发表评论</a-button>
               </div>
               <a-divider />
-              <div v-for="item in page.list" :key="item.videoCommentId">
+              <div v-for="(item,index1) in page.list" :key="item.videoCommentId">
                 <a-comment>
-                  <span slot="actions" key="comment-nested-reply-to">回复</span>
+                  <span slot="actions" key="comment-nested-reply-to" @click="rely(item.videoCommentId,item)">回复</span>
                   <span slot="author">
                     <a-tag v-if=" user.userName === item.userName " :style="{ float:'left'}" color="orange">
                       作者
@@ -63,7 +64,7 @@
                     <a>{{ item.userName }}</a></span>
                   <a-avatar
                     slot="avatar"
-                    :size="64"
+                    :size="32"
                     :src="item.userIcon"
                   />
                   <span slot="content">
@@ -73,7 +74,7 @@
                     <span>{{ item.videoCommentCreatedTime }}</span>
                   </a-tooltip>
                   <a-comment v-for="item1 in item.videoCommentList" :key="item1.videoCommentId">
-                    <span slot="actions">回复</span>
+                    <span slot="actions" @click="rely(item1.videoCommentParent,item1)">回复</span>
                     <span slot="author">
                       <a-tag v-if=" user.userName === item1.userName " :style="{ float:'left'}" color="orange">
                         作者
@@ -84,7 +85,7 @@
                       :src="item1.userIcon"
                     />
                     <span slot="content">
-                      <p v-if="item1.videoCommentParentName !== undefined ">回复 @{{ item1.videoCommentParentName }}</p>
+                      <p v-if="item1.videoCommentParentName !== undefined">回复 @{{ item1.videoCommentParentName }}</p>
                       {{ item1.videoCommentContent }}
                     </span>
                     <a-tooltip slot="datetime">
@@ -92,6 +93,22 @@
                     </a-tooltip>
                   </a-comment>
                 </a-comment>
+                <p v-if="item.videoCommentParentSum >2" :style="{ margin:'20px 50px'}">共{{ item.videoCommentParentSum }}条回复, <a @click="check(index1)">点击查看</a></p>
+                <div v-show="now === item.videoCommentId">
+                  <div :style="{ float:'left'}">
+                    <a-avatar :size="64" :style="{ margin:'20px 20px 50px 20px'}" :src="userIcon" />
+                  </div>
+                  <div>
+                    <a-textarea
+                      id="commment"
+                      v-model="videoComment.videoCommentContent"
+                      :style="{float:'left',margin:'20px 10px',maxWidth:'70%'}"
+                      :placeholder="commentPlaceholder"
+                      :auto-size="{ minRows: 3, maxRows: 5 }"
+                    />
+                    <a-button type="primary" :style="{height:'70px',float:'left',margin:'20px 0px'}" @click="primaryComment">发表评论</a-button>
+                  </div>
+                </div>
                 <a-divider />
               </div>
               <!--    底部分页栏-->
@@ -105,17 +122,6 @@
                 show-quick-jumper
                 @change="pageChange"
               />
-              <!--              <div :style="{ float:'left'}">-->
-              <!--                <a-avatar :size="64" :style="{ margin:'20px 20px'}" :src="this.userIcon" />-->
-              <!--              </div>-->
-              <!--              <div v-if="videoComment !== '' ">-->
-              <!--                <a-textarea-->
-              <!--                  :style="{float:'left',margin:'20px 20px',maxWidth:'70%'}"-->
-              <!--                  placeholder="请自觉遵守互联网相关的政策法规，严禁发布色情、暴力和发动的言论！"-->
-              <!--                  :auto-size="{ minRows: 3, maxRows: 5 }"-->
-              <!--                />-->
-              <!--                <a-button type="primary" :style="{height:'64px',float:'left',margin:'20px 0px'}">发表评论</a-button>-->
-              <!--              </div>-->
             </a-col>
           </a-row>
         </a-layout-content>
@@ -128,7 +134,6 @@
               <h1 :style="{fontWeight:'1000'}">{{ this.user.userName }}</h1>
               <p>{{ this.user.userDescription }}</p>
             </div>
-            <!--    <a-card-meta :style="{margin:'0px 0px 0px 30px'}" title="财务大数据分析工具" :description="this.$route.params.videoId" />-->
           </a-card>
           <a-card :style="{margin:'10px 0',height:'46px',background: '#fffff'}">
             <p :style="{margin:'-10px 0'}">弹幕列表</p>
@@ -155,23 +160,24 @@
             </a-list-item>
           </a-list>
           <h1 :style="{margin:'10px 0'}">相关推荐</h1>
-          <a-row v-for="count in 8" :key="count" :style="{margin:'10px 0',height:'100px',width:'100%',background: '#fffff'}">
-            <a-col :span="13">
-              <img
-                :style="{margin:'10px 0',width:'150px',height:'100px'}"
-                src="http://175.24.45.179/group1/M00/00/00/rBEABV61XfqAPhV3AAJLTj2s19g377.jpg"
-              >
-              <div
-                style="position:absolute;width:100px;height:25px;color:#FFFFFF;z-index:2;left:10px;bottom:10px;"
-              >
-                <a-icon type="play-square" /> 1,225
-                <a-icon type="like" /> 12
-              </div>
-            </a-col>
+          <a-row v-for="item in recommendVideo" :key="item.videoId" :style="{margin:'10px 0',height:'100px',width:'100%',background: '#fffff'}">
+            <router-link :to="{ path: '/tilltill/' + item.videoId}" >
+              <a-col :span="13">
+                <img
+                  :style="{margin:'10px 0',width:'150px',height:'100px'}"
+                  :src="item.coverUrl"
+                >
+                <div
+                  style="position:absolute;width:100px;height:25px;color:#FFFFFF;z-index:2;left:10px;bottom:10px;"
+                >
+                  <a-icon type="play-square" /> {{ item.playVolume }}
+                </div>
+              </a-col>
+            </router-link>
             <a-col :style="{margin:'15px 0'}" :span="11">
-              <p :style="{fontSize:'13px'}">前方高能！让世界感受这场视觉盛宴吧！</p>
-              <p :style="{fontSize:'7px'}">你好啊</p>
-              <p :style="{fontSize:'7px'}">1807.8万播放 · 7.0万弹幕</p>
+              <p :style="{fontSize:'13px'}">{{ item.title }}</p>
+              <p :style="{fontSize:'7px'}">{{ item.url }}</p>
+              <p :style="{fontSize:'7px'}">{{ item.createdTime }} <br> {{ item.category }}</p>
             </a-col>
           </a-row>
         </div>
@@ -185,6 +191,7 @@ import DPlayer from 'dplayer'
 import { mapGetters } from 'vuex'
 import VideoApi from '@/api/video/video.js'
 import { getUserById } from '../../api/user'
+import message from 'ant-design-vue/es/message'
 
 export default {
   name: 'App',
@@ -195,6 +202,16 @@ export default {
       list: false,
       user: {},
       videoInfo: {},
+      now: 0,
+      recommendVideo: [],
+      commentPlaceholder: '请自觉遵守互联网相关的政策法规，严禁发布色情、暴力和发动的言论！',
+      videoCommentContent: '',
+      videoComment: {
+        videoCommentContent: '',
+        videoCommentParent: 0,
+        videoCommentParentName: '',
+        videoId: ''
+      },
       page: {
         currentPage: 1,
         pageSize: 5,
@@ -203,15 +220,20 @@ export default {
         params: {
           videoCommentParentSum: 0
         },
-        sortColumn: 'createdTime',
+        sortColumn: 'video_comment_good',
         sortMethod: 'desc',
         list: []
       }
     }
   },
+  watch: {
+    $route(to, from) {
+      this.$router.go(0)
+    }
+  },
   computed: {
     ...mapGetters([
-      'userName', 'userIcon'
+      'userName', 'userIcon', 'userId'
     ])
   },
   created() {
@@ -221,21 +243,78 @@ export default {
       this.getVideoInfo(this.$route.params.videoId)
       this.page.params.id = this.$route.params.videoId
       VideoApi.getVideoCommentById(this.page).then(res => {
-        console.log(res.data)
         this.page = res.data
       })
     }
   },
   methods: {
+    primaryCommentTop() {
+      if (this.videoCommentContent === '') {
+        message.success('请输入评论内容')
+      } else {
+        this.now = 0
+        this.videoComment.videoCommentContent = this.videoCommentContent
+        this.videoComment.videoCommentParent = ''
+        this.videoComment.videoCommentParentName = ''
+        this.videoComment.videoId = this.videoInfo.videoId
+        VideoApi.setVideoComment(this.videoComment).then(res => {
+          VideoApi.getVideoCommentById(this.page).then(res => {
+            this.page = res.data
+          })
+          this.videoCommentContent = ''
+          this.videoComment.videoCommentContent = ''
+        })
+      }
+    },
+    primaryComment() {
+      this.videoComment.videoId = this.videoInfo.videoId
+      if (this.videoComment.videoCommentContent === '') {
+        message.success('请输入评论内容')
+      } else {
+        VideoApi.setVideoComment(this.videoComment).then(res => {
+          VideoApi.getVideoCommentById(this.page).then(res => {
+            this.page = res.data
+          })
+          this.videoComment.videoCommentParent = ''
+          this.videoComment.videoCommentParentName = ''
+          this.videoComment.videoCommentContent = ''
+        })
+      }
+    },
+    rely(id, itme) {
+      if (this.now === id && itme.videoCommentParent === 0) {
+        this.now = 0
+      } else {
+        if (itme.videoCommentParent !== 0) {
+          this.videoComment.videoCommentParent = itme.videoCommentParent
+          this.videoComment.videoCommentParentName = itme.userName
+          this.commentPlaceholder = '回复 @' + itme.userName
+        } else {
+          this.videoComment.videoCommentParent = itme.videoCommentId
+          this.commentPlaceholder = '请自觉遵守互联网相关的政策法规，严禁发布色情、暴力和发动的言论！'
+        }
+        this.now = id
+        document.getElementById('commment').focus()
+      }
+    },
+    check(index) {
+      VideoApi.getVideoCommentParentById(this.page.list[index].videoCommentId).then(res => {
+        this.page.list[index].videoCommentParentSum = 0
+        this.page.list[index].videoCommentList = res.data
+      })
+    },
     isList() {
       this.list = !this.list
     },
     getVideoInfo(id) {
       VideoApi.getVideo(id).then(res => {
-        console.log(res.data)
         this.videoInfo = res.data
         getUserById(this.videoInfo.userId).then(res => {
           this.user = res.data
+        })
+        VideoApi.recommendVideo(this.videoInfo.category, 8).then(res => {
+          console.log(res.data)
+          this.recommendVideo = res.data
         })
         this.dplayer()
         this.$http.get('http://175.24.9.127:1207/v3/?id=' + this.videoInfo.videoId + '&max=1000').then(res => {
@@ -245,17 +324,27 @@ export default {
       })
     },
     changeSort() {
-
+      if (this.current[0] === 'Good') {
+        this.page.sortColumn = 'video_comment_created_time'
+      } else {
+        this.page.sortColumn = 'video_comment_good'
+      }
+      VideoApi.getVideoCommentById(this.page).then(res => {
+        this.page = res.data
+      })
     },
-    pageChange() {
-
+    // 换页
+    pageChange(pageNumber) {
+      this.page.currentPage = pageNumber
+      VideoApi.getVideoCommentById(this.page).then(res => {
+        this.page = res.data
+      })
     },
     dplayer() {
       const dp = new DPlayer({
         container: document.getElementById('dplayer'),
         logo: 'http://175.24.45.179/group1/M00/00/01/rBEABV7PpfSANxA-AAAFgSB2uGM540.png',
         video: {
-          // url: 'http://175.24.9.127:8888/group1/M00/00/00/rxgJf17OCFiALTaIATo1QPOUkLI185.mp4'
           url: this.videoInfo.url
         },
         danmaku: {
@@ -292,7 +381,6 @@ export default {
         ]
       })
       dp.toggle()
-      // dp.seek(100);
     }
   }
 }
