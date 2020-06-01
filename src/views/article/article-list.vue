@@ -46,7 +46,7 @@
                     <div class="article-other">
                       <a-icon class="action-icon" type="eye" /><span class="count-num"> {{ item.articleRead }}</span>
                       <a-icon class="action-icon" type="heart" /><span class="count-num"> {{ item.articleCollection }}</span>
-                      <a-icon class="action-icon" type="like" /><span class="count-num"> {{ item.articleGood }}</span>
+                      <a-icon :class=" item.goodArticleFlag ? 'action-icon meta-active' : 'action-icon'" type="like" /><span class="count-num"> {{ item.articleGood }}</span>
                       <a-icon class="action-icon" type="message" /><span class="count-num"> {{ item.articleComment }}</span>
                     </div>
                   </div>
@@ -261,5 +261,13 @@ export default {
   .article-card {
     margin-bottom: 1px;
     border-radius: 5px;
+  }
+  .meta-active {
+    /* 标识当前是否已点赞，是否已收藏 */
+    color: red;
+  }
+  .meta-active:hover {
+    /* 标识当前是否已点赞，是否已收藏 */
+    color: red !important;
   }
 </style>

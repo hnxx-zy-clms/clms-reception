@@ -45,7 +45,7 @@
                       <div class="question-time">{{ item.questionTime }}</div>
                     </div>
                     <div class="question-action">
-                      <a-icon class="action-icon" type="like" /><span class="count-num"> {{ item.questionGood }} </span>
+                      <a-icon :class=" item.goodQuestionFlag ? 'action-icon meta-active' : 'action-icon'" type="like" /><span class="count-num"> {{ item.questionGood }} </span>
                       <a-icon class="action-icon" type="message" /><span class="count-num"> {{ item.answerCount }} </span>
                     </div>
                   </div>
@@ -175,5 +175,13 @@ export default {
   }
   .question-pagination {
       margin-top: 10px;
+  }
+  .meta-active {
+    /* 标识当前是否已点赞，是否已收藏 */
+    color: red;
+  }
+  .meta-active:hover {
+    /* 标识当前是否已点赞，是否已收藏 */
+    color: red !important;
   }
 </style>

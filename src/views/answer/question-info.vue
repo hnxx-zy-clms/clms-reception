@@ -17,6 +17,19 @@
             <div class="question-desc">{{ question.questionDescription }}</div>
             <a-divider />
             <div class="question-content" v-html="question.questionContent" />
+            <!-- 文章操作 -->
+            <div class="question-action">
+              <div class="question-good">
+                <a href="javascript:void(0);" :class="isGoodQuestion ? 'question-good meta-active' : 'question-good'" @click="saveGoodForQuestion">
+                  <a-icon type="like" /> 点赞
+                </a>
+              </div>
+              <div class="question-collection">
+                <a href="javascript:void(0);" :class="isCollection ? 'question-collection meta-active' : 'question-collection'" @click="saveCollection">
+                  <a-icon type="heart" /> 收藏
+                </a>
+              </div>
+            </div>
             <a-divider />
             <div class="question-main">
               <!-- 左侧提问人头像 flex-start -->
@@ -40,7 +53,7 @@
                     <!-- <div class="author-type">学生</div> -->
                     <div class="question-time">{{ question.questionTime }}</div>
                   </div>
-                  <div class="question-action">
+                  <div class="question-bottom-action">
                     <a-icon class="action-icon" type="like" /><span class="count-num"> {{ question.questionGood }} </span>
                     <a-icon class="action-icon" type="message" /><span class="count-num"> {{ question.answerCount }} </span>
                   </div>
@@ -101,7 +114,11 @@
                       <div class="answer-time">{{ item.answerTime }}</div>
                     </div>
                     <div class="answer-action">
-                      <a-icon class="action-icon" type="like" /><span class="count-num"> {{ item.answerGood }} </span>
+                      <a-icon
+                        :class=" item.goodAnswerFlag ? 'action-icon meta-active' : 'action-icon'"
+                        type="like"
+                        @click="saveGoodForAnswer(item.answerId)"
+                      /><span class="count-num"> {{ item.answerGood }} </span>
                     </div>
                   </div>
                 </div>
@@ -130,17 +147,24 @@
 import questionApi from '@/api/answer/question'
 import answerApi from '@/api/answer/answer'
 import AuthorInfo from '@/views/answer/author-info'
-// import AnswerList fron '@/views/answer/answer-list'
+import goodApi from '@/api/article/good'
+import collectionApi from '@/api/article/collection'
 export default {
   components: {
     AuthorInfo
   },
   data() {
     return {
+      isGoodQuestion: false, // 判断是否已经点赞
+      isCollection: false, // 判断是否已经收藏
       current: ['1'],
       question: {},
       answer: {
         questionId: ''
+      },
+      good: {
+        question: '',
+        answer: ''
       },
       page: {
         currentPage: 1,
@@ -185,8 +209,63 @@ export default {
   created() {
     this.get(this.questionId)
     this.getAnswerPage(this.page)
+    this.getGoodForQuestion()
   },
   methods: {
+    getGoodForQuestion() {
+      this.good.questionId = this.$route.params.id
+      goodApi.getGood(this.good).then(res => {
+        const flag = res.data
+        if (flag === 0) {
+          this.isGoodQuestion = false
+        } else {
+          this.isGoodQuestion = true
+        }
+      })
+    },
+    getCollection() {
+      collectionApi.getCollection(this.article.articleId).then(res => {
+        const flag = res.data
+        if (flag === 0) {
+          this.isCollection = false
+        } else {
+          this.isCollection = true
+        }
+      })
+    },
+    saveGoodForQuestion(val) {
+      // 点赞
+      if (!this.isGoodQuestion) {
+        this.good = {}
+        this.good.questionId = this.$route.params.id
+        goodApi.save(this.good).then(res => {
+          this.$message.success(res.msg)
+          this.get(this.questionId)
+          this.getGoodForQuestion()
+        })
+      } else {
+        this.$message.error('您已点赞，请勿重复点赞')
+      }
+    },
+    saveGoodForAnswer(val) {
+      this.good = {}
+      this.good.answerId = val
+      goodApi.save(this.good).then(res => {
+        this.$message.success(res.msg)
+        this.getAnswerPage(this.page)
+      })
+    },
+    saveCollection() {
+      // 收藏
+      if (!this.isCollection) {
+        collectionApi.save(this.collection).then(res => {
+          this.$message.success(res.msg)
+          this.getCollection()
+        })
+      } else {
+        this.$message.error('您已收藏，请勿重复收藏')
+      }
+    },
     get() {
       this.loading = true
       this.id = this.$route.params.id
@@ -406,5 +485,15 @@ export default {
     min-height: 1000px;
     margin-left: 3px;
     /* border: 1px solid green; */
+  }
+  .question-action {
+    display: flex;
+    flex-direction: row;
+    width: 300px;
+    min-height: 200px;
+    line-height: 200px;
+    margin: auto;
+    justify-content: space-evenly;
+    font-size: 24px;
   }
 </style>

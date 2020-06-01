@@ -24,7 +24,7 @@
           <!-- 文章操作 -->
           <div class="article-action">
             <div class="article-good">
-              <a href="javascript:void(0);" :class="isGood ? 'article-good meta-active' : 'article-good'" @click="saveGoods">
+              <a href="javascript:void(0);" :class="isGoodArticle ? 'article-good meta-active' : 'article-good'" @click="saveGoodForArticle">
                 <a-icon type="like" /> 点赞
               </a>
             </div>
@@ -61,20 +61,79 @@
         </div>
         <!-- 评论列表容器 -->
         <div class="comment-list-container">
-          <a-card v-for="item in page.list" :key="item.commentId" :body-style="commentStyle" style="width: 100%">
-            <div class="comment-main">
-              <div class="comment-header">
-                <img class="author-img" :src="item.userIcon" alt="">
+          <div v-for="item in page.list" :key="item.commentId">
+            <a-comment>
+              <span slot="actions">
+                <a-icon
+                  type="like"
+                  :class=" item.goodCommentFlag ? 'meta-active' : ''"
+                  @click="saveGoodForComment(item.commentId)"
+                /> {{ item.commentGood }}
+              </span>
+              <span slot="actions">删除</span>
+              <span slot="actions" key="comment-nested-reply-to" @click="doSaveChildComment(item)">回复</span>
+              <span slot="author">
+                <a-tag v-if=" article.articleAuthor === item.commentUser " :style="{ float:'left'}" color="orange">
+                  作者
+                </a-tag>
+                <a>{{ item.commentUser }}</a>
+              </span>
+              <a-avatar
+                slot="avatar"
+                :size="32"
+                :src="item.userIcon"
+              />
+              <span slot="content">
+                {{ item.commentContent }}
+              </span>
+              <a-tooltip slot="datetime">
+                <span>{{ item.commentTime }}</span>
+              </a-tooltip>
+              <span :style="{ margin:'20px 50px'}">共{{ item.commentCount }}条回复
+                <a v-if=" (showChildComment != item.commentId) && (item.commentCount !== 0) " @click="getCommentChildList(item.commentId)">点击查看</a>
+                <a v-if="showChildComment === item.commentId" @click="hiddenCommentChildList(item.commentId)">收起</a>
+              </span>
+              <!-- 二级评论 -->
+              <div v-if="showChildComment === item.commentId">
+                <a-comment v-for="item1 in commentChildList" :key="item1.commentId">
+                  <span slot="actions">
+                    <a-icon
+                      type="like"
+                      :class=" item1.goodCommentFlag ? 'meta-active' : ''"
+                      @click="saveGoodForChildComment(item1.commentId, item.commentId)"
+                    /> {{ item1.commentGood }}
+                  </span>
+                  <span slot="actions">删除</span>
+                  <!-- <span slot="actions" @click="doSaveChildComment(item1)">回复</span> -->
+                  <span slot="author">
+                    <a-tag v-if=" article.articleAuthor === item1.commentUser " :style="{ float:'left'}" color="orange">
+                      作者
+                    </a-tag>
+                    <a>{{ item1.commentUser }}</a></span>
+                  <a-avatar
+                    slot="avatar"
+                    :src="item1.userIcon"
+                  />
+                  <span slot="content">
+                    <p v-if="item1.commentUser !== undefined ">回复 @{{ item.commentUser }}</p>
+                    {{ item1.commentContent }}
+                  </span>
+                  <a-tooltip slot="datetime">
+                    <span>{{ item1.commentTime }}</span>
+                  </a-tooltip>
+                </a-comment>
+                <!-- 二级评论分页 -->
+                <el-pagination
+                  class="child-comment-pagination"
+                  :current-page="childPage.currentPage"
+                  :page-size="childPage.pageSize"
+                  layout="total, prev, pager, next"
+                  :total="childPage.totalCount"
+                  @current-change="handleCurrentChangeChild"
+                />
               </div>
-              <div class="comment-container">
-                <div class="comment-user">{{ item.commentUser }}</div>
-                <div class="comment-time">发表于 {{ item.commentTime }}</div>
-                <div class="comment-content">{{ item.commentContent }}</div>
-              </div>
-              <div class="comment-good"><a-icon type="like" /> {{ item.commentGood }}</div>
-              <div class="comment-comment"><span>查看回复 </span><a-icon type="message" /> {{ item.commentCount }}</div>
-            </div>
-          </a-card>
+            </a-comment>
+          </div>
         </div>
         <!-- 一级评论分页 -->
         <el-pagination
@@ -86,6 +145,15 @@
           :total="page.totalCount"
           @current-change="handleCurrentChange"
         />
+      </div>
+      <div class="user-comment">
+        <a-textarea v-model="childContent" :placeholder="'回复@' + commentParentUser" :rows="3" />
+        <div class="comment-button">
+          <a-button type="primary" @click="saveChildComment()">发表评论</a-button>
+          <div v-show="childCountShow" class="content-count">
+            还能输入 {{ commentContentCount }} 个字符
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -103,12 +171,14 @@ export default {
   },
   data() {
     return {
+      focusCtrl: 0,
+      currentIndex: 0,
       author: '',
       commentStyle: {
         padding: '10px'
       },
-      user: this.$store.getters.getUser,
-      isGood: false, // 判断是否已经点赞
+      isGoodArticle: false, // 判断是否已经点赞文章
+      isGoodComment: false, // 判断评论是否已经点赞
       isCollection: false, // 判断是否已经收藏
       page: {
         currentPage: 1,
@@ -122,9 +192,23 @@ export default {
         sortMethod: 'desc',
         list: []
       },
-      good: {
-        articleId: this.$route.params.id
+      childPage: {
+        currentPage: 1,
+        pageSize: 3,
+        totalCount: 0,
+        totalPage: 0,
+        params: {
+          pid: ''
+        },
+        sortColumn: 'commentTime',
+        sortMethod: 'desc',
+        list: []
       },
+      good: {
+        articleId: '',
+        commentId: ''
+      },
+      goodList: [],
       collection: {
         articleId: this.$route.params.id
       },
@@ -136,12 +220,17 @@ export default {
       },
       current: ['commentTime'],
       content: '', // 评论文本内容
+      childContent: '', // 评论评论文本内容
       id: '',
       article: {
         articleId: ''
       },
+      commentParentUser: '',
+      showChildComment: true, // 控制二级评论的显示
+      commentChildList: [],
       loading: false,
       countShow: false, // 控制是否显示字符个数提示
+      childCountShow: false,
       commentContentCount: 300 // 显示还能输入的字符数量
     }
   },
@@ -158,13 +247,26 @@ export default {
       const newValLength = newVal ? newVal.length : 0
       const oldValLength = oldVal ? oldVal.length : 0
       this.commentContentCount = this.commentContentCount - (newValLength - oldValLength)
+    },
+    'childContent': function(newVal, oldVal) {
+      if (this.childContent.length > 300) {
+        this.childContent = this.content.substring(0, 300)
+      }
+      if (this.childContent.length > 0) {
+        this.childCountShow = true
+      } else {
+        this.childCountShow = false
+      }
+      const newValLength = newVal ? newVal.length : 0
+      const oldValLength = oldVal ? oldVal.length : 0
+      this.commentContentCount = this.commentContentCount - (newValLength - oldValLength)
     }
   },
   created() {
     this.read()
     this.article.articleId = this.$route.params.id
     this.getCommentList()
-    this.getGood()
+    this.getGoodForArticle()
     this.getCollection()
   },
   methods: {
@@ -177,19 +279,45 @@ export default {
         this.loading = false
       })
     },
+    getList() {
+      goodApi.getList().then(res => {
+        this.goodList = res.data
+      })
+    },
+    // 分页查询一级评论
     getCommentList() {
       this.page.params.commentArticle = this.article.articleId
       commentApi.getCommentList(this.page).then(res => {
         this.page = res.data
+        this.page.list = res.data.list
       })
     },
-    getGood() {
-      goodApi.getGood(this.article.articleId).then(res => {
+    // 查询二级评论
+    getCommentChildList(val) {
+      this.showChildComment = val
+      this.childPage.params.pid = val
+      this.getByPage(this.childPage)
+    },
+    hiddenCommentChildList(val) {
+      this.showChildComment = 0
+    },
+    // 分页查询二级评论
+    getByPage() {
+      this.commentChildList = null
+      this.childPage.pageSize = 2
+      commentApi.getByPage(this.childPage).then(res => {
+        this.childPage = res.data
+        this.commentChildList = res.data.list
+      })
+    },
+    getGoodForArticle() {
+      this.good.articleId = this.$route.params.id
+      goodApi.getGood(this.good).then(res => {
         const flag = res.data
         if (flag === 0) {
-          this.isGood = false
+          this.isGoodArticle = false
         } else {
-          this.isGood = true
+          this.isGoodArticle = true
         }
       })
     },
@@ -203,16 +331,34 @@ export default {
         }
       })
     },
-    saveGoods() {
+    saveGoodForArticle() {
       // 点赞
-      if (!this.isGood) {
+      if (!this.isGoodArticle) {
+        this.good = {}
+        this.good.articleId = this.$route.params.id
         goodApi.save(this.good).then(res => {
           this.$message.success(res.msg)
-          this.getGood()
+          this.getGoodForArticle()
         })
       } else {
         this.$message.error('您已点赞，请勿重复点赞')
       }
+    },
+    saveGoodForComment(val) {
+      this.good = {}
+      this.good.commentId = val
+      goodApi.save(this.good).then(res => {
+        this.$message.success(res.msg)
+        this.getCommentList()
+      })
+    },
+    saveGoodForChildComment(val1, val) {
+      this.good = {}
+      this.good.commentId = val1
+      goodApi.save(this.good).then(res => {
+        this.$message.success(res.msg)
+        this.getCommentChildList(val)
+      })
     },
     saveCollection() {
       // 收藏
@@ -229,10 +375,26 @@ export default {
     saveComment(content) {
       this.comment.commentArticle = this.id
       this.comment.commentContent = this.content
+      this.comment.commentType = 0
       commentApi.save(this.comment).then(res => {
         this.getCommentList()
         this.$message.success(res.msg)
         this.content = ''
+      })
+    },
+    doSaveChildComment(val) {
+      this.comment.pid = val.commentId
+      this.commentParentUser = val.commentUser
+    },
+    // 添加评论评论
+    saveChildComment() {
+      this.comment.commentArticle = this.id
+      this.comment.commentContent = this.childContent
+      this.comment.commentType = 1
+      commentApi.save(this.comment).then(res => {
+        this.getCommentList()
+        this.$message.success(res.msg)
+        this.childContent = ''
       })
     },
     changeSort(e) {
@@ -249,6 +411,11 @@ export default {
     handleCurrentChange(val) {
       this.page.currentPage = val
       this.getCommentList(this.page)
+    },
+    // 当前页跳转 参数 value 当前页(currentPage)
+    handleCurrentChangeChild(val) {
+      this.childPage.currentPage = val
+      this.getByPage(this.childPage)
     },
     goBack() {
       this.$router.go(-1)
