@@ -25,8 +25,12 @@
             </a-col>
             <a-col style="width: 100%" :span="6" :push="0">
               <div :style="{background: '#FFFFFF'}">
-                <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="like" /><p :style="{ float:'left',margin:'17px 5px'}">{{ this.videoInfo.like }}</p>
-                <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="star" /><p :style="{ float:'left',margin:'17px 5px'}">{{ this.videoInfo.collect }}</p>
+                <a href="javascript:void(0);" :class="isGoodVideo ? 'video-good meta-video' : 'video-good'" @click="saveGoodForVideo">
+                  <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="like" /><p :style="{ float:'left',margin:'17px 5px'}">{{ this.videoInfo.videoGood }}</p>
+                </a>
+                <a>
+                  <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="star" /><p :style="{ float:'left',margin:'17px 5px'}">{{ this.videoInfo.collect }}</p>
+                </a>
                 <a-icon :style="{ float:'right',fontSize:'28px',margin:'13px 5px'}" type="more" />
               </div>
               <a-divider />
@@ -161,7 +165,7 @@
           </a-list>
           <h1 :style="{margin:'10px 0'}">相关推荐</h1>
           <a-row v-for="item in recommendVideo" :key="item.videoId" :style="{margin:'10px 0',height:'100px',width:'100%',background: '#fffff'}">
-            <router-link :to="{ path: '/tilltill/' + item.videoId}" >
+            <router-link :to="{ path: '/tilltill/' + item.videoId}">
               <a-col :span="13">
                 <img
                   :style="{margin:'10px 0',width:'150px',height:'100px'}"
@@ -192,11 +196,14 @@ import { mapGetters } from 'vuex'
 import VideoApi from '@/api/video/video.js'
 import { getUserById } from '../../api/user'
 import message from 'ant-design-vue/es/message'
+import goodApi from '@/api/article/good'
 
 export default {
   name: 'App',
   data() {
     return {
+      isGoodVideo: false, // 判断video是否点赞
+      isCollection: false, // 判断是否已经收藏
       current: ['Good'],
       data: [],
       list: false,
@@ -210,6 +217,9 @@ export default {
         videoCommentContent: '',
         videoCommentParent: 0,
         videoCommentParentName: '',
+        videoId: ''
+      },
+      good: {
         videoId: ''
       },
       page: {
@@ -246,6 +256,7 @@ export default {
         this.page = res.data
       })
     }
+    this.getGoodForVideo()
   },
   methods: {
     primaryCommentTop() {
@@ -323,6 +334,32 @@ export default {
         })
       })
     },
+    // 获取当前视频点赞信息
+    getGoodForVideo() {
+      this.good.videoId = this.$route.params.videoId
+      goodApi.getGood(this.good).then(res => {
+        const flag = res.data
+        if (flag === 0) {
+          this.isGoodVideo = false
+        } else {
+          this.isGoodVideo = true
+        }
+      })
+    },
+    // 保存video点赞
+    saveGoodForVideo() {
+      // 点赞
+      if (!this.isGoodVideo) {
+        this.good.videoId = this.$route.params.videoId
+        goodApi.save(this.good).then(res => {
+          this.$message.success(res.msg)
+          this.getGoodForVideo()
+          this.videoInfo.videoGood += 1
+        })
+      } else {
+        this.$message.error('您已点赞，请勿重复点赞')
+      }
+    },
     changeSort() {
       if (this.current[0] === 'Good') {
         this.page.sortColumn = 'video_comment_created_time'
@@ -387,5 +424,13 @@ export default {
 </script>
 
 <style>
+.meta-video {
+    /* 标识当前是否已点赞，是否已收藏 */
+    color: red;
+  }
+  .meta-video:hover {
+    /* 标识当前是否已点赞，是否已收藏 */
+    color: red !important;
+  }
 
 </style>

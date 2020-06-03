@@ -29,16 +29,16 @@
           <a-card title="广告位" :head-style="headStyle" :body-style="adStyle">
             <a-carousel autoplay effect="fade">
               <div>
-                <img src="@/assets/img/1.jpg" class="carousel-img">
+                <img src="https://img-bss.csdn.net/1589341716269.jpg" class="carousel-img">
               </div>
               <div>
-                <img src="@/assets/img/2.jpg" class="carousel-img">
+                <img src="https://img-bss.csdn.net/1570520124064.png" class="carousel-img">
               </div>
               <div>
-                <img src="@/assets/img/3.jpg" class="carousel-img">
+                <img src="https://img-bss.csdn.net/1591005951303.png" class="carousel-img">
               </div>
               <div>
-                <img src="@/assets/img/4.jpg" class="carousel-img">
+                <img src="https://img-bss.csdn.net/1590996285821.jpg" class="carousel-img">
               </div>
             </a-carousel>
           </a-card>
@@ -238,7 +238,7 @@ export default {
   }
   .carousel-img {
     width: 100%;
-    height: 100%;
+    height: 190px;
   }
   .right-container  {
     width: 350px;

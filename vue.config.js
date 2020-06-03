@@ -39,6 +39,7 @@ module.exports = {
     proxy: {
       '': {
         target: `http://127.0.0.1:8080`,
+        // target: `http://175.24.45.179:8080`,
         secure: false, // false为http访问，true为https访问
         changeOrigin: true, // 是否跨域
         pathRewrite: {
