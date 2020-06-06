@@ -48,7 +48,7 @@
             <div
               class=" recom-list"
             >
-              <a-spin :spinning="loading" style="height: 888px">
+              <a-spin :spinning="loading" style="height: 620px">
                 <div class="spin-content">
                   <a-card v-for="item in page.list" :key="item.articleId" :body-style="recomStyle" class="article-card">
                     <div class="article-main">

@@ -60,97 +60,102 @@
           </div>
         </div>
         <!-- 评论列表容器 -->
-        <transition name="fade" mode="out-in">
-          <div class="comment-list-container">
-            <div v-for="item in page.list" :key="item.commentId">
-              <a-comment>
-                <span slot="actions">
-                  <a-icon
-                    type="like"
-                    :class=" item.goodCommentFlag ? 'meta-active' : ''"
-                    @click="saveGoodForComment(item.commentId)"
-                  /> {{ item.commentGood }}
-                </span>
-                <span v-if="(userName === item.commentUser) || (userName === article.articleAuthor)" slot="actions">删除</span>
-                <span slot="actions" key="comment-nested-reply-to" @click="doSaveChildComment(item)">回复</span>
-                <span slot="actions" :style="{ margin:'20px 50px'}">共{{ item.commentCount }}条回复
-                  <a v-if=" (showChildComment != item.commentId) && (item.commentCount !== 0) " @click="getCommentChildList(item.commentId)">点击查看</a>
-                  <a v-if="showChildComment === item.commentId" @click="hiddenCommentChildList(item.commentId)">收起</a>
-                </span>
-                <span slot="author">
-                  <a-tag v-if=" article.articleAuthor === item.commentUser " :style="{ float:'left'}" color="orange">
-                    作者
-                  </a-tag>
-                  <a>{{ item.commentUser }}</a>
-                </span>
-                <a-avatar
-                  slot="avatar"
-                  :size="32"
-                  :src="item.userIcon"
-                />
-                <span slot="content">
-                  {{ item.commentContent }}
-                </span>
-                <a-tooltip slot="datetime">
-                  <span>{{ item.commentTime }}</span>
-                </a-tooltip>
-                <!-- 二级评论 -->
-                <div v-if="showChildComment === item.commentId">
-                  <a-comment v-for="item1 in commentChildList" :key="item1.commentId">
-                    <span slot="actions">
-                      <a-icon
-                        type="like"
-                        :class=" item1.goodCommentFlag ? 'meta-active' : ''"
-                        @click="saveGoodForChildComment(item1.commentId, item.commentId)"
-                      /> {{ item1.commentGood }}
-                    </span>
-                    <span v-if="(userName === item1.commentUser) || (userName === article.articleAuthor)" slot="actions">删除</span>
-                    <span slot="actions" @click="doSaveChildCommentWithParent(item1,item)">回复</span>
-                    <span slot="author">
-                      <a-tag v-if=" article.articleAuthor === item1.commentUser " :style="{ float:'left'}" color="orange">
-                        作者
-                      </a-tag>
-                      <a>{{ item1.commentUser }}</a></span>
-                    <a-avatar
-                      slot="avatar"
-                      :src="item1.userIcon"
-                    />
-                    <span slot="content">
-                      <p v-if="item1.parentCommentUser !== undefined ">回复 @{{ item.commentUser }}</p>
-                      {{ item1.commentContent }}
-                    </span>
-                    <a-tooltip slot="datetime">
-                      <span>{{ item1.commentTime }}</span>
-                    </a-tooltip>
-                  </a-comment>
-                  <!-- 二级评论分页 -->
-                  <el-pagination
-                    class="child-comment-pagination"
-                    :current-page="childPage.currentPage"
-                    :page-size="childPage.pageSize"
-                    layout="total, prev, pager, next"
-                    :total="childPage.totalCount"
-                    @current-change="handleCurrentChangeChild"
+        <div class="comment-list-container">
+          <div v-for="item in page.list" :key="item.commentId">
+            <a-comment>
+              <span slot="actions">
+                <a-icon
+                  type="like"
+                  :class=" item.goodCommentFlag ? 'meta-active' : ''"
+                  @click="saveGoodForComment(item.commentId)"
+                /> {{ item.commentGood }}
+              </span>
+              <span v-if="(userName === item.commentUser) || (userName === article.articleAuthor)" slot="actions" @click="deleteComment(item)">删除</span>
+              <span slot="actions" key="comment-nested-reply-to" @click="doSaveChildComment(item)">回复</span>
+              <span slot="actions" :style="{ margin:'20px 50px'}">共{{ item.commentCount }}条回复
+                <a v-if=" (showChildComment != item.commentId) && (item.commentCount !== 0) " @click="getCommentChildList(item.commentId)">点击查看</a>
+                <a v-if="showChildComment === item.commentId" @click="hiddenCommentChildList(item.commentId)">收起</a>
+              </span>
+              <span slot="author">
+                <a-tag v-if=" article.articleAuthor === item.commentUser " :style="{ float:'left'}" color="orange">
+                  作者
+                </a-tag>
+                <a>{{ item.commentUser }}</a>
+              </span>
+              <a-avatar
+                slot="avatar"
+                :size="32"
+                :src="item.userIcon"
+              />
+              <span slot="content">
+                {{ item.commentContent }}
+              </span>
+              <a-tooltip slot="datetime">
+                <span>{{ item.commentTime }}</span>
+              </a-tooltip>
+              <!-- 二级评论 -->
+              <div v-if="showChildComment === item.commentId">
+                <a-comment v-for="item1 in commentChildList" :key="item1.commentId">
+                  <span slot="actions">
+                    <a-icon
+                      type="like"
+                      :class=" item1.goodCommentFlag ? 'meta-active' : ''"
+                      @click="saveGoodForChildComment(item1.commentId, item.commentId)"
+                    /> {{ item1.commentGood }}
+                  </span>
+                  <span v-if="(userName === item1.commentUser) || (userName === article.articleAuthor)" slot="actions" @click="deleteChildComment(item1)">删除</span>
+                  <span slot="actions" @click="doSaveChildCommentWithParent(item1,item)">回复</span>
+                  <span slot="author">
+                    <a-tag v-if=" article.articleAuthor === item1.commentUser " :style="{ float:'left'}" color="orange">
+                      作者
+                    </a-tag>
+                    <a>{{ item1.commentUser }}</a></span>
+                  <a-avatar
+                    slot="avatar"
+                    :src="item1.userIcon"
                   />
-                </div>
-              </a-comment>
-            </div>
+                  <span slot="content">
+                    <p v-if="item1.parentCommentUser !== undefined ">回复 @{{ item1.parentCommentUser }}</p>
+                    {{ item1.commentContent }}
+                  </span>
+                  <a-tooltip slot="datetime">
+                    <span>{{ item1.commentTime }}</span>
+                  </a-tooltip>
+                </a-comment>
+                <!-- 二级评论分页 -->
+                <el-pagination
+                  class="child-comment-pagination"
+                  :current-page="childPage.currentPage"
+                  :page-size="childPage.pageSize"
+                  layout="total, prev, pager, next"
+                  :total="childPage.totalCount"
+                  @current-change="handleCurrentChangeChild"
+                />
+              </div>
+            </a-comment>
           </div>
-          <!-- 一级评论分页 -->
-          <el-pagination
-            align="center"
-            class="comment-pagination"
-            :current-page="page.currentPage"
-            :page-size="page.pageSize"
-            layout="total, prev, pager, next, jumper"
-            :total="page.totalCount"
-            @current-change="handleCurrentChange"
-          />
-        </transition>
+        </div>
+        <!-- 一级评论分页 -->
+        <el-pagination
+          align="center"
+          class="comment-pagination"
+          :current-page="page.currentPage"
+          :page-size="page.pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="page.totalCount"
+          @current-change="handleCurrentChange"
+        />
       </div>
       <!-- 二级评论 -->
       <div id="childCommentContent" class="user-comment">
-        <a-textarea v-model="childContent" :placeholder="'回复@' + commentParentUser" :rows="3" />
+        <div class="comment-top">
+          <a-avatar
+            slot="avatar"
+            :size="72.4"
+            :src="userIcon"
+          />
+          <a-textarea v-model="childContent" :placeholder="'回复@' + commentParentUser" :rows="3" :style="{maxWidth: '90%'}" />
+        </div>
         <div class="comment-button">
           <a-button type="primary" @click="saveChildComment()">发表评论</a-button>
           <div v-show="childCountShow" class="content-count">
@@ -179,6 +184,7 @@ export default {
       currentIndex: 0,
       author: '',
       userName: this.$store.getters.userName,
+      userIcon: this.$store.getters.userIcon,
       commentStyle: {
         padding: '10px'
       },
@@ -391,12 +397,14 @@ export default {
     },
     // 点击回复，定位到二级评论输入框
     doSaveChildComment(val) {
+      this.commentParentUser = val.commentUser
       this.comment.parentCommentUser = null
       document.getElementById('childCommentContent').scrollIntoView()
       document.getElementById('childCommentContent').focus()
       this.comment.pid = val.commentId
     },
     doSaveChildCommentWithParent(val1, val) {
+      this.commentParentUser = val1.commentUser
       document.getElementById('childCommentContent').scrollIntoView()
       document.getElementById('childCommentContent').focus()
       this.comment.pid = val.commentId
@@ -411,6 +419,43 @@ export default {
         this.getCommentList()
         this.$message.success(res.msg)
         this.childContent = ''
+      })
+    },
+    // 删除评论 一级、二级
+    deleteComment(val) {
+      const commentId = val.commentId
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        commentApi.delete(commentId).then(res => {
+          this.$message.success(res.msg)
+          this.getCommentList()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    deleteChildComment(val) {
+      const commentId = val.commentId
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        commentApi.delete(commentId).then(res => {
+          this.$message.success(res.msg)
+          this.getCommentChildList(val.pid)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     changeSort(e) {
@@ -471,6 +516,7 @@ export default {
     width: 350px;
     min-height: 900px;
     margin-right: 3px;
+    background-color: white;
   }
   .right-container {
     display: flex;
@@ -478,6 +524,7 @@ export default {
     width: 850px;
     min-height: 900px;
     margin-left: 3px;
+    background-color: white;
     /* border: 1px solid green; */
   }
   .article-container {
@@ -537,9 +584,13 @@ export default {
     margin-top: 5px;
   }
   .user-comment {
-    margin-top: 15px;
     background-color: #fff;
-    margin-bottom: 10px;
+  }
+  .comment-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    justify-content: space-between;
   }
   .comment-button {
     margin: 15px;
@@ -603,7 +654,8 @@ export default {
     margin-top: 5px;
   }
   .comment-pagination {
-    margin-top: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
   }
   .meta-active {
     /* 标识当前是否已点赞，是否已收藏 */
@@ -623,6 +675,10 @@ export default {
     text-align: center;
     font-size: 14px;
     color: #fff;
+  }
+  /* 输入文本域 */
+  .ant-input {
+    border-radius: 0px !important;
   }
   /* 滚动条的宽度 */
   ::-webkit-scrollbar {

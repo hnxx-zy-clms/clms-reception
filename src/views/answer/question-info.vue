@@ -65,7 +65,7 @@
         <!-- 底部区域,放置评论 -->
         <div class="do-answer-container">
           <div class="user-answer">
-            <a-textarea v-model="content" placeholder="请输入内容，不超过300字" :rows="4" />
+            <tinymce v-model="content" />
             <div class="answer-button">
               <a-button type="primary" @click="saveAnswer(content)">发表答复</a-button>
               <div v-show="countShow" class="content-count">
@@ -87,43 +87,59 @@
           </div>
           <!-- 答复列表 -->
           <div class="answer-list">
-            <!-- 答复卡片 -->
-            <a-card v-for="item in page.list" :key="item.answerId" class="answer-card">
-              <div class="answer-main">
-                <!-- 左侧答复人头像 flex-start -->
-                <div class="answer-author-img">
-                  <img class="author-img" :src="item.userIcon" alt="">
-                </div>
-                <!-- 右侧答复主体 space-between link位置 -->
-                <div class="answer-container">
-                  <!-- 上层信息 row -->
-                  <div class="answer-top-content">
-                    <!-- 答复状态标记 -->
-                    <div class="answer-mark">
-                      <a-tag v-if="item.answerMark===0" color="red">未采纳</a-tag>
-                      <a-tag v-if="item.answerMark===1" color="green">已采纳</a-tag>
-                    </div>
-                    <!-- 答复标题/描述 -->
-                    <div class="answer-content">{{ item.answerContent }}</div>
-                  </div>
-                  <!-- 下层信息 -->
-                  <div class="answer-bottom-content">
-                    <div class="answer-meta">
-                      <div class="author-name">{{ item.answerAuthor }}</div>
-                      <!-- <div class="author-type">学生</div> -->
-                      <div class="answer-time">{{ item.answerTime }}</div>
-                    </div>
-                    <div class="answer-action">
-                      <a-icon
-                        :class=" item.goodAnswerFlag ? 'action-icon meta-active' : 'action-icon'"
-                        type="like"
-                        @click="saveGoodForAnswer(item.answerId)"
-                      /><span class="count-num"> {{ item.answerGood }} </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a-card>
+            <!-- 答复列表 -->
+            <div v-for="item in page.list" :key="item.answerId">
+              <a-comment>
+                <span slot="actions">
+                  <a-icon
+                    type="like"
+                    :class=" item.goodAnswerFlag ? 'meta-active' : ''"
+                    @click="saveGoodForAnswer(item.answerId)"
+                  /> {{ item.answerGood }}
+                </span>
+                <span v-show="(userName === item.answerAuthor) || (userName === question.questionAuthor)" slot="actions" @click="deleteAnswer(item)">删除</span>
+                <span slot="actions" @click="toAdoptAnwer(item)">采纳</span>
+                <span slot="actions" key="comment-nested-reply-to">回复</span>
+                <span slot="actions" :style="{ margin:'20px 50px'}">共N条回复
+                  <a>点击查看</a>
+                  <a>收起</a>
+                </span>
+                <span slot="author">
+                  <a-tag v-if="item.answerMark === 1" color="green">
+                    已采纳
+                  </a-tag>
+                  <a-tag v-if="item.answerMark === 0" color="red">
+                    未采纳
+                  </a-tag>
+                  <a-tag v-if=" (question.questionAuthor === item.answerAuthor) " :style="{ float:'left'}" color="orange">
+                    提问人
+                  </a-tag>
+                  <a>{{ item.answerAuthor }}</a>
+                </span>
+                <a-avatar
+                  slot="avatar"
+                  :size="32"
+                  :src="item.userIcon"
+                  :style="{ marginLeft: '12px' }"
+                />
+                <a-tooltip slot="content" class="preview-answer-content" placement="topLeft" title="点击查看全部内容！" @click="showAnswerModal(item)" v-html="item.answerContent" />
+                <a-tooltip slot="datetime">
+                  <span>{{ item.answerTime }}</span>
+                </a-tooltip>
+                <a-modal
+                  width="800px"
+                  :mask="false"
+                  ok-text="确认"
+                  cancel-text="取消"
+                  title="答复内容"
+                  :visible="visible"
+                  @ok="handleOk"
+                  @cancel="handleCancel"
+                >
+                  <p v-html="modalContent" />
+                </a-modal>
+              </a-comment>
+            </div>
           </div>
           <el-pagination
             align="center"
@@ -149,12 +165,16 @@ import answerApi from '@/api/answer/answer'
 import AuthorInfo from '@/views/answer/author-info'
 import goodApi from '@/api/article/good'
 import collectionApi from '@/api/article/collection'
+import Tinymce from '@/views/common/Tinymce/index'
 export default {
   components: {
-    AuthorInfo
+    AuthorInfo,
+    Tinymce
   },
   data() {
     return {
+      userName: this.$store.getters.userName,
+      userIcon: this.$store.getters.userIcon,
       isGoodQuestion: false, // 判断是否已经点赞
       isCollection: false, // 判断是否已经收藏
       current: ['1'],
@@ -180,7 +200,7 @@ export default {
       },
       content: '', // 评论文本内容
       countShow: false, // 控制是否显示字符个数提示
-      answerContentCount: 300, // 显示还能输入的字符数量
+      answerContentCount: 1000, // 显示还能输入的字符数量
       headStyle: {
         fontSize: '18px',
         fontWeight: 'bold',
@@ -188,13 +208,17 @@ export default {
         borderLeft: '5px solid #409eff'
       },
       loading: false,
-      questionId: this.$route.params.id
+      questionId: this.$route.params.id,
+      // 控制答复内容弹框
+      modalContent: '',
+      visible: false,
+      confirmLoading: false
     }
   },
   watch: {
     'content': function(newVal, oldVal) {
-      if (this.content.length > 300) {
-        this.content = this.content.substring(0, 300)
+      if (this.content.length > 1000) {
+        this.content = this.content.substring(0, 1000)
       }
       if (this.content.length > 0) {
         this.countShow = true
@@ -289,10 +313,59 @@ export default {
         this.content = ''
       })
     },
+    // 采纳答复
+    toAdoptAnwer(val) {
+      const answerId = val.answerId
+      this.$confirm('是否采纳?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        answerApi.isAdopt(answerId).then(res => {
+          this.$message.success(res.msg)
+          this.getAnswerPage()
+          this.question.questionMark = 1
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消采纳'
+        })
+      })
+    },
+    // 删除评论 一级、二级
+    deleteAnswer(val) {
+      const answerId = val.answerId
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        answerApi.delete(answerId).then(res => {
+          this.$message.success(res.msg)
+          this.getAnswerPage()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
     // 当前页跳转 参数 value 当前页(currentPage)
     handleCurrentChange(val) {
       this.page.currentPage = val
       this.getAnswerPage(this.page)
+    },
+    showAnswerModal(val) {
+      this.modalContent = val.answerContent
+      this.visible = true
+    },
+    handleOk(e) {
+      this.visible = false
+    },
+    handleCancel(e) {
+      this.visible = false
     },
     goBack() {
       this.$router.go(-1)
@@ -302,6 +375,9 @@ export default {
 </script>
 
 <style scoped>
+  .mce-tinymec {
+    border-width: 0px !important;
+  }
   .question-container {
     display: flex;
     flex-direction: row;
@@ -413,12 +489,18 @@ export default {
   }
   .answer-list {
     width: 100%;
+    background-color: white;
     /* border: 1px solid green; */
   }
   .answer-main {
     display: flex;
     flex-direction: row;
     align-items: center;
+  }
+  .answer-author-img {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
   .author-img {
     border: 5px solid #e5e5e5;
@@ -435,7 +517,13 @@ export default {
   .answer-top-content {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     margin-bottom: 3px;
+  }
+  .answer-content {
+    height: 21px;
+    overflow: hidden;
+    cursor: pointer;	/* 聚焦样式*/
   }
   .answer-description {
     font-size: 16px;
@@ -455,6 +543,9 @@ export default {
     flex-direction: row;
     justify-content: space-around;
   }
+  .answer-action {
+    margin-right: 8px;
+  }
   .author-name {
     margin-right: 20px;
   }
@@ -468,7 +559,7 @@ export default {
     color: #349edf;
   }
   .answer-pagination {
-      margin-top: 20px;
+      margin-top: 5px;
   }
   .meta-active {
     /* 标识当前是否已点赞，是否已收藏 */
@@ -495,5 +586,18 @@ export default {
     margin: auto;
     justify-content: space-evenly;
     font-size: 24px;
+  }
+  /* 预览问题答复列表的问题内容 */
+  .preview-answer-content {
+    width: 100%;
+    max-height: 30px;
+    line-height: 30px;
+    cursor: pointer;	/* 聚焦样式*/
+    display: -webkit-box;
+    white-space: pre-wrap;
+    /* 超出隐藏 */
+    overflow: hidden;
+    /* 超出部分省略号 */
+    text-overflow: ellipsis;
   }
 </style>

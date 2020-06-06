@@ -83,8 +83,7 @@ export default {
   },
   created() {
     this.getRecomRead()
-    this.page.params.articleAuthor = this.author
-    console.log(this.author)
+    this.page.params.articleAuthor = this.article.articleAuthor
   },
   methods: {
     // 推荐阅读列表 阅读最多
