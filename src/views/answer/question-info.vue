@@ -186,6 +186,10 @@ export default {
         question: '',
         answer: ''
       },
+      collection: {
+        question: this.$route.params.id,
+        collectionType: 2
+      },
       page: {
         currentPage: 1,
         pageSize: 5,
@@ -234,6 +238,7 @@ export default {
     this.get(this.questionId)
     this.getAnswerPage(this.page)
     this.getGoodForQuestion()
+    this.getCollection()
   },
   methods: {
     getGoodForQuestion() {
@@ -248,7 +253,8 @@ export default {
       })
     },
     getCollection() {
-      collectionApi.getCollection(this.article.articleId).then(res => {
+      this.collection.questionId = this.$route.params.id
+      collectionApi.getCollection(this.collection).then(res => {
         const flag = res.data
         if (flag === 0) {
           this.isCollection = false
@@ -279,6 +285,7 @@ export default {
         this.getAnswerPage(this.page)
       })
     },
+    // 添加问题收藏
     saveCollection() {
       // 收藏
       if (!this.isCollection) {

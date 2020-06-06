@@ -25,10 +25,10 @@
             </a-col>
             <a-col style="width: 100%" :span="6" :push="0">
               <div :style="{background: '#FFFFFF'}">
-                <a href="javascript:void(0);" :class="isGoodVideo ? 'video-good meta-video' : 'video-good'" @click="saveGoodForVideo">
+                <a href="javascript:void(0);" :class="isGoodVideo ? 'video-good meta-active' : 'video-good'" @click="saveGoodForVideo">
                   <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="like" /><p :style="{ float:'left',margin:'17px 5px'}">{{ this.videoInfo.videoGood }}</p>
                 </a>
-                <a>
+                <a href="javascript:void(0);" :class="isCollection ? 'video-collection meta-active' : 'video-collection'" @click="saveCollection">
                   <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="star" /><p :style="{ float:'left',margin:'17px 5px'}">{{ this.videoInfo.collect }}</p>
                 </a>
                 <a-icon :style="{ float:'right',fontSize:'28px',margin:'13px 5px'}" type="more" />
@@ -197,7 +197,7 @@ import VideoApi from '@/api/video/video.js'
 import { getUserById } from '../../api/user'
 import message from 'ant-design-vue/es/message'
 import goodApi from '@/api/article/good'
-
+import collectionApi from '@/api/article/collection'
 export default {
   name: 'App',
   data() {
@@ -221,6 +221,10 @@ export default {
       },
       good: {
         videoId: ''
+      },
+      collection: {
+        videoId: this.$route.params.id,
+        collectionType: 3
       },
       page: {
         currentPage: 1,
@@ -257,6 +261,7 @@ export default {
       })
     }
     this.getGoodForVideo()
+    this.getCollection()
   },
   methods: {
     primaryCommentTop() {
@@ -360,6 +365,31 @@ export default {
         this.$message.error('您已点赞，请勿重复点赞')
       }
     },
+    // 查询视频是否收藏
+    getCollection() {
+      this.collection.videoId = this.$route.params.videoId
+      collectionApi.getCollection(this.collection).then(res => {
+        const flag = res.data
+        if (flag === 0) {
+          this.isCollection = false
+        } else {
+          this.isCollection = true
+        }
+      })
+    },
+    // 添加视频收藏
+    saveCollection() {
+      // 收藏
+      if (!this.isCollection) {
+        collectionApi.save(this.collection).then(res => {
+          this.$message.success(res.msg)
+          this.getCollection()
+          this.videoInfo.collect += 1
+        })
+      } else {
+        this.$message.error('您已收藏，请勿重复收藏')
+      }
+    },
     changeSort() {
       if (this.current[0] === 'Good') {
         this.page.sortColumn = 'video_comment_created_time'
@@ -424,11 +454,11 @@ export default {
 </script>
 
 <style>
-.meta-video {
+.meta-active {
     /* 标识当前是否已点赞，是否已收藏 */
     color: red;
   }
-  .meta-video:hover {
+  .meta-active:hover {
     /* 标识当前是否已点赞，是否已收藏 */
     color: red !important;
   }

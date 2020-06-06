@@ -221,7 +221,8 @@ export default {
       },
       goodList: [],
       collection: {
-        articleId: this.$route.params.id
+        articleId: this.$route.params.id,
+        collectionType: 1
       },
       comment: {
         commentContent: '',
@@ -331,8 +332,10 @@ export default {
         }
       })
     },
+    // 查询文章是否收藏
     getCollection() {
-      collectionApi.getCollection(this.article.articleId).then(res => {
+      this.collection.articleId = this.$route.params.id
+      collectionApi.getCollection(this.collection).then(res => {
         const flag = res.data
         if (flag === 0) {
           this.isCollection = false
@@ -371,7 +374,7 @@ export default {
         this.getCommentChildList(val)
       })
     },
-    // 添加收藏
+    // 添加文章收藏
     saveCollection() {
       // 收藏
       if (!this.isCollection) {
