@@ -20,11 +20,11 @@
           <div class="spin-content">
             <div v-if="(current+'') == 'article'">
               <!-- 文章卡片 -->
-              <article-card :page="searchPage" @baseSearch="baseSearch" />
+              <article-card :page="searchPage" @searchHighlightWithFields="searchHighlightWithFields" />
             </div>
             <!-- 问答卡片 -->
             <div v-if="(current+'') == 'answer'">
-              <answer-card :page="searchPage" @baseSearch="baseSearch" />
+              <answer-card :page="searchPage" @searchHighlightWithFields="searchHighlightWithFields" />
             </div>
             <a-button style="width: 100%" :loading="searchLoading" @click="searchMore()">
               加载更多
@@ -57,8 +57,9 @@ export default {
       searchPage: {
         keyword: '测试',
         pageNo: 1,
-        pageSize: 1,
+        pageSize: 5,
         params: 'articleTitle',
+        keyFields: ['articleTitle', 'articleDesc'],
         // params: 'questionDescription',
         index: 'clms_article_index',
         // index: 'clms_question_index',
@@ -68,24 +69,34 @@ export default {
   },
   created() {
     console.log('关键字：' + this.keyword)
-    this.baseSearch(this.searchPage)
+    // this.baseSearch(this.searchPage)
+    this.searchHighlightWithFields(this.searchPage)
   },
   methods: {
-    baseSearch() {
+    searchHighlightWithFields() {
       this.searchPage.keyword = this.keyword
       this.loading = true
-      searchApi.baseSearch(this.searchPage).then(res => {
+      searchApi.searchHighlightWithFields(this.searchPage).then(res => {
         this.searchPage = res.data
         this.loading = false
         console.log(res)
       })
     },
+    // baseSearch() {
+    //   this.searchPage.keyword = this.keyword
+    //   this.loading = true
+    //   searchApi.baseSearch(this.searchPage).then(res => {
+    //     this.searchPage = res.data
+    //     this.loading = false
+    //     console.log(res)
+    //   })
+    // },
     searchMore() {
       this.searchLoading = true
       this.searchPage.pageNo += 1
-      searchApi.baseSearch(this.searchPage).then(res => {
+      searchApi.searchHighlightWithFields(this.searchPage).then(res => {
         if (res.data.list.length < this.searchPage.pageSize) {
-          this.$message.success('当前是最后一页了!')
+          this.$message.warning('当前是最后一页了!')
         }
         const dataList = res.data.list
         dataList.forEach(item => {
@@ -105,18 +116,21 @@ export default {
     },
     // 改变搜索对象
     changeParams(e) {
+      // 重置当前起始页
+      this.searchPage.pageNo = 1
       this.current = [e.key]
       console.log('' + this.current)
       if ((this.current + '') === 'article') {
         console.log('执行了文章搜索')
         this.searchPage.index = 'clms_article_index'
-        this.searchPage.params = 'articleTitle'
-        this.baseSearch(this.searchPage)
+        this.searchPage.keyFields = ['articleTitle', 'articleDesc']
+        this.searchHighlightWithFields(this.searchPage)
       } else if ((this.current + '') === 'answer') {
         console.log('执行了问题搜索')
+        this.searchPage.pageSize = 10
         this.searchPage.index = 'clms_question_index'
-        this.searchPage.params = 'questionDescription'
-        this.baseSearch(this.searchPage)
+        this.searchPage.keyFields = ['questionDescription']
+        this.searchHighlightWithFields(this.searchPage)
       } else {
         console.log('其他')
       }

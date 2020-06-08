@@ -1,131 +1,136 @@
 <template>
-    <div id="chatBox">
-        <div id="chat-container" v-if="user">
-            <div class="chat-header">
-                <h2>聊天窗口</h2>
-            </div>
-            <div id="chatList">
-                <ul id="messageArea">
-                    <ChatItem v-for="(message ,index) in messageList" :key="index" :message="message" />
-                </ul>
-            </div>
-            <div class="form-group">
-                <div class="input-group clearfix">
-                    <input v-model="content" @keyup.enter="sendMessage" type="text" class="form-control"
-                           placeholder="Type a message...">
-                    <a-button type="primary" @click="sendMessage">
-                        发送
-                    </a-button>
-                </div>
-            </div>
+  <div id="chatBox">
+    <div v-if="user" id="chat-container">
+      <div class="chat-header">
+        <h2>聊天窗口</h2>
+      </div>
+      <div id="chatList">
+        <ul id="messageArea">
+          <ChatItem v-for="(message ,index) in messageList" :key="index" :message="message" />
+        </ul>
+      </div>
+      <div class="form-group">
+        <div class="input-group clearfix">
+          <input
+            v-model="content"
+            type="text"
+            class="form-control"
+            placeholder="Type a message..."
+            @keyup.enter="sendMessage"
+          >
+          <a-button type="primary" @click="sendMessage">
+            发送
+          </a-button>
         </div>
-        <div v-else class="chat-login">
-            <h4>请先进行账号登录！！</h4>
-        </div>
+      </div>
     </div>
+    <div v-else class="chat-login">
+      <h4>请先进行账号登录！！</h4>
+    </div>
+  </div>
 </template>
 
 <script>
-    import ChatItem from './chat-item'
-    import SockJS from "sockjs-client";
-    import Stomp from "stompjs";
-    import { isLogin } from '../../api/user.js';
-    export default {
-        components: {
-            ChatItem,
-        },
-        data() {
-            return {
-                messageList: [],
-                user: this.$store.getters.name,
-                stompClient: '',
-                content: ''
-            }
-        },
-        methods: {
-            isLogin(){
-                isLogin().then(res=>{
-                    console.log(res)
-                })
-            },
-            getStompClient() {
-                let socket = new SockJS('http://127.0.0.1:8081/zyb')
-                // 获取STOMP子协议的客户端对象
-                this.stompClient = Stomp.over(socket)
-                return Stomp.over(socket)
-            },
-            initWebSocket() {
-                // 建立连接对象
-                let stompClient = this.getStompClient()
-                stompClient.connect({}, () => {
-                    // 回调方法，如果消息到达订阅主题，则会调用该方法
-                    stompClient.subscribe('/topic/public', (msg) => {
-                        let chatMessage = JSON.parse(msg.body);
-                        this.messageListAdd(chatMessage)
-                    }, {});
-                    // 向/app/chat.addUser发送消息将该用户的名称告知服务器
-                    stompClient.send("/app/chat.addUser",
-                        {},
-                        JSON.stringify({sender: this.user, type: 'JOIN',icon:this.$store.getters.userIcon})
-                    )  //用户加入接口
-                }, (err) => {
-                    // 连接发生错误时的处理函数
-                    const chatMessage = {sender: '', content: '连接聊天室出错，请重试！！', type: 'ERROR', createdTime: ''}
-                    this.messageListAdd(chatMessage)
-                });
-            },
-            messageListAdd(message) {
-                this.messageList.push(message)
-            },
-            sendMessage() {
-                let content = this.content.trim()
-                if (content) {
-                    let chatMessage = {
-                        sender: this.user,
-                        content: content,
-                        type: 'CHAT',
-                        icon:this.$store.getters.userIcon,
-                        createdTime: ''
-                    }
-                    this.stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
-                    this.content = ''
-                } else {
-                    alert("发送的消息不能为空噢！！ 快捷发送，回车即可！！")
-                }
-            },
-            // 断开连接
-            disconnect() {
-                this.stompClient.send("/app/chat.leftUser", {}, JSON.stringify({sender: this.user, type: 'LEAVE'}));
-                setTimeout(
-                    this.stompClient.disconnect(),
-                    1000
-                )
-            },
-            getMessageArea  (){
-                return document.querySelector('#messageArea')
-            }
-        },
-        watch: {
-            'messageList': function(newVal, oldVal) {
-                setTimeout(function () {
-                    let messageArea = document.querySelector('#messageArea');
-                    messageArea.scrollTop = messageArea.scrollHeight;
-                },200)
-            }
-        },
-        beforeDestroy: function () {
-            this.disconnect()
-        },
-        // 初始化连接
-        mounted() {
-            if (this.user) {
-                this.initWebSocket();
-            }else{
-                this.isLogin()
-            }
-        }
-
+import ChatItem from './chat-item'
+import SockJS from 'sockjs-client'
+import Stomp from 'stompjs'
+import { isLogin } from '../../api/user.js'
+export default {
+  components: {
+    ChatItem
+  },
+  data() {
+    return {
+      messageList: [],
+      user: this.$store.getters.name,
+      stompClient: '',
+      content: ''
     }
+  },
+  watch: {
+    'messageList': function(newVal, oldVal) {
+      setTimeout(function() {
+        const messageArea = document.querySelector('#messageArea')
+        messageArea.scrollTop = messageArea.scrollHeight
+      }, 200)
+    }
+  },
+  beforeDestroy: function() {
+    this.disconnect()
+  },
+  // 初始化连接
+  mounted() {
+    if (this.user) {
+      this.initWebSocket()
+    } else {
+      this.isLogin()
+    }
+  },
+  methods: {
+    isLogin() {
+      isLogin().then(res => {
+        console.log(res)
+      })
+    },
+    getStompClient() {
+      const socket = new SockJS('http://175.24.45.179:8081/zyb')
+      // 获取STOMP子协议的客户端对象
+      this.stompClient = Stomp.over(socket)
+      return Stomp.over(socket)
+    },
+    initWebSocket() {
+      // 建立连接对象
+      const stompClient = this.getStompClient()
+      stompClient.connect({}, () => {
+        // 回调方法，如果消息到达订阅主题，则会调用该方法
+        stompClient.subscribe('/topic/public', (msg) => {
+          const chatMessage = JSON.parse(msg.body)
+          this.messageListAdd(chatMessage)
+        }, {})
+        // 向/app/chat.addUser发送消息将该用户的名称告知服务器
+        stompClient.send('/app/chat.addUser',
+          {},
+          JSON.stringify({ sender: this.user, type: 'JOIN', icon: this.$store.getters.userIcon })
+        ) // 用户加入接口
+      }, (err) => {
+        // 连接发生错误时的处理函数
+        const chatMessage = { sender: '', content: '连接聊天室出错，请重试！！', type: 'ERROR', createdTime: '' }
+        this.messageListAdd(chatMessage)
+      })
+    },
+    messageListAdd(message) {
+      this.messageList.push(message)
+    },
+    sendMessage() {
+      const content = this.content.trim()
+      if (content) {
+        const chatMessage = {
+          sender: this.user,
+          content: content,
+          type: 'CHAT',
+          icon: this.$store.getters.userIcon,
+          createdTime: ''
+        }
+        this.stompClient.send('/app/chat.sendMessage', {}, JSON.stringify(chatMessage))
+        this.content = ''
+      } else {
+        alert('发送的消息不能为空噢！！ 快捷发送，回车即可！！')
+      }
+    },
+    // 断开连接
+    disconnect() {
+      this.stompClient.send('/app/chat.leftUser', {}, JSON.stringify({ sender: this.user, type: 'LEAVE' }))
+      setTimeout(
+        this.stompClient.disconnect(),
+        1000
+      )
+    },
+    getMessageArea() {
+      return document.querySelector('#messageArea')
+    }
+  }
+
+}
 </script>
 
 <style scoped>

@@ -9,7 +9,7 @@
         <router-link :to="{ path: '/articleRead/' + item.articleId}" append :class="item.articleImage ? 'image-article' : 'article-container'">
           <!-- 文章标题 -->
           <div class="article-title" v-html="item.articleTitle" />
-          <div class="article-desc">{{ item.articleDesc }}</div>
+          <div class="article-desc" v-html="item.articleDesc" />
           <div class="article-bottom">
             <div class="author-container">
               <div class="author-header">
