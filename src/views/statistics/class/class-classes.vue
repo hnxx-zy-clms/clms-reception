@@ -37,7 +37,7 @@ export default {
     getData() {
       classApi.getClassNum().then(res => {
         this.data = res.data
-        console.log('class:', this.data)
+        // console.log('class:', this.data)
       })
     },
     initComponent() {

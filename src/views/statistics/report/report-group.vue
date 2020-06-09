@@ -1,5 +1,4 @@
 <template>
-  <!-- <p>用户ID: {{ userId }}</p> -->
   <div id="c3" />
 </template>
 
@@ -22,7 +21,7 @@ export default {
         params: {
           reportType: 0,
           userClassesId: 1,
-          userGroupId: 2,
+          userGroupId: 1,
           isClasses: 0,
           time: moment(new Date()).format('YYYY-MM-DD')
         }
@@ -38,7 +37,7 @@ export default {
   watch: {
     data(b, a) {
       this.chart.changeData(b)
-      // console.log("wisdom", b)
+      console.log('改变的小组日报数据', b)
       this.chart.render()
     }
   },
@@ -46,30 +45,30 @@ export default {
     this.initComponent()
   },
   created() {
-    // this.getUserGroup()
-    // var d = new Date()
-    console.log('jintianderiqishi', moment(new Date()).format('YYYY-MM-DD'))
+    this.getUserGroup()
     this.getUserGroupReport()
     this.userIds = this.userId
+    // console.log('userids:', this.userIds)
   },
   methods: {
-    // getUserGroup() {
-    //   userApi
-    //     .getUserGroup(3)
-    //     .then(res => {
-    //       console.log('小组', res)
-    //       this.data.type = res
-    //     })
-    //     .catch(error => {
-    //       console.log(error)
-    //     })
-    // },
+    getUserGroup() {
+      console.log('userid', this.userId)
+      userApi
+        .getUserGroup(this.userId)
+        .then(res => {
+          console.log('小组', res)
+          this.page.params.userGroupId = res
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
     getUserGroupReport() {
       reportApi
         .getUserReportInfo(this.page)
         .then(res => {
           this.data = res.data.list
-          console.log(res.data.list)
+          console.log('获取组id后的数据', res)
         })
         .catch(error => {
           console.log(error)

@@ -66,7 +66,7 @@ export default {
         .getMarkingScore(this.scorepage)
         .then(res => {
           this.data = res.data.list
-          console.log(res.data.list)
+          // console.log(res.data.list)
         })
         .catch(error => {
           console.log(error)

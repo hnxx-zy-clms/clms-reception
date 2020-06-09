@@ -57,9 +57,9 @@ export default {
   methods: {
     getData() {
       articleApi.getUserArticleCountInfo(this.userparam).then(res => {
-        console.log('before', this.data)
+        // console.log('before', this.data)
         this.data = res.data.list
-        console.log(this.data)
+        // console.log(this.data)
       })
     },
     initComponent() {
