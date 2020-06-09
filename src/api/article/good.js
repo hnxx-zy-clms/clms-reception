@@ -15,17 +15,17 @@ export default {
       data: id
     })
   },
-  getList(id) { // 根据用户id查询
+  getList() { // 根据用户id查询
     return request({
-      url: `/${group_name}/getList/${id}`,
-      method: 'get',
-      data: id
+      url: `/${group_name}/getList`,
+      method: 'get'
     })
   },
-  getGood(aid) { // 获取当前用户点赞情况是否点赞
+  getGood(good) { // 获取当前用户点赞情况是否点赞
     return request({
-      url: `/${group_name}/getGood/${aid}`,
-      method: 'get'
+      url: `/${group_name}/getGood`,
+      method: 'post',
+      data: good
     })
   },
   getByPage(page) { // 分页查询

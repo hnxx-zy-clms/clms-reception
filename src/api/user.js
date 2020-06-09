@@ -37,6 +37,12 @@ export function getInfo(params) {
     params
   })
 }
+export function getUserById(id) {
+  return request({
+    url: '/getUserById/' + id,
+    method: 'get'
+  })
+}
 
 export function SmsCaptcha(mobile) {
   return request({
@@ -55,5 +61,12 @@ export function logout() {
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
     }
+  })
+}
+
+export function isLogin() {
+  return request({
+    url: '/isLogin',
+    method: 'post',
   })
 }

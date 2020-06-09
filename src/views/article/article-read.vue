@@ -3,48 +3,43 @@
   <div class="read-container">
     <!-- 左侧容器,作者信息介绍 -->
     <div class="left-container">
-      <author-info />
+      <author-info :article="article" />
     </div>
     <!-- 右侧容器,文章内容 -->
     <div class="right-container">
-      <a-button class="go-back" @click="goBack()">返回</a-button>
+      <a-button class="go-back" icon="el-icon-back" @click="goBack()">返回</a-button>
       <!-- 中间区域,放置文章 -->
-      <div
-        v-loading="loading"
-        class="article-container"
-        element-loading-text="拼命加载中"
-        element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(255, 255, 255, 0.8)"
-        style="min-height: 520px"
-      >
-        <div class="article-title">{{ article.articleTitle }}</div>
-        <div class="article-item">
-          <div class="created-time">发表时间: {{ article.createdTime }}</div>
-          <div class="article-meta">
-            <a-icon class="action-icon" type="eye" /><span class="count-num"> {{ article.articleRead }} 阅读</span>
-            <a-icon class="action-icon" type="heart" /><span class="count-num"> {{ article.articleCollection }} 收藏</span>
-            <a-icon class="action-icon" type="like" /><span class="count-num"> {{ article.articleGood }} 点赞</span>
+      <div class="article-container">
+        <a-spin :spinning="loading" style="min-height: 400px">
+          <div class="article-title">{{ article.articleTitle }}</div>
+          <div class="article-item">
+            <div class="created-time">发表时间: {{ article.createdTime }}</div>
+            <div class="article-meta">
+              <a-icon class="action-icon" type="eye" /><span class="count-num"> {{ article.articleRead }} 阅读</span>
+              <a-icon class="action-icon" type="heart" /><span class="count-num"> {{ article.articleCollection }} 收藏</span>
+              <a-icon class="action-icon" type="like" /><span class="count-num"> {{ article.articleGood }} 点赞</span>
+            </div>
           </div>
-        </div>
-        <div class="article-content" v-html="article.articleContent" />
-        <!-- 文章操作 -->
-        <div class="article-action">
-          <div class="article-good">
-            <a href="javascript:void(0);" :class="isGood ? 'article-good meta-active' : 'article-good'" @click="saveGoods">
-              <a-icon type="like" /> 点赞
-            </a>
+          <div class="article-content" v-html="article.articleContent" />
+          <!-- 文章操作 -->
+          <div class="article-action">
+            <div class="article-good">
+              <a href="javascript:void(0);" :class="isGoodArticle ? 'article-good meta-active' : 'article-good'" @click="saveGoodForArticle">
+                <a-icon type="like" /> 点赞
+              </a>
+            </div>
+            <div class="article-collection">
+              <a href="javascript:void(0);" :class="isCollection ? 'article-collection meta-active' : 'article-collection'" @click="saveCollection">
+                <a-icon type="heart" /> 收藏
+              </a>
+            </div>
           </div>
-          <div class="article-collection">
-            <a href="javascript:void(0);" :class="isCollection ? 'article-collection meta-active' : 'article-collection'" @click="saveCollection">
-              <a-icon type="heart" /> 收藏
-            </a>
-          </div>
-        </div>
+        </a-spin>
       </div>
       <!-- 底部区域,放置评论 -->
       <div class="do-comment-container">
         <div class="user-comment">
-          <a-textarea v-model="content" placeholder="请输入内容，不超过300字" :rows="4" />
+          <a-textarea v-model="content" placeholder="请输入内容，不超过300字" :rows="3" />
           <div class="comment-button">
             <a-button type="primary" @click="saveComment(content)">发表评论</a-button>
             <div v-show="countShow" class="content-count">
@@ -60,26 +55,85 @@
             <a-menu v-model="current" mode="horizontal" @click="changeSort">
               <a-menu-item key="commentTime">最新</a-menu-item>
               <a-menu-item key="commentGood">点赞最多</a-menu-item>
-              <a-menu-item key="commentComment">评论最多</a-menu-item>
+              <a-menu-item key="commentCount">评论最多</a-menu-item>
             </a-menu>
           </div>
         </div>
         <!-- 评论列表容器 -->
         <div class="comment-list-container">
-          <a-card v-for="item in page.list" :key="item.commentId" style="width: 100%">
-            <div class="comment-main">
-              <div class="comment-header">
-                <img class="author-img" src="http://img.fusheng.xyz/code-fusheng.jpg" alt="">
+          <div v-for="item in page.list" :key="item.commentId">
+            <a-comment>
+              <span slot="actions">
+                <a-icon
+                  type="like"
+                  :class=" item.goodCommentFlag ? 'meta-active' : ''"
+                  @click="saveGoodForComment(item.commentId)"
+                /> {{ item.commentGood }}
+              </span>
+              <span v-if="(userName === item.commentUser) || (userName === article.articleAuthor)" slot="actions" @click="deleteComment(item)">删除</span>
+              <span slot="actions" key="comment-nested-reply-to" @click="doSaveChildComment(item)">回复</span>
+              <span slot="actions" :style="{ margin:'20px 50px'}">共{{ item.commentCount }}条回复
+                <a v-if=" (showChildComment != item.commentId) && (item.commentCount !== 0) " @click="getCommentChildList(item.commentId)">点击查看</a>
+                <a v-if="showChildComment === item.commentId" @click="hiddenCommentChildList(item.commentId)">收起</a>
+              </span>
+              <span slot="author">
+                <a-tag v-if=" article.articleAuthor === item.commentUser " :style="{ float:'left'}" color="orange">
+                  作者
+                </a-tag>
+                <a>{{ item.commentUser }}</a>
+              </span>
+              <a-avatar
+                slot="avatar"
+                :size="32"
+                :src="item.userIcon"
+              />
+              <span slot="content">
+                {{ item.commentContent }}
+              </span>
+              <a-tooltip slot="datetime">
+                <span>{{ item.commentTime }}</span>
+              </a-tooltip>
+              <!-- 二级评论 -->
+              <div v-if="showChildComment === item.commentId">
+                <a-comment v-for="item1 in commentChildList" :key="item1.commentId">
+                  <span slot="actions">
+                    <a-icon
+                      type="like"
+                      :class=" item1.goodCommentFlag ? 'meta-active' : ''"
+                      @click="saveGoodForChildComment(item1.commentId, item.commentId)"
+                    /> {{ item1.commentGood }}
+                  </span>
+                  <span v-if="(userName === item1.commentUser) || (userName === article.articleAuthor)" slot="actions" @click="deleteChildComment(item1)">删除</span>
+                  <span slot="actions" @click="doSaveChildCommentWithParent(item1,item)">回复</span>
+                  <span slot="author">
+                    <a-tag v-if=" article.articleAuthor === item1.commentUser " :style="{ float:'left'}" color="orange">
+                      作者
+                    </a-tag>
+                    <a>{{ item1.commentUser }}</a></span>
+                  <a-avatar
+                    slot="avatar"
+                    :src="item1.userIcon"
+                  />
+                  <span slot="content">
+                    <p v-if="item1.parentCommentUser !== undefined ">回复 @{{ item1.parentCommentUser }}</p>
+                    {{ item1.commentContent }}
+                  </span>
+                  <a-tooltip slot="datetime">
+                    <span>{{ item1.commentTime }}</span>
+                  </a-tooltip>
+                </a-comment>
+                <!-- 二级评论分页 -->
+                <el-pagination
+                  class="child-comment-pagination"
+                  :current-page="childPage.currentPage"
+                  :page-size="childPage.pageSize"
+                  layout="total, prev, pager, next"
+                  :total="childPage.totalCount"
+                  @current-change="handleCurrentChangeChild"
+                />
               </div>
-              <div class="comment-container">
-                <div class="comment-user">{{ item.commentUser }}</div>
-                <div class="comment-time">发表于 {{ item.commentTime }}</div>
-                <div class="comment-content">{{ item.commentContent }}</div>
-              </div>
-              <div class="comment-good"><a-icon type="like" /> {{ item.commentGood }}</div>
-              <div class="comment-comment"><span>查看回复 </span><a-icon type="message" /> {{ item.commentCount }}</div>
-            </div>
-          </a-card>
+            </a-comment>
+          </div>
         </div>
         <!-- 一级评论分页 -->
         <el-pagination
@@ -91,6 +145,23 @@
           :total="page.totalCount"
           @current-change="handleCurrentChange"
         />
+      </div>
+      <!-- 二级评论 -->
+      <div id="childCommentContent" class="user-comment">
+        <div class="comment-top">
+          <a-avatar
+            slot="avatar"
+            :size="72.4"
+            :src="userIcon"
+          />
+          <a-textarea v-model="childContent" :placeholder="'回复@' + commentParentUser" :rows="3" :style="{maxWidth: '90%'}" />
+        </div>
+        <div class="comment-button">
+          <a-button type="primary" @click="saveChildComment()">发表评论</a-button>
+          <div v-show="childCountShow" class="content-count">
+            还能输入 {{ commentContentCount }} 个字符
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -108,8 +179,17 @@ export default {
   },
   data() {
     return {
-      user: this.$store.getters.getUser,
-      isGood: false, // 判断是否已经点赞
+      refrehFlag: false,
+      focusCtrl: 0,
+      currentIndex: 0,
+      author: '',
+      userName: this.$store.getters.userName,
+      userIcon: this.$store.getters.userIcon,
+      commentStyle: {
+        padding: '10px'
+      },
+      isGoodArticle: false, // 判断是否已经点赞文章
+      isGoodComment: false, // 判断评论是否已经点赞
       isCollection: false, // 判断是否已经收藏
       page: {
         currentPage: 1,
@@ -120,14 +200,29 @@ export default {
           articleId: this.$route.params.id
         },
         sortColumn: 'commentTime',
-        sortMethod: 'desc',
+        sortMethod: 'asc',
+        list: []
+      },
+      childPage: {
+        currentPage: 1,
+        pageSize: 3,
+        totalCount: 0,
+        totalPage: 0,
+        params: {
+          pid: ''
+        },
+        sortColumn: 'commentTime',
+        sortMethod: 'asc',
         list: []
       },
       good: {
-        articleId: this.$route.params.id
+        articleId: '',
+        commentId: ''
       },
+      goodList: [],
       collection: {
-        articleId: this.$route.params.id
+        articleId: this.$route.params.id,
+        collectionType: 1
       },
       comment: {
         commentContent: '',
@@ -137,12 +232,17 @@ export default {
       },
       current: ['commentTime'],
       content: '', // 评论文本内容
+      childContent: '', // 评论评论文本内容
       id: '',
       article: {
         articleId: ''
       },
+      commentParentUser: '',
+      showChildComment: true, // 控制二级评论的显示
+      commentChildList: [],
       loading: false,
       countShow: false, // 控制是否显示字符个数提示
+      childCountShow: false,
       commentContentCount: 300 // 显示还能输入的字符数量
     }
   },
@@ -159,13 +259,26 @@ export default {
       const newValLength = newVal ? newVal.length : 0
       const oldValLength = oldVal ? oldVal.length : 0
       this.commentContentCount = this.commentContentCount - (newValLength - oldValLength)
+    },
+    'childContent': function(newVal, oldVal) {
+      if (this.childContent.length > 300) {
+        this.childContent = this.childContent.substring(0, 300)
+      }
+      if (this.childContent.length > 0) {
+        this.childCountShow = true
+      } else {
+        this.childCountShow = false
+      }
+      const newValLength = newVal ? newVal.length : 0
+      const oldValLength = oldVal ? oldVal.length : 0
+      this.commentContentCount = this.commentContentCount - (newValLength - oldValLength)
     }
   },
   created() {
     this.read()
     this.article.articleId = this.$route.params.id
     this.getCommentList()
-    this.getGood()
+    this.getGoodForArticle()
     this.getCollection()
   },
   methods: {
@@ -174,30 +287,55 @@ export default {
       this.id = this.$route.params.id
       articleApi.read(this.id).then(res => {
         this.article = res.data
+        this.author = res.data.articleAuthor
         this.loading = false
       })
     },
+    getList() {
+      goodApi.getList().then(res => {
+        this.goodList = res.data
+      })
+    },
+    // 分页查询一级评论
     getCommentList() {
       this.page.params.commentArticle = this.article.articleId
       commentApi.getCommentList(this.page).then(res => {
         this.page = res.data
-        console.log(res)
+        this.page.list = res.data.list
       })
     },
-    getGood() {
-      goodApi.getGood(this.article.articleId).then(res => {
-        console.log(res)
+    // 查询二级评论
+    getCommentChildList(val) {
+      this.showChildComment = val
+      this.childPage.params.pid = val
+      this.getByPage(this.childPage)
+    },
+    hiddenCommentChildList(val) {
+      this.showChildComment = 0
+    },
+    // 分页查询二级评论
+    getByPage() {
+      this.commentChildList = null
+      commentApi.getByPage(this.childPage).then(res => {
+        this.childPage = res.data
+        this.commentChildList = res.data.list
+      })
+    },
+    getGoodForArticle() {
+      this.good.articleId = this.$route.params.id
+      goodApi.getGood(this.good).then(res => {
         const flag = res.data
         if (flag === 0) {
-          this.isGood = false
+          this.isGoodArticle = false
         } else {
-          this.isGood = true
+          this.isGoodArticle = true
         }
       })
     },
+    // 查询文章是否收藏
     getCollection() {
-      collectionApi.getCollection(this.article.articleId).then(res => {
-        console.log(res)
+      this.collection.articleId = this.$route.params.id
+      collectionApi.getCollection(this.collection).then(res => {
         const flag = res.data
         if (flag === 0) {
           this.isCollection = false
@@ -206,17 +344,37 @@ export default {
         }
       })
     },
-    saveGoods() {
+    saveGoodForArticle() {
       // 点赞
-      if (!this.isGood) {
+      if (!this.isGoodArticle) {
+        this.good = {}
+        this.good.articleId = this.$route.params.id
         goodApi.save(this.good).then(res => {
           this.$message.success(res.msg)
-          this.getGood()
+          this.getGoodForArticle()
         })
       } else {
         this.$message.error('您已点赞，请勿重复点赞')
       }
     },
+    // 点赞评论
+    saveGoodForComment(val) {
+      this.good = {}
+      this.good.commentId = val
+      goodApi.save(this.good).then(res => {
+        this.$message.success(res.msg)
+        this.getCommentList()
+      })
+    },
+    saveGoodForChildComment(val1, val) {
+      this.good = {}
+      this.good.commentId = val1
+      goodApi.save(this.good).then(res => {
+        this.$message.success(res.msg)
+        this.getCommentChildList(val)
+      })
+    },
+    // 添加文章收藏
     saveCollection() {
       // 收藏
       if (!this.isCollection) {
@@ -230,12 +388,77 @@ export default {
     },
     // 添加文章评论
     saveComment(content) {
+      this.comment.parentCommentUser = null
       this.comment.commentArticle = this.id
       this.comment.commentContent = this.content
+      this.comment.commentType = 0
       commentApi.save(this.comment).then(res => {
         this.getCommentList()
         this.$message.success(res.msg)
         this.content = ''
+      })
+    },
+    // 点击回复，定位到二级评论输入框
+    doSaveChildComment(val) {
+      this.commentParentUser = val.commentUser
+      this.comment.parentCommentUser = null
+      document.getElementById('childCommentContent').scrollIntoView()
+      document.getElementById('childCommentContent').focus()
+      this.comment.pid = val.commentId
+    },
+    doSaveChildCommentWithParent(val1, val) {
+      this.commentParentUser = val1.commentUser
+      document.getElementById('childCommentContent').scrollIntoView()
+      document.getElementById('childCommentContent').focus()
+      this.comment.pid = val.commentId
+      this.comment.parentCommentUser = val1.commentUser
+    },
+    // 添加评论评论
+    saveChildComment() {
+      this.comment.commentArticle = this.id
+      this.comment.commentContent = this.childContent
+      this.comment.commentType = 1
+      commentApi.save(this.comment).then(res => {
+        this.getCommentList()
+        this.$message.success(res.msg)
+        this.childContent = ''
+      })
+    },
+    // 删除评论 一级、二级
+    deleteComment(val) {
+      const commentId = val.commentId
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        commentApi.delete(commentId).then(res => {
+          this.$message.success(res.msg)
+          this.getCommentList()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    deleteChildComment(val) {
+      const commentId = val.commentId
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        commentApi.delete(commentId).then(res => {
+          this.$message.success(res.msg)
+          this.getCommentChildList(val.pid)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     changeSort(e) {
@@ -253,6 +476,11 @@ export default {
       this.page.currentPage = val
       this.getCommentList(this.page)
     },
+    // 当前页跳转 参数 value 当前页(currentPage)
+    handleCurrentChangeChild(val) {
+      this.childPage.currentPage = val
+      this.getByPage(this.childPage)
+    },
     goBack() {
       this.$router.go(-1)
     }
@@ -261,6 +489,12 @@ export default {
 </script>
 
 <style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
   .count-num {
     color: #349edf;
     margin-right: 5px;
@@ -271,35 +505,36 @@ export default {
   .read-container {
     display: flex;
     flex-direction: row;
-    min-height: 1200px;
+    min-height: 900px;
     width: 1200px;
     /* border: 1px solid red; */
     /* 左右自适应 */
     margin: auto;
     margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   .left-container {
     display: flex;
     flex-direction: column;
     width: 350px;
-    min-height: 1200px;
+    min-height: 900px;
     margin-right: 3px;
+    background-color: white;
   }
-
   .right-container {
     display: flex;
     flex-direction: column;
     width: 850px;
-    min-height: 1200px;
+    min-height: 900px;
     margin-left: 3px;
+    background-color: white;
     /* border: 1px solid green; */
   }
   .article-container {
     overflow:hidden;
     display: flex;
     flex-direction: column;
-    width: 840px;
+    width: 100%;
     min-height: 500px;
     background-color: white;
     /* border: 1px solid yellow; */
@@ -308,7 +543,8 @@ export default {
   }
   .article-content {
     margin-top: 10px;
-
+    max-height: 1000px;
+    overflow: auto;
   }
   .article-content img {
     vertical-align: middle;
@@ -351,9 +587,13 @@ export default {
     margin-top: 5px;
   }
   .user-comment {
-    margin-top: 15px;
     background-color: #fff;
-    margin-bottom: 10px;
+  }
+  .comment-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    justify-content: space-between;
   }
   .comment-button {
     margin: 15px;
@@ -418,6 +658,7 @@ export default {
   }
   .comment-pagination {
     margin-top: 5px;
+    margin-bottom: 5px;
   }
   .meta-active {
     /* 标识当前是否已点赞，是否已收藏 */
@@ -427,5 +668,29 @@ export default {
     /* 标识当前是否已点赞，是否已收藏 */
     color: red !important;
   }
-
+  .do-article {
+    width: 100%;
+    height: 40px;
+    /* border: 1px solid blue; */
+    line-height: 40px;
+    background-color: #ca0c16;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+  }
+  /* 输入文本域 */
+  .ant-input {
+    border-radius: 0px !important;
+  }
+  /* 滚动条的宽度 */
+  ::-webkit-scrollbar {
+    width: 2px;
+    height: 10px;
+  }
+  /* 滚动条滑块样式 */
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(121, 216, 240);
+    border-radius: 3px;
+  }
 </style>

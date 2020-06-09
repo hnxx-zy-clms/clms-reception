@@ -7,9 +7,11 @@ import store from './store'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import G2 from '@antv/g2'
+import VueResource from 'vue-resource'
 
 import './permission' // 权限控制
 
+Vue.use(VueResource)
 Vue.use(Antd)
 Vue.use(ElementUI)
 Vue.use(require('vue-moment'))

@@ -2,9 +2,9 @@
   <div>
     <!-- 左侧个人信息展示卡片 -->
     <a-card class="my-back-card" title="作者信息" :head-style="headStyle" hoverable>
-      <img src="http://img.fusheng.xyz/code-fusheng.jpg" class="my-header">
+      <img :src="article.userIcon" class="my-header">
       <div class="my-bottom-container">
-        <div class="my-nickname">code-fusheng</div>
+        <div class="my-nickname">{{ article.articleAuthor }}</div>
         <div class="my-signature">忍一时越想越气，退一步越想越亏</div>
         <a-divider />
         <div class="social-container">
@@ -27,33 +27,72 @@
         <a-divider />
       </div>
     </a-card>
-    <a-card title="推荐阅读" :head-style="headStyle">
-      <a-card title="Inner card title">
-        <a slot="extra" href="#">More</a>
-        Inner Card content
+    <div class="recom-read">
+      <a-card title="推荐阅读" :head-style="headStyle" :body-style="recomStyle">
+        <div class="recom-list">
+          <a-card v-for="item in page.list" :key="item.articleId" :body-style="recomStyle" class="article-card">
+            <div class="article-main">
+              <div v-if="item.articleImage" class="article-image">
+                <img :src="item.articleImage" class="article-cover">
+              </div>
+              <router-link :to="{ path: '/articleRead/' + item.articleId}" class="item.articleImage ? 'image-article' : 'no-image-article'">
+                <!-- 文章标题 -->
+                <div class="article-title">{{ item.articleTitle }}</div>
+              </router-link>
+            </div>
+          </a-card>
+        </div>
       </a-card>
-      <a-card title="Inner card title">
-        <a slot="extra" href="#">More</a>
-        Inner Card content
-      </a-card>
-      <a-card title="Inner card title">
-        <a slot="extra" href="#">More</a>
-        Inner Card content
-      </a-card>
-    </a-card>
+    </div>
   </div>
 </template>
 
 <script>
+import articleApi from '@/api/article/article'
 export default {
+  props: {
+    article: {
+      type: Object,
+      default: null
+    }
+  },
   data() {
     return {
+      recomStyle: {
+        padding: '5px'
+      },
       headStyle: {
         fontSize: '18px',
         fontWeight: 'bold',
         lineHeight: '15px',
         borderLeft: '5px solid #409eff'
+      },
+      page: {
+        currentPage: 1,
+        pageSize: 10,
+        totalCount: 0,
+        totalPage: 0,
+        params: {
+          articleAuthor: 'admin'
+        },
+        sortColumn: 'articleRead',
+        sortMethod: 'desc',
+        list: []
       }
+    }
+  },
+  created() {
+    this.getRecomRead()
+    this.page.params.articleAuthor = this.article.articleAuthor
+  },
+  methods: {
+    // 推荐阅读列表 阅读最多
+    getRecomRead() {
+      this.page.params.articleAuthor = this.author
+      articleApi.getByPage(this.page).then(res => {
+        this.page = res.data
+        console.log(res)
+      })
     }
   }
 }
@@ -123,5 +162,67 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+  }
+  .recom-list {
+    /* max-height: 780px; */
+    min-height: 600px;
+    width: 338px;
+    overflow: auto;
+  }
+  .article-main {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .author-img {
+    width: 36px;
+    height: 36px;
+    margin-right: 15px;
+  }
+  .article-author {
+    font-size: 16px;
+  }
+  .article-title {
+    height: 42px;
+    max-width: 324px;
+    align-self: start;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* 强制div文本换行 */
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
+  }
+  .article-image {
+    width: 65px;
+    height:45px;
+    margin-right: 10px;
+  }
+  .article-cover {
+    width: 65px;
+    height:45px;
+    border-radius: 5px;
+  }
+  .image-article {
+    width: 550px;
+    min-height: 45px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+  .no-image-article {
+    width: 100%;
+    min-height: 45px;
+  }
+  /* 滚动条的宽度 */
+  ::-webkit-scrollbar {
+    width: 2px;
+  }
+  /* 滚动条滑块样式 */
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(226, 243, 247) !important;
   }
 </style>
