@@ -26,46 +26,29 @@
         <el-button type="primary" class="write-article" icon="el-icon-edit" @click="openAddDialog">发表文章</el-button>
         <!-- 走马灯 -->
         <div class="cneter-carousel">
-          <a-card title="广告位" :head-style="headStyle" :body-style="adStyle">
+          <a-card title="校园新闻" :head-style="headStyle" :body-style="adStyle">
             <a-carousel autoplay effect="fade">
               <div>
-<<<<<<< HEAD
-                <img src="@/assets/img/1.jpg" class="carousel-img">
+                <img src="http://img.fusheng.xyz/clms-news-3.jpg" class="carousel-img">
               </div>
               <div>
-                <img src="@/assets/img/2.jpg" class="carousel-img">
+                <img src="http://img.fusheng.xyz/clms-news-2.jpg" class="carousel-img">
               </div>
               <div>
-                <img src="@/assets/img/3.jpg" class="carousel-img">
+                <img src="http://img.fusheng.xyz/clms-news-1.jpg" class="carousel-img">
               </div>
               <div>
-                <img src="@/assets/img/4.jpg" class="carousel-img">
-=======
-                <img src="https://img-bss.csdn.net/1589341716269.jpg" class="carousel-img">
-              </div>
-              <div>
-                <img src="https://img-bss.csdn.net/1570520124064.png" class="carousel-img">
-              </div>
-              <div>
-                <img src="https://img-bss.csdn.net/1591005951303.png" class="carousel-img">
-              </div>
-              <div>
-                <img src="https://img-bss.csdn.net/1590996285821.jpg" class="carousel-img">
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
+                <img src="http://img.fusheng.xyz/clms-search-back.jpg" class="carousel-img">
               </div>
             </a-carousel>
           </a-card>
         </div>
         <div class="recom-read">
-          <a-card title="推荐阅读" :head-style="headStyle" :body-style="recomStyle">
+          <a-card title="今日推荐" :head-style="headStyle" :body-style="recomStyle">
             <div
               class=" recom-list"
             >
-<<<<<<< HEAD
-              <a-spin :spinning="loading" style="height: 888px">
-=======
-              <a-spin :spinning="loading" style="height: 620px">
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
+              <a-spin :spinning="loading" style="height: 558px">
                 <div class="spin-content">
                   <a-card v-for="item in page.list" :key="item.articleId" :body-style="recomStyle" class="article-card">
                     <div class="article-main">
@@ -114,7 +97,8 @@ export default {
         padding: '10px'
       },
       recomStyle: {
-        padding: '5px'
+        padding: '5px',
+        maxHeight: '560px'
       },
       typeList: [],
       type: {
@@ -137,7 +121,7 @@ export default {
   },
   created() {
     this.getTypeList()
-    this.getRecomRead()
+    // this.getRecomRead()
   },
   methods: {
     getTypeList() {
@@ -190,7 +174,7 @@ export default {
   .article-container {
     display: flex;
     flex-direction: row;
-    height: 888px;
+    max-height: 1600px;
     width: 1312px;
     /* 左右自适应 */
     margin: auto;
@@ -255,11 +239,7 @@ export default {
   }
   .carousel-img {
     width: 100%;
-<<<<<<< HEAD
-    height: 100%;
-=======
     height: 190px;
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   }
   .right-container  {
     width: 350px;
@@ -272,7 +252,7 @@ export default {
     width: 100%;
   }
   .recom-list {
-    height: 520px;
+    height: 526px;
     width: 338px;
     overflow: auto;
   }

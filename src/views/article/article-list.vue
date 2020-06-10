@@ -20,8 +20,8 @@
       </div>
     </div>
     <!-- 文案列表容器 -->
-    <div>
-      <a-spin :spinning="loading" style="height: 750px">
+    <div class="article-list-container" @scroll="scrollLoadMore($event)">
+      <a-spin :spinning="loading" style="maxHeight: 1500px overflow: auto">
         <div class="spin-content">
           <!-- 文章卡片 -->
           <a-card v-for="item in page.list" :key="item.articleId" :body-style="articleBodyStyle" class="article-card">
@@ -57,7 +57,13 @@
         </div>
       </a-spin>
     </div>
-    <el-pagination
+    <a-button v-if="page.list.length < page.totalCount && page.list.length !== 0 && noMore !== true" style="width: 100%" :loading="loadingMore" @click="loadMore()">
+      加载更多
+    </a-button>
+    <a-button v-else style="width: 100%" :loading="loadingMore">
+      到底了
+    </a-button>
+    <!-- <el-pagination
       align="center"
       class="pagination"
       :current-page="page.currentPage"
@@ -65,7 +71,7 @@
       layout="total, prev, pager, next, jumper"
       :total="page.totalCount"
       @current-change="handleCurrentChange"
-    />
+    /> -->
   </div>
 </template>
 
@@ -88,7 +94,7 @@ export default {
       },
       page: {
         currentPage: 1,
-        pageSize: 5,
+        pageSize: 6,
         totalCount: 0,
         totalPage: 0,
         params: {},
@@ -97,16 +103,16 @@ export default {
         list: []
       },
       loading: false,
+      loadingMore: false,
+      noMore: false,
       pageShow: false
     }
   },
   watch: {
     type: function() {
+      this.page.currentPage = 1
       this.page.params.articleType = this.type.typeId
       this.getByPage(this.page)
-    },
-    page: function() {
-      this.loading = false
     }
   },
   created() {
@@ -117,7 +123,35 @@ export default {
       this.loading = true
       articleApi.getByPage(this.page).then(res => {
         this.page = res.data
+        this.loading = false
       })
+    },
+    scrollLoadMore(e) {
+      // !this.moreLoading 没有在加载状态，触发加载更多时，把this.moreLoading置未true
+      // !this.noMore 没有更多的状态为false，当我们取到的数据长度小于1页的数量时，就没有更多了数据了，把 this.noMore置为true，这样就不会触发无意义的加载更多了
+      if (e.srcElement.scrollTop + e.srcElement.offsetHeight > e.srcElement.scrollHeight && !this.loadingMore && !this.noMore) {
+        this.loadMore()
+      }
+    },
+    loadMore() {
+      if (this.noMore === false) {
+        this.loadingMore = true
+        this.page.currentPage += 1
+        this.page.pageSize = 10
+        articleApi.getByPage(this.page).then(res => {
+          if (res.data.list.length < this.page.pageSize) {
+            this.$message.warning('当前是最后一页了!')
+            this.noMore = true
+          }
+          const dataList = res.data.list
+          dataList.forEach(item => {
+            this.page.list.push(item)
+          })
+          this.loadingMore = false
+        })
+      } else {
+        this.$message.warning('当前是最后一页了!')
+      }
     },
     // 每页大小改变 参数 value 为每页大小(pageSize)
     handleSizeChange(val) {
@@ -133,8 +167,9 @@ export default {
     // 条件排序 e 和 val 都行
     changeSort(e) {
       this.page.sortColumn = e.key
-      this.$message.success('操作成功!')
-      this.getByPage()
+      this.page.pageSize = this.page.list.length
+      this.page.currentPage = 1
+      this.getByPage(this.page)
     }
   }
 }
@@ -154,6 +189,10 @@ export default {
     background-color:white;
     border: 1px solid #e8e8e8;
   }
+  .span-content {
+    max-height: 1500px;
+    overflow: auto;
+  }
   .type-text {
     margin-left: 15px;
     font-size: 16px;
@@ -163,6 +202,10 @@ export default {
   }
   .ant-menu {
     background: none !important;
+  }
+  .article-list-container {
+    max-height: 1530px;
+    overflow: auto;
   }
   .article-main {
     display: flex;

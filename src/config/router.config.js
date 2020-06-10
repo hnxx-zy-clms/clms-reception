@@ -6,6 +6,7 @@ const Answer = () => import('../views/answer')
 const QuestionInfo = () => import('../views/answer/question-info')
 const Article = () => import('../views/article/index')
 const ArticleRead = () => import('../views/article/article-read')
+const ArticleUpdate = () => import('../views/article/article-update')
 const Chat = () => import('../views/chat')
 const Classes = () => import('../views/classes')
 const Statistics = () => import('../views/statistics')
@@ -115,6 +116,16 @@ export const constantRouterMap = [
     component: ArticleRead,
     mate: {
       title: '阅读文章',
+      icon: 'book',
+      isLoading: false
+    }
+  },
+  {
+    path: '/articleUpdate/:id',
+    name: 'ArticleUpdate',
+    component: ArticleUpdate,
+    mate: {
+      title: '编辑文章',
       icon: 'book',
       isLoading: false
     }
