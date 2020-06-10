@@ -55,7 +55,11 @@
             <a-menu v-model="current" mode="horizontal" @click="changeSort">
               <a-menu-item key="commentTime">最新</a-menu-item>
               <a-menu-item key="commentGood">点赞最多</a-menu-item>
+<<<<<<< HEAD
               <a-menu-item key="commentComment">评论最多</a-menu-item>
+=======
+              <a-menu-item key="commentCount">评论最多</a-menu-item>
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
             </a-menu>
           </div>
         </div>
@@ -70,8 +74,17 @@
                   @click="saveGoodForComment(item.commentId)"
                 /> {{ item.commentGood }}
               </span>
+<<<<<<< HEAD
               <span slot="actions">删除</span>
               <span slot="actions" key="comment-nested-reply-to" @click="doSaveChildComment(item)">回复</span>
+=======
+              <span v-if="(userName === item.commentUser) || (userName === article.articleAuthor)" slot="actions" @click="deleteComment(item)">删除</span>
+              <span slot="actions" key="comment-nested-reply-to" @click="doSaveChildComment(item)">回复</span>
+              <span slot="actions" :style="{ margin:'20px 50px'}">共{{ item.commentCount }}条回复
+                <a v-if=" (showChildComment != item.commentId) && (item.commentCount !== 0) " @click="getCommentChildList(item.commentId)">点击查看</a>
+                <a v-if="showChildComment === item.commentId" @click="hiddenCommentChildList(item.commentId)">收起</a>
+              </span>
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
               <span slot="author">
                 <a-tag v-if=" article.articleAuthor === item.commentUser " :style="{ float:'left'}" color="orange">
                   作者
@@ -89,10 +102,13 @@
               <a-tooltip slot="datetime">
                 <span>{{ item.commentTime }}</span>
               </a-tooltip>
+<<<<<<< HEAD
               <span :style="{ margin:'20px 50px'}">共{{ item.commentCount }}条回复
                 <a v-if=" (showChildComment != item.commentId) && (item.commentCount !== 0) " @click="getCommentChildList(item.commentId)">点击查看</a>
                 <a v-if="showChildComment === item.commentId" @click="hiddenCommentChildList(item.commentId)">收起</a>
               </span>
+=======
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
               <!-- 二级评论 -->
               <div v-if="showChildComment === item.commentId">
                 <a-comment v-for="item1 in commentChildList" :key="item1.commentId">
@@ -103,8 +119,13 @@
                       @click="saveGoodForChildComment(item1.commentId, item.commentId)"
                     /> {{ item1.commentGood }}
                   </span>
+<<<<<<< HEAD
                   <span slot="actions">删除</span>
                   <!-- <span slot="actions" @click="doSaveChildComment(item1)">回复</span> -->
+=======
+                  <span v-if="(userName === item1.commentUser) || (userName === article.articleAuthor)" slot="actions" @click="deleteChildComment(item1)">删除</span>
+                  <span slot="actions" @click="doSaveChildCommentWithParent(item1,item)">回复</span>
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
                   <span slot="author">
                     <a-tag v-if=" article.articleAuthor === item1.commentUser " :style="{ float:'left'}" color="orange">
                       作者
@@ -115,7 +136,11 @@
                     :src="item1.userIcon"
                   />
                   <span slot="content">
+<<<<<<< HEAD
                     <p v-if="item1.commentUser !== undefined ">回复 @{{ item.commentUser }}</p>
+=======
+                    <p v-if="item1.parentCommentUser !== undefined ">回复 @{{ item1.parentCommentUser }}</p>
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
                     {{ item1.commentContent }}
                   </span>
                   <a-tooltip slot="datetime">
@@ -146,8 +171,21 @@
           @current-change="handleCurrentChange"
         />
       </div>
+<<<<<<< HEAD
       <div class="user-comment">
         <a-textarea v-model="childContent" :placeholder="'回复@' + commentParentUser" :rows="3" />
+=======
+      <!-- 二级评论 -->
+      <div id="childCommentContent" class="user-comment">
+        <div class="comment-top">
+          <a-avatar
+            slot="avatar"
+            :size="72.4"
+            :src="userIcon"
+          />
+          <a-textarea v-model="childContent" :placeholder="'回复@' + commentParentUser" :rows="3" :style="{maxWidth: '90%'}" />
+        </div>
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
         <div class="comment-button">
           <a-button type="primary" @click="saveChildComment()">发表评论</a-button>
           <div v-show="childCountShow" class="content-count">
@@ -171,9 +209,18 @@ export default {
   },
   data() {
     return {
+<<<<<<< HEAD
       focusCtrl: 0,
       currentIndex: 0,
       author: '',
+=======
+      refrehFlag: false,
+      focusCtrl: 0,
+      currentIndex: 0,
+      author: '',
+      userName: this.$store.getters.userName,
+      userIcon: this.$store.getters.userIcon,
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
       commentStyle: {
         padding: '10px'
       },
@@ -189,7 +236,11 @@ export default {
           articleId: this.$route.params.id
         },
         sortColumn: 'commentTime',
+<<<<<<< HEAD
         sortMethod: 'desc',
+=======
+        sortMethod: 'asc',
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
         list: []
       },
       childPage: {
@@ -201,7 +252,11 @@ export default {
           pid: ''
         },
         sortColumn: 'commentTime',
+<<<<<<< HEAD
         sortMethod: 'desc',
+=======
+        sortMethod: 'asc',
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
         list: []
       },
       good: {
@@ -210,7 +265,12 @@ export default {
       },
       goodList: [],
       collection: {
+<<<<<<< HEAD
         articleId: this.$route.params.id
+=======
+        articleId: this.$route.params.id,
+        collectionType: 1
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
       },
       comment: {
         commentContent: '',
@@ -250,7 +310,11 @@ export default {
     },
     'childContent': function(newVal, oldVal) {
       if (this.childContent.length > 300) {
+<<<<<<< HEAD
         this.childContent = this.content.substring(0, 300)
+=======
+        this.childContent = this.childContent.substring(0, 300)
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
       }
       if (this.childContent.length > 0) {
         this.childCountShow = true
@@ -304,7 +368,10 @@ export default {
     // 分页查询二级评论
     getByPage() {
       this.commentChildList = null
+<<<<<<< HEAD
       this.childPage.pageSize = 2
+=======
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
       commentApi.getByPage(this.childPage).then(res => {
         this.childPage = res.data
         this.commentChildList = res.data.list
@@ -321,8 +388,15 @@ export default {
         }
       })
     },
+<<<<<<< HEAD
     getCollection() {
       collectionApi.getCollection(this.article.articleId).then(res => {
+=======
+    // 查询文章是否收藏
+    getCollection() {
+      this.collection.articleId = this.$route.params.id
+      collectionApi.getCollection(this.collection).then(res => {
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
         const flag = res.data
         if (flag === 0) {
           this.isCollection = false
@@ -344,6 +418,10 @@ export default {
         this.$message.error('您已点赞，请勿重复点赞')
       }
     },
+<<<<<<< HEAD
+=======
+    // 点赞评论
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
     saveGoodForComment(val) {
       this.good = {}
       this.good.commentId = val
@@ -360,6 +438,10 @@ export default {
         this.getCommentChildList(val)
       })
     },
+<<<<<<< HEAD
+=======
+    // 添加文章收藏
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
     saveCollection() {
       // 收藏
       if (!this.isCollection) {
@@ -373,6 +455,10 @@ export default {
     },
     // 添加文章评论
     saveComment(content) {
+<<<<<<< HEAD
+=======
+      this.comment.parentCommentUser = null
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
       this.comment.commentArticle = this.id
       this.comment.commentContent = this.content
       this.comment.commentType = 0
@@ -382,9 +468,26 @@ export default {
         this.content = ''
       })
     },
+<<<<<<< HEAD
     doSaveChildComment(val) {
       this.comment.pid = val.commentId
       this.commentParentUser = val.commentUser
+=======
+    // 点击回复，定位到二级评论输入框
+    doSaveChildComment(val) {
+      this.commentParentUser = val.commentUser
+      this.comment.parentCommentUser = null
+      document.getElementById('childCommentContent').scrollIntoView()
+      document.getElementById('childCommentContent').focus()
+      this.comment.pid = val.commentId
+    },
+    doSaveChildCommentWithParent(val1, val) {
+      this.commentParentUser = val1.commentUser
+      document.getElementById('childCommentContent').scrollIntoView()
+      document.getElementById('childCommentContent').focus()
+      this.comment.pid = val.commentId
+      this.comment.parentCommentUser = val1.commentUser
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
     },
     // 添加评论评论
     saveChildComment() {
@@ -397,6 +500,46 @@ export default {
         this.childContent = ''
       })
     },
+<<<<<<< HEAD
+=======
+    // 删除评论 一级、二级
+    deleteComment(val) {
+      const commentId = val.commentId
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        commentApi.delete(commentId).then(res => {
+          this.$message.success(res.msg)
+          this.getCommentList()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    deleteChildComment(val) {
+      const commentId = val.commentId
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        commentApi.delete(commentId).then(res => {
+          this.$message.success(res.msg)
+          this.getCommentChildList(val.pid)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
     changeSort(e) {
       this.page.sortColumn = e.key
       this.getCommentList(this.page)
@@ -425,6 +568,15 @@ export default {
 </script>
 
 <style scoped>
+<<<<<<< HEAD
+=======
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   .count-num {
     color: #349edf;
     margin-right: 5px;
@@ -449,6 +601,10 @@ export default {
     width: 350px;
     min-height: 900px;
     margin-right: 3px;
+<<<<<<< HEAD
+=======
+    background-color: white;
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   }
   .right-container {
     display: flex;
@@ -456,6 +612,10 @@ export default {
     width: 850px;
     min-height: 900px;
     margin-left: 3px;
+<<<<<<< HEAD
+=======
+    background-color: white;
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
     /* border: 1px solid green; */
   }
   .article-container {
@@ -515,9 +675,19 @@ export default {
     margin-top: 5px;
   }
   .user-comment {
+<<<<<<< HEAD
     margin-top: 15px;
     background-color: #fff;
     margin-bottom: 10px;
+=======
+    background-color: #fff;
+  }
+  .comment-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    justify-content: space-between;
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   }
   .comment-button {
     margin: 15px;
@@ -581,7 +751,12 @@ export default {
     margin-top: 5px;
   }
   .comment-pagination {
+<<<<<<< HEAD
     margin-top: 10px;
+=======
+    margin-top: 5px;
+    margin-bottom: 5px;
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   }
   .meta-active {
     /* 标识当前是否已点赞，是否已收藏 */
@@ -602,6 +777,13 @@ export default {
     font-size: 14px;
     color: #fff;
   }
+<<<<<<< HEAD
+=======
+  /* 输入文本域 */
+  .ant-input {
+    border-radius: 0px !important;
+  }
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   /* 滚动条的宽度 */
   ::-webkit-scrollbar {
     width: 2px;

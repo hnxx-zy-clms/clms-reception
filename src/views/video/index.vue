@@ -25,8 +25,17 @@
             </a-col>
             <a-col style="width: 100%" :span="6" :push="0">
               <div :style="{background: '#FFFFFF'}">
+<<<<<<< HEAD
                 <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="like" /><p :style="{ float:'left',margin:'17px 5px'}">{{ this.videoInfo.like }}</p>
                 <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="star" /><p :style="{ float:'left',margin:'17px 5px'}">{{ this.videoInfo.collect }}</p>
+=======
+                <a href="javascript:void(0);" :class="isGoodVideo ? 'video-good meta-active' : 'video-good'" @click="saveGoodForVideo">
+                  <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="like" /><p :style="{ float:'left',margin:'17px 5px'}">{{ this.videoInfo.videoGood }}</p>
+                </a>
+                <a href="javascript:void(0);" :class="isCollection ? 'video-collection meta-active' : 'video-collection'" @click="saveCollection">
+                  <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="star" /><p :style="{ float:'left',margin:'17px 5px'}">{{ this.videoInfo.collect }}</p>
+                </a>
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
                 <a-icon :style="{ float:'right',fontSize:'28px',margin:'13px 5px'}" type="more" />
               </div>
               <a-divider />
@@ -161,7 +170,11 @@
           </a-list>
           <h1 :style="{margin:'10px 0'}">相关推荐</h1>
           <a-row v-for="item in recommendVideo" :key="item.videoId" :style="{margin:'10px 0',height:'100px',width:'100%',background: '#fffff'}">
+<<<<<<< HEAD
             <router-link :to="{ path: '/tilltill/' + item.videoId}" >
+=======
+            <router-link :to="{ path: '/tilltill/' + item.videoId}">
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
               <a-col :span="13">
                 <img
                   :style="{margin:'10px 0',width:'150px',height:'100px'}"
@@ -192,11 +205,21 @@ import { mapGetters } from 'vuex'
 import VideoApi from '@/api/video/video.js'
 import { getUserById } from '../../api/user'
 import message from 'ant-design-vue/es/message'
+<<<<<<< HEAD
 
+=======
+import goodApi from '@/api/article/good'
+import collectionApi from '@/api/article/collection'
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
 export default {
   name: 'App',
   data() {
     return {
+<<<<<<< HEAD
+=======
+      isGoodVideo: false, // 判断video是否点赞
+      isCollection: false, // 判断是否已经收藏
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
       current: ['Good'],
       data: [],
       list: false,
@@ -212,6 +235,16 @@ export default {
         videoCommentParentName: '',
         videoId: ''
       },
+<<<<<<< HEAD
+=======
+      good: {
+        videoId: ''
+      },
+      collection: {
+        videoId: this.$route.params.id,
+        collectionType: 3
+      },
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
       page: {
         currentPage: 1,
         pageSize: 5,
@@ -246,6 +279,11 @@ export default {
         this.page = res.data
       })
     }
+<<<<<<< HEAD
+=======
+    this.getGoodForVideo()
+    this.getCollection()
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   },
   methods: {
     primaryCommentTop() {
@@ -323,6 +361,60 @@ export default {
         })
       })
     },
+<<<<<<< HEAD
+=======
+    // 获取当前视频点赞信息
+    getGoodForVideo() {
+      this.good.videoId = this.$route.params.videoId
+      goodApi.getGood(this.good).then(res => {
+        const flag = res.data
+        if (flag === 0) {
+          this.isGoodVideo = false
+        } else {
+          this.isGoodVideo = true
+        }
+      })
+    },
+    // 保存video点赞
+    saveGoodForVideo() {
+      // 点赞
+      if (!this.isGoodVideo) {
+        this.good.videoId = this.$route.params.videoId
+        goodApi.save(this.good).then(res => {
+          this.$message.success(res.msg)
+          this.getGoodForVideo()
+          this.videoInfo.videoGood += 1
+        })
+      } else {
+        this.$message.error('您已点赞，请勿重复点赞')
+      }
+    },
+    // 查询视频是否收藏
+    getCollection() {
+      this.collection.videoId = this.$route.params.videoId
+      collectionApi.getCollection(this.collection).then(res => {
+        const flag = res.data
+        if (flag === 0) {
+          this.isCollection = false
+        } else {
+          this.isCollection = true
+        }
+      })
+    },
+    // 添加视频收藏
+    saveCollection() {
+      // 收藏
+      if (!this.isCollection) {
+        collectionApi.save(this.collection).then(res => {
+          this.$message.success(res.msg)
+          this.getCollection()
+          this.videoInfo.collect += 1
+        })
+      } else {
+        this.$message.error('您已收藏，请勿重复收藏')
+      }
+    },
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
     changeSort() {
       if (this.current[0] === 'Good') {
         this.page.sortColumn = 'video_comment_created_time'
@@ -387,5 +479,16 @@ export default {
 </script>
 
 <style>
+<<<<<<< HEAD
+=======
+.meta-active {
+    /* 标识当前是否已点赞，是否已收藏 */
+    color: red;
+  }
+  .meta-active:hover {
+    /* 标识当前是否已点赞，是否已收藏 */
+    color: red !important;
+  }
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
 
 </style>

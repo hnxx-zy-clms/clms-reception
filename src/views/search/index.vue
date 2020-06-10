@@ -20,11 +20,19 @@
           <div class="spin-content">
             <div v-if="(current+'') == 'article'">
               <!-- 文章卡片 -->
+<<<<<<< HEAD
               <article-card :page="searchPage" @baseSearch="baseSearch" />
             </div>
             <!-- 问答卡片 -->
             <div v-if="(current+'') == 'answer'">
               <answer-card :page="searchPage" @baseSearch="baseSearch" />
+=======
+              <article-card :page="searchPage" @searchHighlightWithFields="searchHighlightWithFields" />
+            </div>
+            <!-- 问答卡片 -->
+            <div v-if="(current+'') == 'answer'">
+              <answer-card :page="searchPage" @searchHighlightWithFields="searchHighlightWithFields" />
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
             </div>
             <a-button style="width: 100%" :loading="searchLoading" @click="searchMore()">
               加载更多
@@ -57,8 +65,14 @@ export default {
       searchPage: {
         keyword: '测试',
         pageNo: 1,
+<<<<<<< HEAD
         pageSize: 1,
         params: 'articleTitle',
+=======
+        pageSize: 5,
+        params: 'articleTitle',
+        keyFields: ['articleTitle', 'articleDesc'],
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
         // params: 'questionDescription',
         index: 'clms_article_index',
         // index: 'clms_question_index',
@@ -68,6 +82,7 @@ export default {
   },
   created() {
     console.log('关键字：' + this.keyword)
+<<<<<<< HEAD
     this.baseSearch(this.searchPage)
   },
   methods: {
@@ -75,17 +90,45 @@ export default {
       this.searchPage.keyword = this.keyword
       this.loading = true
       searchApi.baseSearch(this.searchPage).then(res => {
+=======
+    // this.baseSearch(this.searchPage)
+    this.searchHighlightWithFields(this.searchPage)
+  },
+  methods: {
+    searchHighlightWithFields() {
+      this.searchPage.keyword = this.keyword
+      this.loading = true
+      searchApi.searchHighlightWithFields(this.searchPage).then(res => {
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
         this.searchPage = res.data
         this.loading = false
         console.log(res)
       })
     },
+<<<<<<< HEAD
     searchMore() {
       this.searchLoading = true
       this.searchPage.pageNo += 1
       searchApi.baseSearch(this.searchPage).then(res => {
         if (res.data.list.length < this.searchPage.pageSize) {
           this.$message.success('当前是最后一页了!')
+=======
+    // baseSearch() {
+    //   this.searchPage.keyword = this.keyword
+    //   this.loading = true
+    //   searchApi.baseSearch(this.searchPage).then(res => {
+    //     this.searchPage = res.data
+    //     this.loading = false
+    //     console.log(res)
+    //   })
+    // },
+    searchMore() {
+      this.searchLoading = true
+      this.searchPage.pageNo += 1
+      searchApi.searchHighlightWithFields(this.searchPage).then(res => {
+        if (res.data.list.length < this.searchPage.pageSize) {
+          this.$message.warning('当前是最后一页了!')
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
         }
         const dataList = res.data.list
         dataList.forEach(item => {
@@ -105,11 +148,17 @@ export default {
     },
     // 改变搜索对象
     changeParams(e) {
+<<<<<<< HEAD
+=======
+      // 重置当前起始页
+      this.searchPage.pageNo = 1
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
       this.current = [e.key]
       console.log('' + this.current)
       if ((this.current + '') === 'article') {
         console.log('执行了文章搜索')
         this.searchPage.index = 'clms_article_index'
+<<<<<<< HEAD
         this.searchPage.params = 'articleTitle'
         this.baseSearch(this.searchPage)
       } else if ((this.current + '') === 'answer') {
@@ -117,6 +166,16 @@ export default {
         this.searchPage.index = 'clms_question_index'
         this.searchPage.params = 'questionDescription'
         this.baseSearch(this.searchPage)
+=======
+        this.searchPage.keyFields = ['articleTitle', 'articleDesc']
+        this.searchHighlightWithFields(this.searchPage)
+      } else if ((this.current + '') === 'answer') {
+        console.log('执行了问题搜索')
+        this.searchPage.pageSize = 10
+        this.searchPage.index = 'clms_question_index'
+        this.searchPage.keyFields = ['questionDescription']
+        this.searchHighlightWithFields(this.searchPage)
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
       } else {
         console.log('其他')
       }

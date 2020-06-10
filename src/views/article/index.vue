@@ -29,6 +29,7 @@
           <a-card title="广告位" :head-style="headStyle" :body-style="adStyle">
             <a-carousel autoplay effect="fade">
               <div>
+<<<<<<< HEAD
                 <img src="@/assets/img/1.jpg" class="carousel-img">
               </div>
               <div>
@@ -39,6 +40,18 @@
               </div>
               <div>
                 <img src="@/assets/img/4.jpg" class="carousel-img">
+=======
+                <img src="https://img-bss.csdn.net/1589341716269.jpg" class="carousel-img">
+              </div>
+              <div>
+                <img src="https://img-bss.csdn.net/1570520124064.png" class="carousel-img">
+              </div>
+              <div>
+                <img src="https://img-bss.csdn.net/1591005951303.png" class="carousel-img">
+              </div>
+              <div>
+                <img src="https://img-bss.csdn.net/1590996285821.jpg" class="carousel-img">
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
               </div>
             </a-carousel>
           </a-card>
@@ -48,7 +61,11 @@
             <div
               class=" recom-list"
             >
+<<<<<<< HEAD
               <a-spin :spinning="loading" style="height: 888px">
+=======
+              <a-spin :spinning="loading" style="height: 620px">
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
                 <div class="spin-content">
                   <a-card v-for="item in page.list" :key="item.articleId" :body-style="recomStyle" class="article-card">
                     <div class="article-main">
@@ -238,7 +255,11 @@ export default {
   }
   .carousel-img {
     width: 100%;
+<<<<<<< HEAD
     height: 100%;
+=======
+    height: 190px;
+>>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   }
   .right-container  {
     width: 350px;
