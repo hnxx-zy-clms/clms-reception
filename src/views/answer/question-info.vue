@@ -65,11 +65,7 @@
         <!-- 底部区域,放置评论 -->
         <div class="do-answer-container">
           <div class="user-answer">
-<<<<<<< HEAD
-            <a-textarea v-model="content" placeholder="请输入内容，不超过300字" :rows="4" />
-=======
             <tinymce v-model="content" />
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
             <div class="answer-button">
               <a-button type="primary" @click="saveAnswer(content)">发表答复</a-button>
               <div v-show="countShow" class="content-count">
@@ -91,45 +87,6 @@
           </div>
           <!-- 答复列表 -->
           <div class="answer-list">
-<<<<<<< HEAD
-            <!-- 答复卡片 -->
-            <a-card v-for="item in page.list" :key="item.answerId" class="answer-card">
-              <div class="answer-main">
-                <!-- 左侧答复人头像 flex-start -->
-                <div class="answer-author-img">
-                  <img class="author-img" :src="item.userIcon" alt="">
-                </div>
-                <!-- 右侧答复主体 space-between link位置 -->
-                <div class="answer-container">
-                  <!-- 上层信息 row -->
-                  <div class="answer-top-content">
-                    <!-- 答复状态标记 -->
-                    <div class="answer-mark">
-                      <a-tag v-if="item.answerMark===0" color="red">未采纳</a-tag>
-                      <a-tag v-if="item.answerMark===1" color="green">已采纳</a-tag>
-                    </div>
-                    <!-- 答复标题/描述 -->
-                    <div class="answer-content">{{ item.answerContent }}</div>
-                  </div>
-                  <!-- 下层信息 -->
-                  <div class="answer-bottom-content">
-                    <div class="answer-meta">
-                      <div class="author-name">{{ item.answerAuthor }}</div>
-                      <!-- <div class="author-type">学生</div> -->
-                      <div class="answer-time">{{ item.answerTime }}</div>
-                    </div>
-                    <div class="answer-action">
-                      <a-icon
-                        :class=" item.goodAnswerFlag ? 'action-icon meta-active' : 'action-icon'"
-                        type="like"
-                        @click="saveGoodForAnswer(item.answerId)"
-                      /><span class="count-num"> {{ item.answerGood }} </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a-card>
-=======
             <!-- 答复列表 -->
             <div v-for="item in page.list" :key="item.answerId">
               <a-comment>
@@ -183,7 +140,6 @@
                 </a-modal>
               </a-comment>
             </div>
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
           </div>
           <el-pagination
             align="center"
@@ -209,14 +165,6 @@ import answerApi from '@/api/answer/answer'
 import AuthorInfo from '@/views/answer/author-info'
 import goodApi from '@/api/article/good'
 import collectionApi from '@/api/article/collection'
-<<<<<<< HEAD
-export default {
-  components: {
-    AuthorInfo
-  },
-  data() {
-    return {
-=======
 import Tinymce from '@/views/common/Tinymce/index'
 export default {
   components: {
@@ -227,7 +175,6 @@ export default {
     return {
       userName: this.$store.getters.userName,
       userIcon: this.$store.getters.userIcon,
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
       isGoodQuestion: false, // 判断是否已经点赞
       isCollection: false, // 判断是否已经收藏
       current: ['1'],
@@ -239,13 +186,10 @@ export default {
         question: '',
         answer: ''
       },
-<<<<<<< HEAD
-=======
       collection: {
         question: this.$route.params.id,
         collectionType: 2
       },
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
       page: {
         currentPage: 1,
         pageSize: 5,
@@ -260,11 +204,7 @@ export default {
       },
       content: '', // 评论文本内容
       countShow: false, // 控制是否显示字符个数提示
-<<<<<<< HEAD
-      answerContentCount: 300, // 显示还能输入的字符数量
-=======
       answerContentCount: 1000, // 显示还能输入的字符数量
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
       headStyle: {
         fontSize: '18px',
         fontWeight: 'bold',
@@ -272,26 +212,17 @@ export default {
         borderLeft: '5px solid #409eff'
       },
       loading: false,
-<<<<<<< HEAD
-      questionId: this.$route.params.id
-=======
       questionId: this.$route.params.id,
       // 控制答复内容弹框
       modalContent: '',
       visible: false,
       confirmLoading: false
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
     }
   },
   watch: {
     'content': function(newVal, oldVal) {
-<<<<<<< HEAD
-      if (this.content.length > 300) {
-        this.content = this.content.substring(0, 300)
-=======
       if (this.content.length > 1000) {
         this.content = this.content.substring(0, 1000)
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
       }
       if (this.content.length > 0) {
         this.countShow = true
@@ -307,10 +238,7 @@ export default {
     this.get(this.questionId)
     this.getAnswerPage(this.page)
     this.getGoodForQuestion()
-<<<<<<< HEAD
-=======
     this.getCollection()
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   },
   methods: {
     getGoodForQuestion() {
@@ -325,12 +253,8 @@ export default {
       })
     },
     getCollection() {
-<<<<<<< HEAD
-      collectionApi.getCollection(this.article.articleId).then(res => {
-=======
       this.collection.questionId = this.$route.params.id
       collectionApi.getCollection(this.collection).then(res => {
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
         const flag = res.data
         if (flag === 0) {
           this.isCollection = false
@@ -361,10 +285,7 @@ export default {
         this.getAnswerPage(this.page)
       })
     },
-<<<<<<< HEAD
-=======
     // 添加问题收藏
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
     saveCollection() {
       // 收藏
       if (!this.isCollection) {
@@ -399,8 +320,6 @@ export default {
         this.content = ''
       })
     },
-<<<<<<< HEAD
-=======
     // 采纳答复
     toAdoptAnwer(val) {
       const answerId = val.answerId
@@ -440,14 +359,11 @@ export default {
         })
       })
     },
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
     // 当前页跳转 参数 value 当前页(currentPage)
     handleCurrentChange(val) {
       this.page.currentPage = val
       this.getAnswerPage(this.page)
     },
-<<<<<<< HEAD
-=======
     showAnswerModal(val) {
       this.modalContent = val.answerContent
       this.visible = true
@@ -458,7 +374,6 @@ export default {
     handleCancel(e) {
       this.visible = false
     },
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
     goBack() {
       this.$router.go(-1)
     }
@@ -467,12 +382,9 @@ export default {
 </script>
 
 <style scoped>
-<<<<<<< HEAD
-=======
   .mce-tinymec {
     border-width: 0px !important;
   }
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   .question-container {
     display: flex;
     flex-direction: row;
@@ -584,10 +496,7 @@ export default {
   }
   .answer-list {
     width: 100%;
-<<<<<<< HEAD
-=======
     background-color: white;
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
     /* border: 1px solid green; */
   }
   .answer-main {
@@ -595,14 +504,11 @@ export default {
     flex-direction: row;
     align-items: center;
   }
-<<<<<<< HEAD
-=======
   .answer-author-img {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
   }
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   .author-img {
     border: 5px solid #e5e5e5;
     width: 50px;
@@ -618,10 +524,6 @@ export default {
   .answer-top-content {
     display: flex;
     flex-direction: row;
-<<<<<<< HEAD
-    margin-bottom: 3px;
-  }
-=======
     justify-content: space-between;
     margin-bottom: 3px;
   }
@@ -630,7 +532,6 @@ export default {
     overflow: hidden;
     cursor: pointer;	/* 聚焦样式*/
   }
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   .answer-description {
     font-size: 16px;
     overflow: hidden;
@@ -649,12 +550,9 @@ export default {
     flex-direction: row;
     justify-content: space-around;
   }
-<<<<<<< HEAD
-=======
   .answer-action {
     margin-right: 8px;
   }
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   .author-name {
     margin-right: 20px;
   }
@@ -668,11 +566,7 @@ export default {
     color: #349edf;
   }
   .answer-pagination {
-<<<<<<< HEAD
-      margin-top: 20px;
-=======
       margin-top: 5px;
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   }
   .meta-active {
     /* 标识当前是否已点赞，是否已收藏 */
@@ -700,8 +594,6 @@ export default {
     justify-content: space-evenly;
     font-size: 24px;
   }
-<<<<<<< HEAD
-=======
   /* 预览问题答复列表的问题内容 */
   .preview-answer-content {
     width: 100%;
@@ -715,5 +607,4 @@ export default {
     /* 超出部分省略号 */
     text-overflow: ellipsis;
   }
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
 </style>

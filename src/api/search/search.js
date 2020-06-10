@@ -7,8 +7,6 @@ export default {
       method: 'post',
       data: searchPage
     })
-<<<<<<< HEAD
-=======
   },
   searchHighlightWithFields(searchPage) { // 复杂多字段高亮搜索
     return request({
@@ -16,6 +14,5 @@ export default {
       method: 'post',
       data: searchPage
     })
->>>>>>> d8f353365b70046617c15d728bd5dfc4b17f163a
   }
 }

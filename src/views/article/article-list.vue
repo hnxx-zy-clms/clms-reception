@@ -94,7 +94,7 @@ export default {
       },
       page: {
         currentPage: 1,
-        pageSize: 6,
+        pageSize: 10,
         totalCount: 0,
         totalPage: 0,
         params: {},
