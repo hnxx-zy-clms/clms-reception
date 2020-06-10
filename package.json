@@ -1,0 +1,52 @@
+{
+  "name": "clms-reception",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@antv/data-set": "^0.11.4",
+    "@antv/g2": "^4.0.7",
+    "ant-design-vue": "^1.5.3",
+    "axios": "^0.19.2",
+    "core-js": "^3.6.4",
+    "dplayer": "^1.25.1",
+    "element-ui": "^2.13.1",
+    "js-cookie": "^2.2.1",
+    "nprogress": "^0.2.0",
+    "sockjs-client": "^1.4.0",
+    "stompjs": "^2.3.3",
+    "vue": "^2.6.11",
+    "vue-infinite-scroll": "^2.0.2",
+    "vue-meta": "^2.3.3",
+    "vue-moment": "^4.1.0",
+    "vue-router": "^3.1.6",
+    "vuex": "^3.1.3",
+    "wangeditor": "^3.1.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.3.0",
+    "@vue/cli-plugin-eslint": "~4.3.0",
+    "@vue/cli-plugin-router": "~4.3.0",
+    "@vue/cli-plugin-unit-jest": "~4.3.0",
+    "@vue/cli-plugin-vuex": "~4.3.0",
+    "@vue/cli-service": "~4.3.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/test-utils": "1.0.0-beta.31",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-vue": "^6.2.2",
+    "prettier": "^1.19.1",
+    "sass": "^1.26.3",
+    "sass-loader": "^8.0.2",
+    "stompjs": "^2.3.3",
+    "vue": "^2.6.11",
+    "vue-resource": "^1.5.1",
+    "vue-template-compiler": "^2.6.11"
+  }
+}
