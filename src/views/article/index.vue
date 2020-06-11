@@ -26,29 +26,29 @@
         <el-button type="primary" class="write-article" icon="el-icon-edit" @click="openAddDialog">发表文章</el-button>
         <!-- 走马灯 -->
         <div class="cneter-carousel">
-          <a-card title="广告位" :head-style="headStyle" :body-style="adStyle">
+          <a-card title="校园新闻" :head-style="headStyle" :body-style="adStyle">
             <a-carousel autoplay effect="fade">
               <div>
-                <img src="https://img-bss.csdn.net/1589341716269.jpg" class="carousel-img">
+                <img src="http://img.fusheng.xyz/clms-news-3.jpg" class="carousel-img">
               </div>
               <div>
-                <img src="https://img-bss.csdn.net/1570520124064.png" class="carousel-img">
+                <img src="http://img.fusheng.xyz/clms-news-2.jpg" class="carousel-img">
               </div>
               <div>
-                <img src="https://img-bss.csdn.net/1591005951303.png" class="carousel-img">
+                <img src="http://img.fusheng.xyz/clms-news-1.jpg" class="carousel-img">
               </div>
               <div>
-                <img src="https://img-bss.csdn.net/1590996285821.jpg" class="carousel-img">
+                <img src="http://img.fusheng.xyz/clms-search-back.jpg" class="carousel-img">
               </div>
             </a-carousel>
           </a-card>
         </div>
         <div class="recom-read">
-          <a-card title="推荐阅读" :head-style="headStyle" :body-style="recomStyle">
+          <a-card title="今日推荐" :head-style="headStyle" :body-style="recomStyle">
             <div
               class=" recom-list"
             >
-              <a-spin :spinning="loading" style="height: 620px">
+              <a-spin :spinning="loading" style="height: 558px">
                 <div class="spin-content">
                   <a-card v-for="item in page.list" :key="item.articleId" :body-style="recomStyle" class="article-card">
                     <div class="article-main">
@@ -97,7 +97,8 @@ export default {
         padding: '10px'
       },
       recomStyle: {
-        padding: '5px'
+        padding: '5px',
+        maxHeight: '560px'
       },
       typeList: [],
       type: {
@@ -120,7 +121,7 @@ export default {
   },
   created() {
     this.getTypeList()
-    this.getRecomRead()
+    // this.getRecomRead()
   },
   methods: {
     getTypeList() {
@@ -173,7 +174,7 @@ export default {
   .article-container {
     display: flex;
     flex-direction: row;
-    height: 888px;
+    max-height: 1600px;
     width: 1312px;
     /* 左右自适应 */
     margin: auto;
@@ -251,7 +252,7 @@ export default {
     width: 100%;
   }
   .recom-list {
-    height: 520px;
+    height: 526px;
     width: 338px;
     overflow: auto;
   }

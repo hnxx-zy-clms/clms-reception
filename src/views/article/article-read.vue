@@ -7,7 +7,15 @@
     </div>
     <!-- 右侧容器,文章内容 -->
     <div class="right-container">
-      <a-button class="go-back" icon="el-icon-back" @click="goBack()">返回</a-button>
+      <!-- <a-row>
+      <a-col :span="8">
+        col-8
+      </a-col>
+      <a-col :span="8" :offset="8">
+        col-8
+      </a-col>
+    </a-row> -->
+      <a-button class="go-back top-action" @click="goBack()">返回</a-button>
       <!-- 中间区域,放置文章 -->
       <div class="article-container">
         <a-spin :spinning="loading" style="min-height: 400px">
@@ -18,6 +26,7 @@
               <a-icon class="action-icon" type="eye" /><span class="count-num"> {{ article.articleRead }} 阅读</span>
               <a-icon class="action-icon" type="heart" /><span class="count-num"> {{ article.articleCollection }} 收藏</span>
               <a-icon class="action-icon" type="like" /><span class="count-num"> {{ article.articleGood }} 点赞</span>
+              <a href="javascript:void(0);"><span class="do-editer" @click="toUpdate(article.articleId)">编辑</span></a>
             </div>
           </div>
           <div class="article-content" v-html="article.articleContent" />
@@ -49,7 +58,7 @@
         </div>
         <!-- 评论列表组件 -->
         <!-- 筛选栏容器 -->
-        <div class="scree-container">
+        <div v-if="page.list.length > 0" class="scree-container">
           <!-- 条件列 -->
           <div class="scree-menu">
             <a-menu v-model="current" mode="horizontal" @click="changeSort">
@@ -94,7 +103,7 @@
                 <span>{{ item.commentTime }}</span>
               </a-tooltip>
               <!-- 二级评论 -->
-              <div v-if="showChildComment === item.commentId">
+              <div v-if="showChildComment === item.commentId" class="child-comment-list" @scroll="scrollLoadMore($event, item)">
                 <a-comment v-for="item1 in commentChildList" :key="item1.commentId">
                   <span slot="actions">
                     <a-icon
@@ -132,11 +141,29 @@
                   @current-change="handleCurrentChangeChild"
                 />
               </div>
+              <!-- 二级评论 -->
+              <div v-if="commentParentUser !== '' && item.commentId === doCommentFlag" id="childCommentContent" class="user-comment">
+                <div class="comment-top">
+                  <a-avatar
+                    slot="avatar"
+                    :size="72.4"
+                    :src="userIcon"
+                  />
+                  <a-textarea v-model="childContent" :placeholder="'回复@' + commentParentUser" :rows="3" :style="{maxWidth: '90%'}" />
+                </div>
+                <div class="comment-button">
+                  <a-button type="primary" @click="saveChildComment(item.commentId)">发表评论</a-button>
+                  <div v-show="childCountShow" class="content-count">
+                    还能输入 {{ commentContentCount }} 个字符
+                  </div>
+                </div>
+              </div>
             </a-comment>
           </div>
         </div>
         <!-- 一级评论分页 -->
         <el-pagination
+          v-if="page.list.length < page.totalCount"
           align="center"
           class="comment-pagination"
           :current-page="page.currentPage"
@@ -146,24 +173,15 @@
           @current-change="handleCurrentChange"
         />
       </div>
-      <!-- 二级评论 -->
-      <div id="childCommentContent" class="user-comment">
-        <div class="comment-top">
-          <a-avatar
-            slot="avatar"
-            :size="72.4"
-            :src="userIcon"
-          />
-          <a-textarea v-model="childContent" :placeholder="'回复@' + commentParentUser" :rows="3" :style="{maxWidth: '90%'}" />
-        </div>
-        <div class="comment-button">
-          <a-button type="primary" @click="saveChildComment()">发表评论</a-button>
-          <div v-show="childCountShow" class="content-count">
-            还能输入 {{ commentContentCount }} 个字符
-          </div>
-        </div>
-      </div>
     </div>
+    <!--
+      修改弹窗
+      :article="article" 用于传递参数对象
+    -->
+    <el-dialog title="修改" :visible.sync="updateDialog" width="80%">
+      <article-update :article="article" @closeUpdateDialog="closeUpdateDialog" @read="read" />
+    </el-dialog>
+
   </div>
 </template>
 
@@ -173,9 +191,11 @@ import articleApi from '@/api/article/article'
 import commentApi from '@/api/article/comment'
 import goodApi from '@/api/article/good'
 import collectionApi from '@/api/article/collection'
+import ArticleUpdate from './article-update'
 export default {
   components: {
-    AuthorInfo
+    AuthorInfo,
+    ArticleUpdate
   },
   data() {
     return {
@@ -200,19 +220,19 @@ export default {
           articleId: this.$route.params.id
         },
         sortColumn: 'commentTime',
-        sortMethod: 'asc',
+        sortMethod: 'desc',
         list: []
       },
       childPage: {
         currentPage: 1,
-        pageSize: 3,
+        pageSize: 5,
         totalCount: 0,
         totalPage: 0,
         params: {
           pid: ''
         },
         sortColumn: 'commentTime',
-        sortMethod: 'asc',
+        sortMethod: 'desc',
         list: []
       },
       good: {
@@ -237,6 +257,10 @@ export default {
       article: {
         articleId: ''
       },
+      loadingMore: false,
+      noMore: false,
+      doCommentFlag: null,
+      updateDialog: false, // 控制修改弹窗显示
       commentParentUser: '',
       showChildComment: true, // 控制二级评论的显示
       commentChildList: [],
@@ -291,10 +315,21 @@ export default {
         this.loading = false
       })
     },
+    // 修改
+    toUpdate(id) {
+      articleApi.get(id).then(res => {
+        this.article = res.data
+        this.updateDialog = true
+      })
+    },
     getList() {
       goodApi.getList().then(res => {
         this.goodList = res.data
       })
+    },
+    closeUpdateDialog() {
+      // 关闭修改弹窗
+      this.updateDialog = false
     },
     // 分页查询一级评论
     getCommentList() {
@@ -304,8 +339,18 @@ export default {
         this.page.list = res.data.list
       })
     },
+    scrollLoadMore(e, val) {
+      // !this.moreLoading 没有在加载状态，触发加载更多时，把this.moreLoading置未true
+      // !this.noMore 没有更多的状态为false，当我们取到的数据长度小于1页的数量时，就没有更多了数据了，把 this.noMore置为true，这样就不会触发无意义的加载更多了
+      if (e.srcElement.scrollTop + e.srcElement.offsetHeight > e.srcElement.scrollHeight && !this.loadingMore && !this.noMore) {
+        this.loadMore(val)
+      }
+    },
+    loadMore(val) {
+    },
     // 查询二级评论
     getCommentChildList(val) {
+      this.childPage.currentPage = 1
       this.showChildComment = val
       this.childPage.params.pid = val
       this.getByPage(this.childPage)
@@ -316,7 +361,9 @@ export default {
     // 分页查询二级评论
     getByPage() {
       this.commentChildList = null
+      this.childPage.sortColumn = 'commentTime'
       commentApi.getByPage(this.childPage).then(res => {
+        console.log(this.childPage)
         this.childPage = res.data
         this.commentChildList = res.data.list
       })
@@ -400,29 +447,30 @@ export default {
     },
     // 点击回复，定位到二级评论输入框
     doSaveChildComment(val) {
+      this.doCommentFlag = val.commentId
       this.commentParentUser = val.commentUser
-      this.comment.parentCommentUser = null
-      document.getElementById('childCommentContent').scrollIntoView()
-      document.getElementById('childCommentContent').focus()
       this.comment.pid = val.commentId
     },
     doSaveChildCommentWithParent(val1, val) {
+      this.doCommentFlag = val.commentId
       this.commentParentUser = val1.commentUser
-      document.getElementById('childCommentContent').scrollIntoView()
-      document.getElementById('childCommentContent').focus()
       this.comment.pid = val.commentId
       this.comment.parentCommentUser = val1.commentUser
+      // document.getElementById('childCommentContent').scrollIntoView()
+      // document.getElementById('childCommentContent').focus()
     },
     // 添加评论评论
-    saveChildComment() {
+    saveChildComment(val) {
       this.comment.commentArticle = this.id
       this.comment.commentContent = this.childContent
       this.comment.commentType = 1
       commentApi.save(this.comment).then(res => {
         this.getCommentList()
+        this.getCommentChildList(val)
         this.$message.success(res.msg)
         this.childContent = ''
       })
+      this.doCommentFlag = null
     },
     // 删除评论 一级、二级
     deleteComment(val) {
@@ -692,5 +740,9 @@ export default {
   ::-webkit-scrollbar-thumb {
     background-color: rgb(121, 216, 240);
     border-radius: 3px;
+  }
+  .child-comment-list {
+    max-height: 420px;
+    overflow: auto;
   }
 </style>
