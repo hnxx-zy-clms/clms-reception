@@ -16,7 +16,7 @@ export default {
       chart: null,
       userparam: {
         params: {
-          articleAuthor: 'code-fusheng'
+          articleAuthor: ''
         },
         sortColumn: 'article_type',
         sortMethod: 'desc'
@@ -59,7 +59,7 @@ export default {
       articleApi.getUserArticleCountInfo(this.userparam).then(res => {
         // console.log('before', this.data)
         this.data = res.data.list
-        // console.log(this.data)
+        console.log(res)
       })
     },
     initComponent() {
