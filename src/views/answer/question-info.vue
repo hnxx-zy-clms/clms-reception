@@ -15,9 +15,8 @@
         <a-card class="question-card">
           <div>
             <div class="question-desc">{{ question.questionDescription }}</div>
-            <a-divider />
             <div class="question-content" v-html="question.questionContent" />
-            <!-- 文章操作 -->
+            <!-- 答疑操作 -->
             <div class="question-action">
               <div class="question-good">
                 <a href="javascript:void(0);" :class="isGoodQuestion ? 'question-good meta-active' : 'question-good'" @click="saveGoodForQuestion">
@@ -127,7 +126,7 @@
                   <span>{{ item.answerTime }}</span>
                 </a-tooltip>
                 <a-modal
-                  width="800px"
+                  width="1000px"
                   :mask="false"
                   ok-text="确认"
                   cancel-text="取消"
@@ -142,6 +141,7 @@
             </div>
           </div>
           <el-pagination
+            v-if="page.totalCount > page.list.length"
             align="center"
             class="answer-pagination"
             :current-page="page.currentPage"
@@ -407,8 +407,10 @@ export default {
     min-height: 300px;
   }
   .question-desc {
-    font-size: 16px;
-    color: black;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 70px;
   }
   .question-main {
     display: flex;
@@ -588,8 +590,8 @@ export default {
     display: flex;
     flex-direction: row;
     width: 300px;
-    min-height: 200px;
-    line-height: 200px;
+    min-height: 100px;
+    line-height: 100px;
     margin: auto;
     justify-content: space-evenly;
     font-size: 24px;

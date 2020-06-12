@@ -7,14 +7,6 @@
     </div>
     <!-- 右侧容器,文章内容 -->
     <div class="right-container">
-      <!-- <a-row>
-      <a-col :span="8">
-        col-8
-      </a-col>
-      <a-col :span="8" :offset="8">
-        col-8
-      </a-col>
-    </a-row> -->
       <a-button class="go-back top-action" @click="goBack()">返回</a-button>
       <!-- 中间区域,放置文章 -->
       <div class="article-container">
@@ -202,7 +194,6 @@ export default {
       refrehFlag: false,
       focusCtrl: 0,
       currentIndex: 0,
-      author: '',
       userName: this.$store.getters.userName,
       userIcon: this.$store.getters.userIcon,
       commentStyle: {
@@ -255,7 +246,8 @@ export default {
       childContent: '', // 评论评论文本内容
       id: '',
       article: {
-        articleId: ''
+        articleId: '',
+        articleAuthor: ''
       },
       loadingMore: false,
       noMore: false,
@@ -311,7 +303,6 @@ export default {
       this.id = this.$route.params.id
       articleApi.read(this.id).then(res => {
         this.article = res.data
-        this.author = res.data.articleAuthor
         this.loading = false
       })
     },

@@ -12,9 +12,22 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" size="mini" @click="onSubmit">提交</el-button>
-        <el-button size="mini" @click="close">取消</el-button>
+        <el-button type="danger" size="mini" @click="close">取消</el-button>
+        <el-button type="primary" size="mini" @click="doRecomQuestions(question)">查询相似问题</el-button>
+        <el-button type="primary" size="mini" @click="doRecomAnswers(question)">查询推荐回答</el-button>
       </el-form-item>
     </el-form>
+    <!-- 推荐容器 -->
+    <div class="recom-cotainer">
+      <!-- 相似问题推荐 -->
+      <div v-if="recomQuestionShow" class="recom-question">
+        推荐问题
+      </div>
+      <!-- 推荐问题答复 -->
+      <div v-if="recomAnswerShow" class="recom-answwer">
+        推荐回复
+      </div>
+    </div>
   </div>
 </template>
 
@@ -28,7 +41,9 @@ export default {
   },
   data() {
     return {
-      question: {}
+      question: {},
+      recomQuestionShow: false,
+      recomAnswerShow: false
     }
   },
   methods: {
@@ -45,6 +60,14 @@ export default {
         this.$emit('freshen')
       })
     },
+    // 展示推荐的相似问题
+    doRecomQuestions() {
+      this.recomQuestionShow = true
+    },
+    // 展示推荐的回答
+    doRecomAnswers() {
+      this.recomAnswerShow = true
+    },
     close() {
       this.$emit('closeAddDialog')
       this.question = {}
@@ -60,5 +83,20 @@ export default {
         min-height: 400px;
         /* border: 1px solid #9c9ea8; */
         background-color: white;
+    }
+    .recom-cotainer {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+    }
+    .recom-question {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+    }
+    .recom-answer {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
     }
 </style>

@@ -180,6 +180,7 @@ export default {
     margin: auto;
     margin-top: 10px;
     margin-bottom: 20px;
+    /* background-color: white; */
   }
   .left-container {
     width: 100px;

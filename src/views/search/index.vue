@@ -3,7 +3,7 @@
     <div class="search-icon">
       <p class="font-icon">ZYT1-CLMS</p>
     </div>
-    <a-input-search v-model="keyword" class="search-box" placeholder="周报/日报/问答/文章/通知" enter-button @search="baseSearch(keyword)" />
+    <a-input-search v-model="keyword" size="large" class="search-box" placeholder="周报/日报/问答/文章/通知" enter-button style="width: 520px " @search="doSearch(keyword)" />
     <!-- 条件列 -->
     <div class="scree-menu">
       <a-menu v-model="current" mode="horizontal" @click="changeParams">
@@ -20,14 +20,17 @@
           <div class="spin-content">
             <div v-if="(current+'') == 'article'">
               <!-- 文章卡片 -->
-              <article-card :page="searchPage" @searchHighlightWithFields="searchHighlightWithFields" />
+              <article-card :page="searchPage" @doSearch="doSearch" />
             </div>
             <!-- 问答卡片 -->
             <div v-if="(current+'') == 'answer'">
-              <answer-card :page="searchPage" @searchHighlightWithFields="searchHighlightWithFields" />
+              <answer-card :page="searchPage" @doSearch="doSearch" />
             </div>
-            <a-button style="width: 100%" :loading="searchLoading" @click="searchMore()">
+            <a-button v-if="noMore === false && searchPage.list.length >= searchPage.pageSize" style="width: 100%" :loading="searchLoading" @click="searchMore()">
               加载更多
+            </a-button>
+            <a-button v-else-if="noMore === true" style="width: 100%" :loading="searchLoading">
+              到底了
             </a-button>
           </div>
         </a-spin>
@@ -50,6 +53,7 @@ export default {
       cardBodyStyle: {
         padding: '18px'
       },
+      noMore: false,
       searchLoading: false,
       loading: false,
       current: ['article'],
@@ -70,10 +74,10 @@ export default {
   created() {
     console.log('关键字：' + this.keyword)
     // this.baseSearch(this.searchPage)
-    this.searchHighlightWithFields(this.searchPage)
+    this.doSearch(this.searchPage)
   },
   methods: {
-    searchHighlightWithFields() {
+    doSearch() {
       this.searchPage.keyword = this.keyword
       this.loading = true
       searchApi.searchHighlightWithFields(this.searchPage).then(res => {
@@ -97,6 +101,7 @@ export default {
       searchApi.searchHighlightWithFields(this.searchPage).then(res => {
         if (res.data.list.length < this.searchPage.pageSize) {
           this.$message.warning('当前是最后一页了!')
+          this.noMore = true
         }
         const dataList = res.data.list
         dataList.forEach(item => {
@@ -124,13 +129,13 @@ export default {
         console.log('执行了文章搜索')
         this.searchPage.index = 'clms_article_index'
         this.searchPage.keyFields = ['articleTitle', 'articleDesc']
-        this.searchHighlightWithFields(this.searchPage)
+        this.doSearch(this.searchPage)
       } else if ((this.current + '') === 'answer') {
         console.log('执行了问题搜索')
         this.searchPage.pageSize = 10
         this.searchPage.index = 'clms_question_index'
         this.searchPage.keyFields = ['questionDescription']
-        this.searchHighlightWithFields(this.searchPage)
+        this.doSearch(this.searchPage)
       } else {
         console.log('其他')
       }
@@ -157,7 +162,10 @@ export default {
     /* 1.居中对齐 以(水平)中轴为参照对齐 【子元素垂直居中】 */
     align-items: center;
     /* 线性渐变 */
-    background-image: linear-gradient(to right,#e8f1f1,#d2dde7);
+    /* background-image: linear-gradient(to right,#e8f1f1,#d2dde7); */
+    background: url(../../assets/img/search-back.jpg) no-repeat;
+    background-size: 100% 100%;
+    background-position: center;
   }
   .search-icon {
     width: 300px;
@@ -184,7 +192,7 @@ export default {
     }
   }
   .search-box {
-    width: 300px;
+    width: 520px;
     height: 50px;
   }
   .scree-menu {

@@ -21,7 +21,7 @@
     </div>
     <!-- 文案列表容器 -->
     <div class="article-list-container" @scroll="scrollLoadMore($event)">
-      <a-spin :spinning="loading" style="maxHeight: 1500px overflow: auto">
+      <a-spin :spinning="loading">
         <div class="spin-content">
           <!-- 文章卡片 -->
           <a-card v-for="item in page.list" :key="item.articleId" :body-style="articleBodyStyle" class="article-card">
@@ -60,7 +60,7 @@
     <a-button v-if="page.list.length < page.totalCount && page.list.length !== 0 && noMore !== true" style="width: 100%" :loading="loadingMore" @click="loadMore()">
       加载更多
     </a-button>
-    <a-button v-else style="width: 100%" :loading="loadingMore">
+    <a-button v-else-if="page.list.length != 0" style="width: 100%" :loading="loadingMore">
       到底了
     </a-button>
     <!-- <el-pagination
@@ -190,7 +190,7 @@ export default {
     border: 1px solid #e8e8e8;
   }
   .span-content {
-    max-height: 1500px;
+    max-height: 1200px;
     overflow: auto;
   }
   .type-text {
@@ -204,7 +204,7 @@ export default {
     background: none !important;
   }
   .article-list-container {
-    max-height: 1530px;
+    max-height: 1250px;
     overflow: auto;
   }
   .article-main {

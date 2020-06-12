@@ -126,7 +126,7 @@ export default {
     align-items: center;
   }
   .author-img {
-    border: 5px solid #e5e5e5;
+    border: 1px solid #e5e5e5;
     width: 50px;
     height: 50px;
     border-radius: 50%;

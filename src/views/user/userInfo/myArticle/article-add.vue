@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <!--修改表单  -->
-    <el-form ref="updateForm" :model="article" label-width="40px" size="mini">
+  <div class="write-article-container">
+    <!--添加表单  -->
+    <el-form ref="addForm" :model="article" label-width="40px" size="mini">
       <el-form-item label="标题" style="width: 50%">
         <el-input v-model="article.articleTitle" />
       </el-form-item>
@@ -28,7 +28,7 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="描述">
-        <el-input v-model="article.articleDesc" />
+        <el-input v-model="article.articleDesc" type="textarea" />
       </el-form-item>
       <el-form-item label="内容">
         <tinymce v-model="article.articleContent" />
@@ -43,49 +43,37 @@
 
 <script>
 import articleApi from '@/api/article/article'
+// 导入富文本公共组件
 import Tinymce from '@/views/common/Tinymce/index'
 import { getToken } from '@/utils/auth'
-import typeApi from '@/api/article/type'
 export default {
+  // 注册组件
   components: {
     Tinymce
   },
-  // 父组件将数据传递给子组件
-  props: {
-    article: {
-      type: Object,
-      default: null
-    }
-  },
   data() {
     return {
-      imageUrl: this.article.articleImage, // 上传图片回显
+      article: {},
+      imageUrl: null, // 上传图片回显
+      uploadUrl: process.env.VUE_APP_UPLOAD_URL, // 上传图片路径
       headers: { // 上传文件的请求头
         Authorization: getToken()
       },
-      uploadUrl: process.env.VUE_APP_UPLOAD_URL_IMAGE,
       typeList: this.$store.getters.typeList
     }
   },
-  created() {
-    this.getTypeList()
-  },
   methods: {
-    getTypeList() {
-      typeApi.getList().then(res => {
-        this.typeList = res.data
-      })
-    },
-    // 修改
+    // 添加 确认
     /**
      * 1、父组件可以使用 props 把数据传给子组件。
      * 2、子组件可以使用 $emit 触发父组件的自定义事件
      */
     onSubmit() {
-      articleApi.update(this.article).then(res => {
+      articleApi.save(this.article).then(res => {
         this.$message.success(res.msg)
-        this.$emit('closeUpdateDialog')
-        this.$emit('read')
+        this.$emit('closeAddDialog')
+        this.article = {}
+        this.$emit('getByPage')
       })
     },
     uploadSuccess(res, file) {
@@ -94,8 +82,42 @@ export default {
       this.article.articleImage = res.data
     },
     close() {
-      this.$emit('closeUpdateDialog')
+      this.$emit('closeAddDialog')
+      this.article = {}
     }
   }
 }
 </script>
+
+<style>
+.write-article-container  {
+    /* padding: 20px; */
+    width: 100%;
+    min-height: 800px;
+    /* border: 1px solid #9c9ea8; */
+    background-color: white;
+  }
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 300px;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+  }
+  .avatar {
+    width: 300px;
+    height: 150px;
+    display: block;
+  }
+</style>

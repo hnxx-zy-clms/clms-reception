@@ -6,6 +6,7 @@ const getters = {
   userId: state => state.user.userId,
   routers: state => state.settings.routers,
   addRouters: state => state.settings.addRouters,
+  typeList: state => state.global.typeList,
   userIcon: state => state.user.userIcon
 }
 export default getters

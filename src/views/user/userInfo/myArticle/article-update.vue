@@ -43,9 +43,9 @@
 
 <script>
 import articleApi from '@/api/article/article'
+// 导入富文本公共组件
 import Tinymce from '@/views/common/Tinymce/index'
 import { getToken } from '@/utils/auth'
-import typeApi from '@/api/article/type'
 export default {
   components: {
     Tinymce
@@ -63,19 +63,11 @@ export default {
       headers: { // 上传文件的请求头
         Authorization: getToken()
       },
-      uploadUrl: process.env.VUE_APP_UPLOAD_URL_IMAGE,
+      uploadUrl: process.env.VUE_APP_UPLOAD_URL, // 上传图片路径
       typeList: this.$store.getters.typeList
     }
   },
-  created() {
-    this.getTypeList()
-  },
   methods: {
-    getTypeList() {
-      typeApi.getList().then(res => {
-        this.typeList = res.data
-      })
-    },
     // 修改
     /**
      * 1、父组件可以使用 props 把数据传给子组件。
@@ -85,8 +77,9 @@ export default {
       articleApi.update(this.article).then(res => {
         this.$message.success(res.msg)
         this.$emit('closeUpdateDialog')
-        this.$emit('read')
+        this.$emit('getByPage')
       })
+      this.imageUrl = null
     },
     uploadSuccess(res, file) {
       this.$message.success(res.msg)

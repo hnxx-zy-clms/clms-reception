@@ -73,7 +73,7 @@ export default {
         totalCount: 0,
         totalPage: 0,
         params: {
-          articleAuthor: 'admin'
+          articleAuthor: ''
         },
         sortColumn: 'articleRead',
         sortMethod: 'desc',
@@ -81,17 +81,18 @@ export default {
       }
     }
   },
-  created() {
-    this.getRecomRead()
-    this.page.params.articleAuthor = this.article.articleAuthor
+  watch: {
+    'article': function() {
+      this.page.params.articleAuthor = this.article.articleAuthor
+      this.getRecomRead(this.page)
+    }
   },
   methods: {
     // 推荐阅读列表 阅读最多
-    getRecomRead() {
-      this.page.params.articleAuthor = this.author
+    getRecomRead(val) {
+      this.page = val
       articleApi.getByPage(this.page).then(res => {
         this.page = res.data
-        console.log(res)
       })
     }
   }
@@ -165,9 +166,9 @@ export default {
   }
   .recom-list {
     /* max-height: 780px; */
-    min-height: 600px;
+    height: 100%;
     width: 338px;
-    overflow: auto;
+    /* overflow: auto; */
   }
   .article-main {
     width: 100%;

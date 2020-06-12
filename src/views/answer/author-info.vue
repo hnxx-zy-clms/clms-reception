@@ -2,46 +2,36 @@
   <div>
     <!-- 我的问答 -->
     <div class="my-answer-container">
-      <a-card hoverable>
-        <img
-          slot="cover"
-          alt="example"
-          src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-        >
-        <template slot="actions" class="ant-card-actions">
-          <a-icon key="setting" type="setting" />
-          <a-icon key="edit" type="edit" />
-          <a-icon key="ellipsis" type="ellipsis" />
-        </template>
-        <a-card-meta title="Card title" description="This is the description">
+      <a-card hoverable title="我的问答">
+        <a-card-meta :title="userName">
           <a-avatar
             slot="avatar"
-            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+            :src="userIcon"
           />
         </a-card-meta>
+        <a-span>积分: 999</a-span>
+        <div>
+          <a-tag style="marginTop: 10px" color="#f50">问</a-tag><span>提了 0 个问题， 0 人进行了回答</span>
+          <br>
+          <a-tag style="marginTop: 10px" color="#2db7f5">答</a-tag><span>回答了 0 个问题</span>
+        </div>
       </a-card>
     </div>
     <!-- 热门问题 -->
-    <a-card title="热门问题" :head-style="headStyle">
-      <a-card title="Inner card title">
-        <a slot="extra" href="#">More</a>
-        Inner Card content
-      </a-card>
-      <a-card title="Inner card title">
-        <a slot="extra" href="#">More</a>
-        Inner Card content
-      </a-card>
-    </a-card>
+    <!-- <a-card title="热门问题" :head-style="headStyle">
+      <a-list item-layout="horizontal">
+        <a-list-item slot="renderItem">
+          <a-list-item-meta />
+        </a-list-item>
+      </a-list>
+    </a-card> -->
     <!-- 最新回答 -->
     <a-card title="最新回答" :head-style="headStyle">
-      <a-card title="Inner card title">
-        <a slot="extra" href="#">More</a>
-        Inner Card content
-      </a-card>
-      <a-card title="Inner card title">
-        <a slot="extra" href="#">More</a>
-        Inner Card content
-      </a-card>
+      <a-list item-layout="horizontal">
+        <a-list-item slot="renderItem">
+          <a-list-item-meta />
+        </a-list-item>
+      </a-list>
     </a-card>
   </div>
 </template>
@@ -50,6 +40,8 @@
 export default {
   data() {
     return {
+      userName: this.$store.getters.userName,
+      userIcon: this.$store.getters.userIcon,
       headStyle: {
         fontSize: '18px',
         fontWeight: 'bold',

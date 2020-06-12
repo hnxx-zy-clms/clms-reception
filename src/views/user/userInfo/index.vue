@@ -1,76 +1,96 @@
 <template>
-  <div>
-    <el-upload
-      class="avatar-uploader"
-      :action="uploadUrl"
-      :show-file-list="false"
-      :on-success="uploadSuccess"
-      :headers="headers"
+  <div class="user-center-container">
+    <a-radio-group v-model="mode" :style="{ marginBottom: '8px' }">
+      <!-- <a-radio-button value="top">
+        Horizontal
+      </a-radio-button>
+      <a-radio-button value="left">
+        Vertical
+      </a-radio-button> -->
+    </a-radio-group>
+    <a-tabs
+      default-active-key="myinfo"
+      tab-position="left"
+      :style="{ height: '878px', width: '100%' }"
+      @prevClick="callback"
+      @nextClick="callback"
     >
-      <img v-if="imageUrl" :src="imageUrl" class="avatar">
-      <i v-else class="el-icon-plus avatar-uploader-icon" />
-    </el-upload>
-    <h1>用户名:{{ name }}</h1>
+      <a-tab-pane key="myinfo">
+        <span slot="tab"><a-icon type="solution" />我的信息</span>
+        <my-info />
+      </a-tab-pane>
+      <a-tab-pane key="myreport">
+        <span slot="tab"><a-icon type="file-word" />我的日报</span>
+        <my-report />
+      </a-tab-pane>
+      <a-tab-pane key="myquestion">
+        <span slot="tab"><a-icon type="question" />我的提问</span>
+        <my-question />
+      </a-tab-pane>
+      <a-tab-pane key="myanswer">
+        <span slot="tab"><a-icon type="highlight" />我的答复</span>
+        <my-answer />
+      </a-tab-pane>
+      <a-tab-pane key="myarticle">
+        <span slot="tab"><a-icon type="book" />我的文章</span>
+        <my-article />
+      </a-tab-pane>
+      <a-tab-pane key="mygood">
+        <span slot="tab"><a-icon type="like" />我的点赞</span>
+        <my-good />
+      </a-tab-pane>
+      <a-tab-pane key="mycollection">
+        <span slot="tab"><a-icon type="star" />我的收藏</span>
+        <my-collection />
+      </a-tab-pane>
+      <a-tab-pane key="mycomment">
+        <span slot="tab"><a-icon type="message" />我的评论</span>
+        <my-comment />
+      </a-tab-pane>
+      <a-tab-pane key="mymoney" />
+      <span slot="tab"><a-icon type="money-collect" />我的钱包</span>
+    </a-tabs>
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import UserInfoApi from '@/api/user/userInfo.js'
+import MyInfo from '@/views/user/userInfo/my-info'
+import MyReport from '@/views/user/userInfo/myReport/index'
+import MyQuestion from '@/views/user/userInfo/myQuestion/index'
+import MyAnswer from '@/views/user/userInfo/myAnswer/index'
+import MyArticle from '@/views/user/userInfo/myArticle/index'
+import MyGood from '@/views/user/userInfo/myGood/index'
+import MyCollection from '@/views/user/userInfo/myCollection/index'
+import MyComment from '@/views/user/userInfo/myComment/index'
 export default {
+  components: {
+    MyInfo,
+    MyReport,
+    MyAnswer,
+    MyQuestion,
+    MyArticle,
+    MyGood,
+    MyCollection,
+    MyComment
+  },
   data() {
     return {
-      headers: { // 上传文件的请求头
-        Authorization: this.$store.getters.token
-      },
-      uploadUrl: process.env.VUE_APP_UPLOAD_URL_IMAGE,
-      imageUrl: this.$store.getters.userIcon,
-      user: {
-        userId: '',
-        userIcon: ''
-      }
+      mode: 'top'
     }
   },
-  computed: {
-    ...mapGetters([
-      'name', 'userId'
-    ])
-  },
   methods: {
-    uploadSuccess(res, file) {
-      this.$message.success(res.msg)
-      this.imageUrl = res.data
-      this.user.userId = this.userId
-      this.user.userIcon = res.data
-      UserInfoApi.updateUserIconById(this.user).then(res => {
-        this.$message.success(res.msg)
-        this.$router.go(0)
-      })
+    callback(val) {
+      console.log(val)
     }
   }
 }
 </script>
-<style>
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
+
+<style scoped>
+  .user-center-container {
+    width: 98%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin: auto;
+    background-color: white;
   }
 </style>
