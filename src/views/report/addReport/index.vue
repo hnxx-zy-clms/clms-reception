@@ -1,13 +1,14 @@
 <template>
   <div>
-    <a-button @click="showDrawer" :style="{background:'#87d068',color:'#fff'}"> <a-icon type="plus" /> 新建报告 </a-button>
+    <a-button :style="{background:'#87d068',color:'#fff'}" @click="showDrawer"> <a-icon type="plus" /> 新建报告 </a-button>
     <router-link v-if="roles > 0" :to="'/reportMarking'">
       <a-button type="primary" :style="{marginLeft:'5px'}"> <a-icon type="check-square" /> 批阅报告 </a-button>
     </router-link>
     <a-drawer
-      title="Create a new report"
+      title="新建报告"
       :width="720"
       :visible="visible"
+      placement="left"
       :body-style="{ paddingBottom: '80px' }"
       @close="onClose"
     >
@@ -31,6 +32,7 @@
           <a-col :span="24">
             <a-form-item label="工作内容">
               <a-textarea
+                id="workContent"
                 v-decorator="[
                   'workContent',
                   {
@@ -137,6 +139,7 @@ export default {
     return {
       form: this.$form.createForm(this, { name: 'report-form' }),
       reportType: 0,
+      stape: 21,
       visible: false
     }
   },
@@ -145,9 +148,18 @@ export default {
       'roles'
     ])
   },
+  created() {
+    ReportApi.getTime().then(res => {
+      this.stape = res.data
+    })
+  },
   methods: {
     showDrawer() {
-      this.visible = true
+      if (new Date().getHours() < this.stape) {
+        this.visible = true
+      } else {
+        this.$message.error('今日提交时间截止！')
+      }
     },
     onClose() {
       this.visible = false

@@ -15,9 +15,9 @@ export default {
       data: page
     })
   },
-  getVideoCommentParentById(id) { // 查询视频评论
+  getVideoCommentParentById(id, page) { // 查询视频评论
     return request({
-      url: `/videoComment/getVideoCommentParentById/${id}`,
+      url: `/videoComment/getVideoCommentParentById/${id}/${page}`,
       method: 'get'
     })
   },

@@ -17,13 +17,13 @@
           <a-col :span="12">
             <a-statistic-countdown
               title="距今日日报截止时间"
-              :value="today"
-              format="HH:mm:ss:SSS"
+              :value="getFullTime()"
+              format="HH:mm:ss"
               style="margin-right: 50px"
             />
           </a-col>
           <a-col :span="24" style="margin-top: 32px;">
-            <a-statistic-countdown title="距本周周报截止时间" :value="deadline" format="D 天 H 时 m 分 s 秒" />
+            <a-statistic-countdown title="距本周周报截止时间" :value="getWeekDay()" format="D 天 H 时 m 分 s 秒" />
           </a-col>
           <a-col :span="36">
             <a-tag color="orange" style="margin-top: 16px;height: 36px;">
@@ -50,32 +50,18 @@
 <script>
 import Moment from 'moment'
 import ReportApi from '@/api/report/report.js'
-function getWeekDay() {
-  const valDate = new Date().getDay()
-  if (valDate === 0) {
-    return getFullTime()
-  } else {
-    const difference = valDate - 7
-    return Moment().subtract(difference, 'days').format('YYYY-MM-DD') + ' 22:00:00'
-  }
-}
-
-function getFullTime() {
-  const stamp = new Date()
-  const time = Moment(stamp).format('YYYY-MM-DD') + ' 22:00:00'
-  return time
-}
 
 export default {
   data() {
     return {
       minReportInfo: {},
-      // .replace(/-/g, '/') 解决ios端获取不到时间戳的问题
-      deadline: new Date(getWeekDay().replace(/-/g, '/')).getTime(),
-      today: new Date(getFullTime().replace(/-/g, '/')).getTime()
+      stape: '22'
     }
   },
   created() {
+    ReportApi.getTime().then(res => {
+      this.stape = res.data
+    })
     ReportApi.getMinReportInfo().then(res => {
       this.minReportInfo = res.data
       this.minReportInfo.forEach(function(element) {
@@ -85,6 +71,23 @@ export default {
     })
   },
   methods: {
+    getFullTime() {
+      const parse = 'YYYY-MM-DD '
+      const stamp = new Date()
+      const time1 = Moment(stamp).format(parse.concat(this.stape, ':00:00'))
+      // .replace(/-/g, '/') 解决ios端获取不到时间戳的问题
+      return new Date(time1.replace(/-/g, '/')).getTime()
+    },
+    getWeekDay() {
+      const parse = 'YYYY-MM-DD '
+      const valDate = new Date().getDay()
+      if (valDate === 0) {
+        return this.getFullTime()
+      } else {
+        const difference = valDate - 7
+        return new Date(Moment().subtract(difference, 'days').format(parse.concat(this.stape, ':00:00')).replace(/-/g, '/')).getTime()
+      }
+    },
     onFinish() {
       console.log('finished!')
     }
