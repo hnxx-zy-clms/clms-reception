@@ -25,7 +25,7 @@
 
     </li>
     <li class="event-message-join" v-else-if="message.type==='JOIN'">
-        <span>欢迎 {{message.sender}}  进入聊天室</span>
+        <span>欢迎 {{message.sender}}  进入聊天室 {{ this.getTime()}}</span>
     </li>
     <li class="event-message-leave" v-else-if="message.type==='LEAVE'">
         <span>{{message.sender}} 离开聊天室</span>
@@ -44,8 +44,27 @@
         data() {
             return {
                 user: this.$store.getters.name,
+                // time:this.getTime()
             }
         },
+        methods:{
+            getTime(dataStart){
+                let d=''
+                if(dataStart){
+                     d = new Date(dataStart)
+                }else{
+                     d = new Date();
+                }
+                // let y = d.getFullYear(); // 年份
+                let m = (d.getMonth() + 1).toString().padStart(2,'0'); // 月份
+                let r = d.getDate().toString().padStart(2,'0'); // 日子
+                let h = d.getHours().toString().padStart(2,'0'); // 小时
+                let mm = d.getMinutes().toString().padStart(2,'0'); // 分钟
+                let ss = d.getSeconds().toString().padStart(2,'0'); // 秒
+                // return `${y}-${m}-${r}  ${h}:${mm}:${ss}`;
+                return `${m}-${r}  ${h}:${mm}:${ss}`;
+            }
+        }
     }
 </script>
 
