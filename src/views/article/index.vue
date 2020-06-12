@@ -16,7 +16,7 @@
           </div>
         </a-spin>
       </div>
-      <!-- 中间容器 - 放文章卡片 -->
+      <!-- 中间容器 - 文章卡片 -->
       <div class="center-container">
         <!-- 文章列表组件 -->
         <article-list ref="articlelist" :type="type" />
