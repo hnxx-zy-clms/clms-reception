@@ -1,7 +1,7 @@
 <template>
-  <a-layout id="components-layout-demo-top-side" style="padding-top: 25px;padding-bottom: 25px">
+  <a-layout id="components-layout-demo-top-side" style="padding-top: 25px;padding-bottom: 25px;">
     <a-layout-content style="padding: 0 50px">
-      <a-layout style="padding: 24px 0; background: #fff">
+      <a-layout style="padding: 24px 0; background: #fff;min-height: 850px">
         <a-layout-sider width="200" style="background: #fff">
           <a-menu
             v-model="current"

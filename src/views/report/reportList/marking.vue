@@ -5,7 +5,8 @@
       <a-avatar slot="avatar" style="color: #f56a00; backgroundColor: #fde3cf">
         组长
       </a-avatar>
-      <p slot="content">{{ reportMarking.groupLeaderComment }}</p>
+      <p v-if="reportMarking.groupLeaderComment === ''" slot="content" :style="{color:'#BFBFBF'}">组长无批阅内容</p>
+      <p v-else slot="content">{{ reportMarking.groupLeaderComment }}</p>
       <a-tooltip slot="datetime">
         <span>{{ reportMarking.groupTime }}</span>
       </a-tooltip>
@@ -15,7 +16,8 @@
       <a-avatar slot="avatar" style="color: #fff; backgroundColor: #52c41a">
         班长
       </a-avatar>
-      <p slot="content">{{ reportMarking.monitorComment }}</p>
+      <p v-if="reportMarking.monitorComment === ''" slot="content" :style="{color:'#BFBFBF'}">班长无批阅内容</p>
+      <p v-else slot="content">{{ reportMarking.monitorComment }}</p>
       <a-tooltip slot="datetime">
         <span>{{ reportMarking.monitorTime }}</span>
       </a-tooltip>
@@ -25,7 +27,8 @@
       <a-avatar slot="avatar" style="color: #fff; backgroundColor: #108ee9">
         教师
       </a-avatar>
-      <p slot="content">{{ reportMarking.teacherComment }}</p>
+      <p v-if="reportMarking.teacherComment === ''" slot="content" :style="{color:'#BFBFBF'}">教师无批阅内容</p>
+      <p v-else slot="content">{{ reportMarking.teacherComment }}</p>
       <a-tooltip slot="datetime">
         <span>{{ reportMarking.teacherTime }}</span>
       </a-tooltip>

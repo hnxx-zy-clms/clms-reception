@@ -1,19 +1,9 @@
 <template>
   <a-carousel arrows autoplay>
-    <div
-      slot="prevArrow"
-      class="custom-slick-arrow"
-      style="left: 10px;zIndex: 1"
-    >
-      <a-icon type="left-circle" />
-    </div>
-    <div slot="nextArrow" class="custom-slick-arrow" style="right: 10px">
-      <a-icon type="right-circle" />
-    </div>
-    <div><img :style="{height:'350px',width: '100%' }" src="http://175.24.9.127:8888/group1/M00/00/00/rxgJf1678fmAK6WnAGWKeEmZSWs922.jpg"></div>
-    <div><img :style="{height:'350px',width: '100%' }" src="http://175.24.45.179/group1/M00/00/00/rBEABV61XfqAPhV3AAJLTj2s19g377.jpg"></div>
-    <div><img :style="{height:'350px',width: '100%' }" src="http://175.24.9.127:8888/group1/M00/00/00/rxgJf1678fmAK6WnAGWKeEmZSWs922.jpg"></div>
-    <div><img :style="{height:'350px',width: '100%' }" src="http://175.24.45.179/group1/M00/00/00/rBEABV61XfqAPhV3AAJLTj2s19g377.jpg"></div>
+    <div><img :style="{height:'330px',width: '100%' }" src="http://175.24.45.179/group1/M00/00/02/rBEABV7jWoGALii7AAL8e7Q89tM042.jpg"></div>
+    <div><img :style="{height:'330px',width: '100%' }" src="http://175.24.45.179/group1/M00/00/02/rBEABV7jWs-AK8kEAAKR2JqUeyU777.jpg"></div>
+    <div><img :style="{height:'330px',width: '100%' }" src="http://175.24.45.179/group1/M00/00/02/rBEABV7jWuSAK0rcAAMfXSYnxs8576.jpg"></div>
+    <div><img :style="{height:'330px',width: '100%' }" src="http://175.24.45.179/group1/M00/00/02/rBEABV7jWvWAS6CcAAKj-AouHM4215.jpg"></div>
   </a-carousel>
 </template>
 <script>
@@ -23,7 +13,7 @@ export default {}
     /* For demo */
     .ant-carousel >>> .slick-slide {
         text-align: center;
-        height: 350px;
+        height: 330px;
         line-height: 160px;
         background: #364d79;
         overflow: hidden;

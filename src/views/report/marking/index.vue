@@ -7,16 +7,16 @@
         <p v-if="roles === 1" :style="{float:'left',fontSize:'20px',marginRight:'10px'}">组长批阅报告</p>
         <p v-if="roles === 2" :style="{float:'left',fontSize:'20px',marginRight:'10px'}">班长批阅报告</p>
         <div :style="{marginTop:'5px'}">
-          <a-tag v-if="day < 22" color="blue">
+          <a-tag v-if="day < 21" color="blue">
             今日日报提交中
           </a-tag>
           <a-tag v-else color="red">
             今日日报提交截止
           </a-tag>
-          <a-tag v-if=" day > 22  && week === 7 " color="red">
+          <a-tag v-show="weekly()" color="red">
             本周周报提交截止
           </a-tag>
-          <a-tag v-else color="blue">
+          <a-tag v-show="!weekly()" color="blue">
             本周周报提交中
           </a-tag>
           <a-tooltip placement="bottom">
@@ -246,6 +246,9 @@ export default {
     this.getByPage()
   },
   methods: {
+    weekly() {
+      return this.day > 21 && this.week === 0
+    },
     // 分页获取数据
     getByPage() {
       MarkingApi.getNotMarkingReport(this.page).then(res => {

@@ -41,5 +41,11 @@ export default {
       method: 'post',
       data: report
     })
+  },
+  getTime() {
+    return request({
+      url: `/${group_name}/getTime`,
+      method: 'get'
+    })
   }
 }

@@ -52,7 +52,8 @@
                 <a-textarea
                   v-model="videoCommentContent"
                   :style="{float:'left',margin:'20px 20px',maxWidth:'70%'}"
-                  placeholder="请自觉遵守互联网相关的政策法规，严禁发布色情、暴力和发动的言论！"
+                  id="commmentTop"
+                  placeholder="请自觉遵守互联网相关的政策法规，严禁发布色情、暴力和反动的言论！"
                   :auto-size="{ minRows: 3, maxRows: 5 }"
                 />
                 <a-button type="primary" :style="{height:'70px',float:'left',margin:'20px 0px'}" @click="primaryCommentTop">发表评论</a-button>
@@ -77,25 +78,61 @@
                   <a-tooltip slot="datetime">
                     <span>{{ item.videoCommentCreatedTime }}</span>
                   </a-tooltip>
-                  <a-comment v-for="item1 in item.videoCommentList" :key="item1.videoCommentId">
-                    <span slot="actions" @click="rely(item1.videoCommentParent,item1)">回复</span>
-                    <span slot="author">
-                      <a-tag v-if=" user.userName === item1.userName " :style="{ float:'left'}" color="orange">
-                        作者
-                      </a-tag>
-                      <a>{{ item1.userName }}</a></span>
-                    <a-avatar
-                      slot="avatar"
-                      :src="item1.userIcon"
-                    />
-                    <span slot="content">
-                      <p v-if="item1.videoCommentParentName !== undefined">回复 @{{ item1.videoCommentParentName }}</p>
-                      {{ item1.videoCommentContent }}
-                    </span>
-                    <a-tooltip slot="datetime">
-                      <span>{{ item1.videoCommentCreatedTime }}</span>
-                    </a-tooltip>
-                  </a-comment>
+                  <div v-if="item.videoCommentList.list === undefined">
+                    <a-comment v-for="item1 in item.videoCommentList" :key="item1.videoCommentId">
+                      <span slot="actions" @click="rely(item1.videoCommentParent,item1)">回复</span>
+                      <span slot="author">
+                        <a-tag v-if=" user.userName === item1.userName " :style="{ float:'left'}" color="orange">
+                          作者
+                        </a-tag>
+                        <a>{{ item1.userName }}</a></span>
+                      <a-avatar
+                        slot="avatar"
+                        :src="item1.userIcon"
+                      />
+                      <span slot="content">
+                        <p v-if="item1.videoCommentParentName !== undefined">回复 @{{ item1.videoCommentParentName }}</p>
+                        {{ item1.videoCommentContent }}
+                      </span>
+                      <a-tooltip slot="datetime">
+                        <span>{{ item1.videoCommentCreatedTime }}</span>
+                      </a-tooltip>
+                    </a-comment>
+                  </div>
+                  <div v-else>
+                    <a-comment v-for="item1 in item.videoCommentList.list" :key="item1.videoCommentId">
+                      <span slot="actions" @click="rely(item1.videoCommentParent,item1)">回复</span>
+                      <span slot="author">
+                        <a-tag v-if=" user.userName === item1.userName " :style="{ float:'left'}" color="orange">
+                          作者
+                        </a-tag>
+                        <a>{{ item1.userName }}</a></span>
+                      <a-avatar
+                        slot="avatar"
+                        :src="item1.userIcon"
+                      />
+                      <span slot="content">
+                        <p v-if="item1.videoCommentParentName !== undefined">回复 @{{ item1.videoCommentParentName }}</p>
+                        {{ item1.videoCommentContent }}
+                      </span>
+                      <a-tooltip slot="datetime">
+                        <span>{{ item1.videoCommentCreatedTime }}</span>
+                      </a-tooltip>
+                    </a-comment>
+                    <!--    底部分页栏-->
+                    <div @click="getVideoCommentParentById(item,index1)">
+                      <a-pagination
+                        v-model="item.videoCommentList.currentPage"
+                        :style="{ marginTop:'20px',marginLeft:'45%' }"
+                        :show-total="total => `共 ${total} 条`"
+                        size="small"
+                        :hide-on-single-page="true"
+                        :page-size="item.videoCommentList.pageSize"
+                        :total="item.videoCommentList.totalCount"
+                        @change="videoCommentpageChange"
+                      />
+                    </div>
+                  </div>
                 </a-comment>
                 <p v-if="item.videoCommentParentSum >2" :style="{ margin:'20px 50px'}">共{{ item.videoCommentParentSum }}条回复, <a @click="check(index1)">点击查看</a></p>
                 <div v-show="now === item.videoCommentId">
@@ -110,7 +147,7 @@
                       :placeholder="commentPlaceholder"
                       :auto-size="{ minRows: 3, maxRows: 5 }"
                     />
-                    <a-button type="primary" :style="{height:'70px',float:'left',margin:'20px 0px'}" @click="primaryComment">发表评论</a-button>
+                    <a-button type="primary" :style="{height:'70px',float:'left',margin:'20px 0px'}" @click="primaryComment(item,index1)">发表评论</a-button>
                   </div>
                 </div>
                 <a-divider />
@@ -219,6 +256,7 @@ export default {
         videoCommentParentName: '',
         videoId: ''
       },
+      videoCommentId: '',
       good: {
         videoId: ''
       },
@@ -274,7 +312,9 @@ export default {
         this.videoComment.videoCommentParentName = ''
         this.videoComment.videoId = this.videoInfo.videoId
         VideoApi.setVideoComment(this.videoComment).then(res => {
-          VideoApi.getVideoCommentById(this.page).then(res => {
+          const mid = { ...this.page }
+          mid.list = []
+          VideoApi.getVideoCommentById(mid).then(res => {
             this.page = res.data
           })
           this.videoCommentContent = ''
@@ -282,17 +322,21 @@ export default {
         })
       }
     },
-    primaryComment() {
+    primaryComment(pageNumber, index) {
       this.videoComment.videoId = this.videoInfo.videoId
       if (this.videoComment.videoCommentContent === '') {
         message.success('请输入评论内容')
       } else {
         VideoApi.setVideoComment(this.videoComment).then(res => {
-          VideoApi.getVideoCommentById(this.page).then(res => {
-            this.page = res.data
-          })
-          this.videoComment.videoCommentParent = ''
-          this.videoComment.videoCommentParentName = ''
+          if (pageNumber.videoCommentList.list === undefined) {
+            VideoApi.getVideoCommentById(this.page).then(res => {
+              this.page = res.data
+            })
+          } else {
+            VideoApi.getVideoCommentParentById(pageNumber.videoCommentId, pageNumber.videoCommentList.currentPage).then(res => {
+              this.page.list[index].videoCommentList = res.data
+            })
+          }
           this.videoComment.videoCommentContent = ''
         })
       }
@@ -306,15 +350,17 @@ export default {
           this.videoComment.videoCommentParentName = itme.userName
           this.commentPlaceholder = '回复 @' + itme.userName
         } else {
+          this.videoComment.videoCommentParent = ''
+          this.videoComment.videoCommentParentName = ''
           this.videoComment.videoCommentParent = itme.videoCommentId
-          this.commentPlaceholder = '请自觉遵守互联网相关的政策法规，严禁发布色情、暴力和发动的言论！'
+          this.commentPlaceholder = '请自觉遵守互联网相关的政策法规，严禁发布色情、暴力和反动的言论！'
         }
         this.now = id
         document.getElementById('commment').focus()
       }
     },
     check(index) {
-      VideoApi.getVideoCommentParentById(this.page.list[index].videoCommentId).then(res => {
+      VideoApi.getVideoCommentParentById(this.page.list[index].videoCommentId, 1).then(res => {
         this.page.list[index].videoCommentParentSum = 0
         this.page.list[index].videoCommentList = res.data
       })
@@ -329,12 +375,10 @@ export default {
           this.user = res.data
         })
         VideoApi.recommendVideo(this.videoInfo.category, 8).then(res => {
-          console.log(res.data)
           this.recommendVideo = res.data
         })
         this.dplayer()
         this.$http.get('http://175.24.9.127:1207/v3/?id=' + this.videoInfo.videoId + '&max=1000').then(res => {
-          console.log(res.data)
           this.data = res.data.data
         })
       })
@@ -391,6 +435,7 @@ export default {
       }
     },
     changeSort() {
+      this.page.list = []
       if (this.current[0] === 'Good') {
         this.page.sortColumn = 'video_comment_created_time'
       } else {
@@ -403,8 +448,18 @@ export default {
     // 换页
     pageChange(pageNumber) {
       this.page.currentPage = pageNumber
-      VideoApi.getVideoCommentById(this.page).then(res => {
+      const sss = { ...this.page }
+      sss.list = []
+      VideoApi.getVideoCommentById(sss).then(res => {
         this.page = res.data
+        document.getElementById('commmentTop').focus()
+      })
+    },
+    videoCommentpageChange(pageNumber) {
+    },
+    getVideoCommentParentById(pageNumber, index) {
+      VideoApi.getVideoCommentParentById(pageNumber.videoCommentId, pageNumber.videoCommentList.currentPage).then(res => {
+        this.page.list[index].videoCommentList = res.data
       })
     },
     dplayer() {
