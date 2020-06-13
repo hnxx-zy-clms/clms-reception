@@ -19,6 +19,13 @@ export function smsLogin(data) {
     }]
   })
 }
+export function register(data) {
+  return request({
+    url: '/register?' + `mobile=re` + data.mobile + '&smsCode=' + data.smsCode,
+    method: 'post',
+    data: data
+  })
+}
 export function getSmsCaptcha(parameter) {
   return request({
     url: api.SendSms,
@@ -67,6 +74,6 @@ export function logout() {
 export function isLogin() {
   return request({
     url: '/isLogin',
-    method: 'post',
+    method: 'post'
   })
 }

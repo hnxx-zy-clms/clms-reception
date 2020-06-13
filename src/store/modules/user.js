@@ -1,5 +1,5 @@
 // 用户操作
-import { login, getInfo, smsLogin } from '../../api/user'
+import { login, getInfo, smsLogin, register } from '../../api/user'
 import { getToken, setToken, removeToken } from '../../utils/auth'
 
 const getDefaultState = () => {
@@ -61,6 +61,16 @@ const actions = {
       smsLogin(userInfo).then(res => {
         commit('SET_TOKEN', res.msg)
         setToken(res.msg, userInfo.remember)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // 用户短信登录
+  register({ commit }, userInfo) {
+    return new Promise((resolve, reject) => {
+      register(userInfo).then(res => {
         resolve()
       }).catch(error => {
         reject(error)

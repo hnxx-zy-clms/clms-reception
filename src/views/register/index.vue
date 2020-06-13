@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-layout  id="content" :style="{display:'flex',minHeight: '300px',width: '50%' }">
+    <a-layout  id="content" :style="{display:'flex', marginTop: '55px' , minHeight: '300px',width: '50%' }">
       <a-layout-header :style="{height:'59px', background: '#fff', zIndex: 1, width: '100%' }">
         <a-menu v-model="current" mode="horizontal">
           <a-menu-item key="login" @click="login=true">登录</a-menu-item>

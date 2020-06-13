@@ -7,16 +7,16 @@
             <a-col style="width: 100%" :span="6" :push="0">
               <div :style="{margin:'10px 10px',width:'100%'}">
                 <a-tag :style="{ float:'left',marginTop:'5px'}" color="orange">
-                  {{ this.videoInfo.category }}
+                  {{ videoInfo.category }}
                 </a-tag>
-                <h1 :style="{fontSize: '20px'}">{{ this.videoInfo.title }}</h1>
+                <h1 :style="{fontSize: '20px'}">{{ videoInfo.title }}</h1>
                 <a-breadcrumb style="float:left;margin: 5px 0" separator=">">
                   <a-breadcrumb-item>主页</a-breadcrumb-item>
-                  <a-breadcrumb-item>{{ this.videoInfo.category }}</a-breadcrumb-item>
+                  <a-breadcrumb-item>{{ videoInfo.category }}</a-breadcrumb-item>
                 </a-breadcrumb>
-                <p style="float:left;margin: 5px 10px">{{ this.videoInfo.createdTime }}</p><br>
+                <p style="float:left;margin: 5px 10px">{{ videoInfo.createdTime }}</p><br>
               </div>
-              <p style="margin: 15px 10px">{{ this.videoInfo.playVolume }}播放 · {{ this.data.length }}弹幕  <a-icon type="stop" :style="{ color: 'red' }" /> 未经作者授权，禁止转载</p>
+              <p style="margin: 15px 10px">{{ videoInfo.playVolume }}播放 · {{ data.length }}弹幕  <a-icon type="stop" :style="{ color: 'red' }" /> 未经作者授权，禁止转载</p>
             </a-col>
             <a-col style="width: 100%" :span="6" :push="0">
               <a-card :style="{background: '#000000',minHeight: '455px'}">
@@ -26,16 +26,16 @@
             <a-col style="width: 100%" :span="6" :push="0">
               <div :style="{background: '#FFFFFF'}">
                 <a href="javascript:void(0);" :class="isGoodVideo ? 'video-good meta-active' : 'video-good'" @click="saveGoodForVideo">
-                  <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="like" /><p :style="{ float:'left',margin:'17px 5px'}">{{ this.videoInfo.videoGood }}</p>
+                  <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="like" /><p :style="{ float:'left',margin:'17px 5px'}">{{ videoInfo.videoGood }}</p>
                 </a>
                 <a href="javascript:void(0);" :class="isCollection ? 'video-collection meta-active' : 'video-collection'" @click="saveCollection">
-                  <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="star" /><p :style="{ float:'left',margin:'17px 5px'}">{{ this.videoInfo.collect }}</p>
+                  <a-icon theme="filled" :style="{ float:'left',fontSize:'28px',margin:'13px 5px'}" type="star" /><p :style="{ float:'left',margin:'17px 5px'}">{{ videoInfo.collect }}</p>
                 </a>
                 <a-icon :style="{ float:'right',fontSize:'28px',margin:'13px 5px'}" type="more" />
               </div>
               <a-divider />
               <div>
-                {{ this.videoInfo.description }}
+                {{ videoInfo.description }}
               </div>
               <a-divider />
               <h1>{{ page.params.videoCommentParentSum }} 评论</h1>
@@ -50,9 +50,9 @@
               </div>
               <div>
                 <a-textarea
+                  id="commmentTop"
                   v-model="videoCommentContent"
                   :style="{float:'left',margin:'20px 20px',maxWidth:'70%'}"
-                  id="commmentTop"
                   placeholder="请自觉遵守互联网相关的政策法规，严禁发布色情、暴力和反动的言论！"
                   :auto-size="{ minRows: 3, maxRows: 5 }"
                 />
@@ -170,10 +170,10 @@
       <a-layout-sider :style="{margin:'0px 10px',background: '#F0F2F5'}">
         <div :style="{minWidth:'300px',minHeight: '1200px',background: '#F0F2F5'}">
           <a-card :style="{background: '#F0F2F5'}">
-            <a-avatar :size="64" :style="{ float:'left'}" :src="this.user.userIcon" />
+            <a-avatar :size="64" :style="{ float:'left'}" :src="user.userIcon" />
             <div :style="{ marginLeft:'80px',marginTop:'10px'}">
-              <h1 :style="{fontWeight:'1000'}">{{ this.user.userName }}</h1>
-              <p>{{ this.user.userDescription }}</p>
+              <h1 :style="{fontWeight:'1000'}">{{ user.userName }}</h1>
+              <p>{{ user.userDescription }}</p>
             </div>
           </a-card>
           <a-card :style="{margin:'10px 0',height:'46px',background: '#fffff'}">
@@ -278,15 +278,15 @@ export default {
       }
     }
   },
-  watch: {
-    $route(to, from) {
-      this.$router.go(0)
-    }
-  },
   computed: {
     ...mapGetters([
       'userName', 'userIcon', 'userId'
     ])
+  },
+  watch: {
+    $route(to, from) {
+      this.$router.go(0)
+    }
   },
   created() {
     if (this.$route.params.videoId === undefined) {

@@ -8,7 +8,7 @@
       <menu-login />
       <simple-menu />
     </a-layout-header>
-    <a-layout-content :style="{ background: '#F0F2F5', minHeight: '878px' }">
+    <a-layout-content :style="{ background: '#F0F2F5', minHeight: '878px', width: '100%' }">
       <router-view />
     </a-layout-content>
     <a-layout-footer :style="{textAlign: 'center',color:'#fff', background: '#001529',bottom: '0px', width: '100%' }">

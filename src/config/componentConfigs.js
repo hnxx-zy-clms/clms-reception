@@ -5,6 +5,7 @@ export const Components = {
     'UserInfo': () => import('../views/user/userInfo'),
     'Remind': () => import('../views/user/remind'),
     'Profile': () => import('../views/user/profile'),
-    'ArticleWrite': () => import('../views/article/article-write')
+    'ArticleWrite': () => import('../views/article/article-write'),
+    'ReportSetting': () => import('../views/report/setting/setting')
   }
 }

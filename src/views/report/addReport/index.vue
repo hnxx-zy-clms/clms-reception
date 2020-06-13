@@ -4,6 +4,9 @@
     <router-link v-if="roles > 0" :to="'/reportMarking'">
       <a-button type="primary" :style="{marginLeft:'5px'}"> <a-icon type="check-square" /> 批阅报告 </a-button>
     </router-link>
+    <router-link v-if="roles > 1" :to="'/reportSetting'">
+      <a-button  :style="{marginLeft:'5px'}"> <a-icon type="setting" />报告设置 </a-button>
+    </router-link>
     <a-drawer
       title="新建报告"
       :width="720"
