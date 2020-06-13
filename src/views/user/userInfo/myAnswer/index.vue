@@ -1,9 +1,8 @@
 <template>
   <!-- 加载 -->
-  <div v-loading="loading">
-
+  <div class="question-container">
     <!-- 搜索栏 模糊查询-->
-    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini">
+    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini" :style="{marginTop: '10px'}">
       <el-form-item label="问题id">
         <el-input v-model="page.params.questionId" placeholder="请输入问题id" clearable />
       </el-form-item>
@@ -187,9 +186,15 @@ export default {
     },
     // 分页方法 调用封装的方法 getByPage()
     getByPage() {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       answerApi.getByPage(this.page).then(res => {
         this.page = res.data
-        this.loading = false
+        loading.close()
       })
     },
     // 恢复搜索框

@@ -34,7 +34,7 @@
         <tinymce v-model="article.articleContent" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" size="mini" @click="onSubmit">提交</el-button>
+        <el-button type="primary" size="mini" :loading="addLoading" @click="onSubmit">提交</el-button>
         <el-button size="mini" @click="close">取消</el-button>
       </el-form-item>
     </el-form>
@@ -59,6 +59,7 @@ export default {
       headers: { // 上传文件的请求头
         Authorization: getToken()
       },
+      addLoading: false,
       typeList: this.$store.getters.typeList
     }
   },
@@ -69,9 +70,11 @@ export default {
      * 2、子组件可以使用 $emit 触发父组件的自定义事件
      */
     onSubmit() {
+      this.addLoading = true
       articleApi.save(this.article).then(res => {
         this.$message.success(res.msg)
         this.$emit('closeAddDialog')
+        this.addLoading = false
         this.article = {}
         this.$emit('getByPage')
       })

@@ -1,9 +1,8 @@
 <template>
   <!-- 加载 -->
-  <div v-loading="loading">
-
+  <div style="minHeight: 878px">
     <!-- 搜索栏 模糊查询-->
-    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini">
+    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini" :style="{marginTop: '10px'}">
       <el-form-item label="文章标题">
         <el-input v-model="page.params.articleTitle" placeholder="文章标题" clearable />
       </el-form-item>
@@ -210,7 +209,6 @@ export default {
         articleSource: null
       },
       typeList: this.$store.getters.typeList, // 分类列表
-      loading: true, // 控制是否显示加载效果
       addDialog: false, // 控制添加弹窗显示
       updateDialog: false, // 控制修改弹窗显示
       readDialog: false // 控制阅读弹窗显示
@@ -219,9 +217,6 @@ export default {
   // 初始化函数
   created() {
     this.getByPage()
-    setTimeout(() => {
-      this.typeList = this.$store.getters.typeList
-    }, 500)
   },
   // 定义方法
   methods: {
@@ -251,9 +246,15 @@ export default {
     },
     // 分页方法 调用封装的方法 getByPage()
     getByPage() {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       articleApi.getByPage(this.page).then(res => {
         this.page = res.data
-        this.loading = false
+        loading.close()
       })
     },
     // 条件排序 e 和 val 都行

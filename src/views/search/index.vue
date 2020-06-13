@@ -6,7 +6,7 @@
     <a-input-search v-model="keyword" size="large" class="search-box" placeholder="周报/日报/问答/文章/通知" enter-button style="width: 520px " @search="doSearch(keyword)" />
     <!-- 条件列 -->
     <div class="scree-menu">
-      <a-menu v-model="current" mode="horizontal" @click="changeParams">
+      <a-menu v-model="current" mode="horizontal" :style="{ backgroundColor: 'black', color: 'white', border: 'none' }" @click="changeParams">
         <a-menu-item key="report">报告</a-menu-item>
         <a-menu-item key="answer">问答</a-menu-item>
         <a-menu-item key="article">文章</a-menu-item>

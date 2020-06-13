@@ -11,7 +11,7 @@
         <tinymce v-model="question.questionContent" type="textarea" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" size="mini" @click="onSubmit">提交</el-button>
+        <el-button type="primary" size="mini" :loading="addLoading" @click="onSubmit">提交</el-button>
         <el-button type="danger" size="mini" @click="close">取消</el-button>
         <el-button type="primary" size="mini" @click="doRecomQuestions(question)">查询相似问题</el-button>
         <el-button type="primary" size="mini" @click="doRecomAnswers(question)">查询推荐回答</el-button>
@@ -42,6 +42,7 @@ export default {
   data() {
     return {
       question: {},
+      addLoading: false,
       recomQuestionShow: false,
       recomAnswerShow: false
     }
@@ -53,9 +54,11 @@ export default {
      * 2、子组件可以使用 $emit 触发父组件的自定义事件
      */
     onSubmit() {
+      this.addLoading = true
       questionApi.save(this.question).then(res => {
         this.$message.success(res.msg)
         this.$emit('closeAddDialog')
+        this.addLoading = false
         this.question = {}
         this.$emit('freshen')
       })

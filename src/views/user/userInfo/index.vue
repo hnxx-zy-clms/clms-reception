@@ -11,7 +11,7 @@
     <a-tabs
       default-active-key="myinfo"
       tab-position="left"
-      :style="{ height: '878px', width: '100%' }"
+      :style="{ height: '878px', width: '100%', marginBottom: '20px', backgroundColor: 'white' }"
       @prevClick="callback"
       @nextClick="callback"
     >
@@ -79,7 +79,6 @@ export default {
   },
   methods: {
     callback(val) {
-      console.log(val)
     }
   }
 }
@@ -91,6 +90,6 @@ export default {
     margin-top: 5px;
     margin-bottom: 5px;
     margin: auto;
-    background-color: white;
+    background-color:#F0F2F5;
   }
 </style>

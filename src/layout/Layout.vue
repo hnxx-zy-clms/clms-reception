@@ -20,8 +20,19 @@
 <script>
 import SimpleMenu from './menu/Menu'
 import MenuLogin from './menu/MenuLogin'
+import typeApi from '@/api/article/type'
 export default {
-  components: { SimpleMenu, MenuLogin }
+  components: { SimpleMenu, MenuLogin },
+  created() {
+    this.getTypeList()
+  },
+  methods: {
+    getTypeList() {
+      typeApi.getList().then(res => {
+        this.$store.commit('global/SET_TYPE', res.data)
+      })
+    }
+  }
 }
 </script>
 

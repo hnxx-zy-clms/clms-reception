@@ -34,7 +34,7 @@
         <tinymce v-model="article.articleContent" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" size="mini" @click="onSubmit">提交</el-button>
+        <el-button type="primary" size="mini" :loading="addLoading" @click="onSubmit">提交</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -59,6 +59,7 @@ export default {
       headers: { // 上传文件的请求头
         Authorization: getToken()
       },
+      addLoading: false,
       typeList: ''
       // typeList: this.$store.getters.typeList
     }
@@ -74,9 +75,11 @@ export default {
     },
     // 添加 确认
     onSubmit() {
+      this.addLoading = true
       articleApi.save(this.article).then(res => {
         this.$message.success(res.msg)
         this.$emit('closeAddDialog')
+        this.addLoading = false
         this.article = {}
         this.$emit('freshen')
       })

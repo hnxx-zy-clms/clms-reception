@@ -43,7 +43,7 @@ export default {
     height: {
       type: [Number, String],
       required: false,
-      default: 150
+      default: 'auto'
     },
     width: {
       type: [Number, String],
@@ -113,7 +113,8 @@ export default {
       window.tinymce.init({
         language: this.language,
         selector: `#${this.tinymceId}`,
-        height: this.height,
+        min_height: 200,
+        // height: this.height,
         body_class: 'panel-body ',
         object_resizing: false,
         toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,

@@ -7,7 +7,6 @@
 
 <script>
 import Layout from './layout/Layout'
-import typeApi from '@/api/article/type'
 export default {
   // 组件页面刷新变量
   provide() {
@@ -17,16 +16,6 @@ export default {
   },
   components: {
     Layout
-  },
-  created() {
-    this.getTypeList()
-  },
-  methods: {
-    getTypeList() {
-      typeApi.getList().then(res => {
-        this.$store.commit('global/SET_TYPE', res.data)
-      })
-    }
   }
 }
 </script>

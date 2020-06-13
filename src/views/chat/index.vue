@@ -82,7 +82,7 @@
                 })
             },
             getCurentUser() {
-                this.$http.get('http://127.0.0.1:8081/chat/chatUser' ).then(res => {
+                this.$http.get('http://175.24.45.179:8081/chat/chatUser' ).then(res => {
                     console.log(res.data)
                     this.userList = res.data
                 }).catch(e=>{
@@ -98,7 +98,7 @@
                 }else if(this.roles===3){
                     type=3
                 }
-                this.$http.get('http://127.0.0.1:8081/chat/chatMessage/'+type).then(res => {
+                this.$http.get('http://175.24.45.179/chat/chatMessage/'+type).then(res => {
                     console.log(res.data)
                     this.messageRecordList = res.data
                 }).catch(e=>{
@@ -106,8 +106,8 @@
                 })
             },
             getStompClient() {
-                let socket = new SockJS('http://127.0.0.1:8081/zyb')
-                // let socket = new SockJS('http://175.24.45.179:8081/zyb')
+                // let socket = new SockJS('http://127.0.0.1:8081/zyb')
+                let socket = new SockJS('http://175.24.45.179:8081/zyb')
                 // 获取STOMP子协议的客户端对象
                 this.stompClient = Stomp.over(socket)
                 return Stomp.over(socket)

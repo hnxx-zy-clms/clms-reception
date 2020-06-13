@@ -140,7 +140,7 @@ export default {
     align-items: center;
   }
   .image-article {
-    width: 100%;
+    width: 80%;
     min-height: 100px;
     display: flex;
     flex-direction: column;

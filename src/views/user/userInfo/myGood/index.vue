@@ -1,12 +1,12 @@
 <template>
   <!-- 加载 -->
-  <div v-loading="loading">
+  <div>
     <!-- 搜索栏 -->
     <!--
       1. inline 行内表单模式 默认:false
       2. :model -- v-bind:model="page" 动态绑定数据 此处主要用于绑定参数列表
     -->
-    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini">
+    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini" :style="{marginTop: '10px'}">
       <el-form-item label="点赞类型">
         <el-select v-model="page.params.goodType" placeholder="文章/评论/提问/答复/视频" width="80" clearable filterable>
           <el-option label="文章" :value="0" />
@@ -101,8 +101,7 @@ export default {
         list: [], // 数据
         sortColumn: 'goodTime', // 排序列
         sortMethod: 'asc' // 排序方式
-      },
-      loading: true // 控制是否显示加载效果
+      }
     }
   },
   // 初始化函数
@@ -124,9 +123,15 @@ export default {
     },
     // 分页方法 调用封装的方法 getByPage()
     getByPage() {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       goodApi.getByPage(this.page).then(res => {
         this.page = res.data
-        this.loading = false
+        loading.close()
       })
     },
     // 恢复搜索框
