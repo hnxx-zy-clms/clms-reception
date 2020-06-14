@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="roles===0">
+    <!--通知待办区域-->
     <div class="noticetodo">
       <a-card :body-style="bodystyle">
         <a-icon
@@ -35,10 +36,13 @@
           </a-button>
         </div>
       </a-card>
+      <!--通知-->
       <notice v-if="leftTitle==='通知'?1:0" ref="notice" />
+      <!--待办-->
       <todo v-else ref="todo" />
     </div>
 
+    <!--任务签到区域-->
     <div class="tasksign">
       <a-card :body-style="bodystyle">
         <svg
@@ -99,9 +103,17 @@
         </div>
       </a-card>
       <div>
+        <!--任务-->
         <Task v-if="rightTitle==='任务'?1:0" ref="task"></Task>
+        <!--签到-->
         <Registration v-else></Registration>
       </div>
+    </div>
+  </div>
+  <!--教师页面-->
+  <div class="container" v-else>
+    <div class="teacherpage" style="min-height: 625px;padding: 20px">
+      <teacher-page/>
     </div>
   </div>
 </template>
@@ -111,13 +123,16 @@ import Notice from './notice'
 import Todo from './todo'
 import Task from './task'
 import Registration from './registration'
+import TeacherPage from './teacherPage'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
     Notice,
     Todo,
     Task,
-    Registration
+    Registration,
+    TeacherPage
   },
   data() {
     return {
@@ -141,7 +156,10 @@ export default {
   computed: {
     date() {
       return this.dateFilter()
-    }
+    },
+    ...mapGetters([
+      'roles'
+    ])
   },
   methods: {
     lefthandleMenuClick(key) { // 左边菜单选择框
@@ -209,6 +227,9 @@ export default {
 }
 </script>
 <style scoped>
+  .teacherpage {
+    width: 100%;
+  }
   .container {
     display: flex;
     position: relative;

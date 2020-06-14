@@ -16,6 +16,8 @@ const Register = () => import('../views/register/index')
 const NotFoundComponent = () => import('../views/exception/404')
 const Search = () => import('../views/search/index')
 const Video = () => import('../views/video/index')
+const Details = () => import('../views/tasknotice/task/task-details')
+const TeacherReply = () => import('../views/tasknotice/task/task-reply')
 
 /**
  * 基础路由
@@ -151,6 +153,16 @@ export const constantRouterMap = [
     }
   },
   {
+    path: '/details',
+    name: 'details',
+    component: Details,
+    mate: {
+      title: '任务详情',
+      icon: 'sound',
+      isLoading: false
+    }
+  },
+  {
     path: '/tilltill/:videoId',
     name: 'TillTill',
     component: Video,
@@ -164,6 +176,16 @@ export const constantRouterMap = [
     path: '/reply',
     name: 'reply',
     component: Reply,
+    mate: {
+      title: '任务回复',
+      icon: 'sound',
+      isLoading: false
+    }
+  },
+  {
+    path: '/teacherreply',
+    name: 'teacherreply',
+    component: TeacherReply,
     mate: {
       title: '任务回复',
       icon: 'sound',

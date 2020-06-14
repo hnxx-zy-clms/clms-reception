@@ -15,7 +15,7 @@
           <div class="noticeTitle">{{item.noticeTitle}}</div>
           <div class="nameTime">
             <div style="margin-right: 20%;">
-              {{item.userName}}
+              {{item.name}}
             </div>
             <div>
               {{item.createdTime}}

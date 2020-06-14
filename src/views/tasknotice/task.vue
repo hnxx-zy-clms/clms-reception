@@ -10,7 +10,7 @@
         <div class="title">{{ item.taskTitle }}</div>
         <div class="content" v-html="item.taskContent" />
         <div class="des">
-          <span class="nowarp">{{ item.userName + '发布于' + item.pushedTime }}</span>
+          <span class="nowarp">{{ item.name + '发布于' + item.pushedTime }}</span>
           <div class="statu">
             <div class="statuitem" :class="[item.taskUser?'finishcolor':'processcolor']" />
             <span class="nowarp" v-if="item.taskUser">已完成</span>
@@ -93,6 +93,7 @@ export default {
 
 <style scoped>
   .demo-infinite-container {
+    background-color: white;
     border: 1px solid #e8e8e8;
     border-radius: 4px;
     overflow: auto;
