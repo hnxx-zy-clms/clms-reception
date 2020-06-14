@@ -9,7 +9,7 @@
             :src="userIcon"
           />
         </a-card-meta>
-        <a-span>积分: 999</a-span>
+        <span>积分: 999</span>
         <div>
           <a-tag style="marginTop: 10px" color="#f50">问</a-tag><span>提了 0 个问题， 0 人进行了回答</span>
           <br>

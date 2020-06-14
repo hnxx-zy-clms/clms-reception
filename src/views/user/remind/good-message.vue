@@ -49,6 +49,16 @@
         </a-list-item>
       </a-list>
     </div>
+    <el-pagination
+      v-if="page.list.length < page.totalCount"
+      align="center"
+      class="question-pagination"
+      :current-page="page.currentPage"
+      :page-size="page.pageSize"
+      layout="total, prev, pager, next, jumper"
+      :total="page.totalCount"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
@@ -59,12 +69,13 @@ export default {
     return {
       page: {
         currentPage: 1,
-        pageSize: 10,
+        pageSize: 15,
         totalCount: 0,
         totalPage: 0,
         params: {
           messageType: [3, 7],
-          messageState: 0
+          messageState: 0,
+          receiveUser: this.$store.getters.userName
         },
         sortColumn: 'createdTime',
         sortMethod: 'desc',
@@ -80,6 +91,17 @@ export default {
       messageApi.getByPage(this.page).then(res => {
         this.page = res.data
       })
+    },
+    // 每页大小改变 参数 value 为每页大小(pageSize)
+    handleSizeChange(val) {
+      this.page.pageSize = val
+      // 重新请求,刷新页面
+      this.getByPage(this.page)
+    },
+    // 当前页跳转 参数 value 当前页(currentPage)
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+      this.getByPage(this.page)
     }
   }
 }
