@@ -24,7 +24,9 @@ import typeApi from '@/api/article/type'
 export default {
   components: { SimpleMenu, MenuLogin },
   created() {
-    this.getTypeList()
+    if (this.$store.getters.userName !== null) {
+      this.getTypeList()
+    }
   },
   methods: {
     getTypeList() {

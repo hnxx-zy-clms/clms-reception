@@ -38,7 +38,7 @@ export default {
       temp: {},
       visible: false,
       isLogin: this.$store.getters.token !== undefined,
-      userName: this.$store.getters.userName,
+      userName: '',
       messageCount: 0, // 消息计数
       websocketUrl: process.env.VUE_APP_BASE_API + '/push/websocket',
       messageList: []
@@ -46,22 +46,20 @@ export default {
   },
   watch: {
     'temp': function() {
-      if (this.temp.receiveUser === this.userName) {
-        this.messageCount++
-        console.log(this.messageCount)
-      }
+
     }
   },
   created() {
-    if (this.userName !== null) {
+    this.userName = this.$store.getters.userName
+    if (this.$store.getters.userName !== null) {
       this.getMessageList()
     }
   },
   mounted() {
     // WebSocket
     if ('WebSocket' in window) {
-      // this.websocket = new WebSocket('ws://localhost:8080/push/websocket')
-      this.websocket = new WebSocket('ws://175.24.45.179:8080/push/websocket')
+      this.websocket = new WebSocket('ws://localhost:8080/push/websocket')
+      // this.websocket = new WebSocket('ws://175.24.45.179:8080/push/websocket')
       // alert('连接浏览器')
       this.initWebSocket()
     } else {
@@ -99,6 +97,13 @@ export default {
       console.log('服务端返回：' + event.data)
       this.temp = JSON.parse(event.data)
       console.log(this.temp)
+      console.log(this.temp.receiveUser)
+      console.log(this.$store.getters.userName)
+      if (this.temp.receiveUser === this.$store.getters.userName) {
+        console.log(this.temp)
+        this.messageCount++
+        console.log(this.messageCount)
+      }
     },
     setOncloseMessage() {
       console.log('WebSocket连接关闭    状态码：' + this.websocket.readyState)

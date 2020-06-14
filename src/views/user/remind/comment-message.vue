@@ -1,5 +1,110 @@
 <template>
-  <div>
-    评论
+  <div class="good-message-container">
+    <!-- 消息顶层操作 -->
+    <div class="top-action">
+      <span><a>清空所有消息</a></span>
+      <span><a>确认所有消息</a></span>
+    </div>
+    <!-- 消息中间列表 -->
+    <div class="message-list">
+      <a-list item-layout="horizontal" :data-source="page.list">
+        <a-list-item slot="renderItem" key="item.messageId" slot-scope="item">
+          <div v-if="item.messageType === 1">
+            <a-tag color="orange">文章</a-tag>
+            <a> {{ item.sendUser }} </a><span>{{ item.createdTime }}</span> 评论了您的文章
+            <router-link :to="'articleRead/'+item.messageContent">
+              <a>{{ item.messageDesc }}</a>
+            </router-link>
+          </div>
+          <div v-if="item.messageType === 2">
+            <a-tag color="green">评论</a-tag>
+            <a> {{ item.sendUser }} </a><span>{{ item.createdTime }}</span> 回复了您的评论
+            <router-link :to="'articleRead/'+item.messageContent">
+              <a>{{ item.messageDesc }}</a>
+            </router-link>
+          </div>
+          <a slot="actions">确认</a>
+          <a slot="actions">删除</a>
+        </a-list-item>
+      </a-list>
+    </div>
+    <el-pagination
+      v-if="page.list.length < page.totalCount"
+      align="center"
+      class="question-pagination"
+      :current-page="page.currentPage"
+      :page-size="page.pageSize"
+      layout="total, prev, pager, next, jumper"
+      :total="page.totalCount"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
+
+<script>
+import messageApi from '@/api/article/message'
+export default {
+  data() {
+    return {
+      page: {
+        currentPage: 1,
+        pageSize: 15,
+        totalCount: 0,
+        totalPage: 0,
+        params: {
+          messageType: [1, 2],
+          messageState: 0,
+          receiveUser: this.$store.getters.userName
+        },
+        sortColumn: 'createdTime',
+        sortMethod: 'desc',
+        list: []
+      }
+    }
+  },
+  created() {
+    this.getByPage()
+  },
+  methods: {
+    getByPage() {
+      messageApi.getByPage(this.page).then(res => {
+        this.page = res.data
+      })
+    },
+    // 每页大小改变 参数 value 为每页大小(pageSize)
+    handleSizeChange(val) {
+      this.page.pageSize = val
+      // 重新请求,刷新页面
+      this.getByPage(this.page)
+    },
+    // 当前页跳转 参数 value 当前页(currentPage)
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+      this.getByPage(this.page)
+    }
+  }
+}
+</script>
+
+<style scoped>
+    .good-message-container {
+        margin-top: 24px;
+        margin-right: 24px;
+        min-height: 830px;
+    }
+    .top-action {
+        width: 100%;
+        height: 60px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .top-action span{
+        margin-left: 20px;
+        margin-right: 6px;
+    }
+    .message-list {
+        padding: 0 0 0 15px;
+    }
+</style>
