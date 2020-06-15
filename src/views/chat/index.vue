@@ -2,21 +2,21 @@
     <div id="chatBox">
 
         <div id="chat-container" v-if="user">
-<!--            用户列表-->
+            <!--            用户列表-->
             <div style="width:10%;float:left;height:100%;margin: 10px 0px 10px 20px; ">
                 <div>
                     <h3 :style="{ margin: '16px 0' }">
-                      在线用户列表 {{userList.length}}
+                        在线用户列表 <span style="color:#108ee9">{{userList.length}}</span>
                     </h3>
                     <a-list size="small" bordered :data-source="userList" style="height:80%;overflow: auto;">
-                        <a-list-item slot="renderItem" slot-scope="item"  id="userElement" >
-                            <div   style=" text-align: center;width: 100% ;height: 100%;">{{ item }}</div>
+                        <a-list-item slot="renderItem" slot-scope="item" id="userElement">
+                            <div style=" text-align: center;width: 100% ;height: 100%;">{{ item }}</div>
                         </a-list-item>
                     </a-list>
                 </div>
             </div>
-<!--            聊天界面-->
-            <div  style="height: 100% ;float: left  ; width: 80%;  background-color: rgb(167,205,214);" >
+            <!--            聊天界面-->
+            <div style="height: 100% ;float: left  ; width: 80%;  background-color: rgb(167,205,214);">
                 <div class="chat-header">
                     <h2>聊天窗口</h2>
                 </div>
@@ -33,15 +33,16 @@
                             发送
                         </a-button>
 
-<!--                       聊天记录-->
-                            <a-button type="primary" @click="clickShowModal" >
-                                聊天记录
-                            </a-button>
-                            <a-modal v-model="visible" title="聊天记录" @ok="handleOk">
-                                <ul style=" list-style-type: none;margin: 0; overflow: auto;overflow-y: scroll;padding: 0 20px 0px 20px;height: 600px;" >
-                                    <ChatItem v-for="(message ,index) in this.messageRecordList" :key="index" :message="message"/>
-                                </ul>
-                            </a-modal>
+                        <!--                       聊天记录-->
+                        <a-button type="primary" @click="clickShowModal">
+                            聊天记录
+                        </a-button>
+                        <a-modal v-model="visible" title="聊天记录" @ok="handleOk">
+                            <ul style=" list-style-type: none;margin: 0; overflow: auto;overflow-y: scroll;padding: 0 20px 0px 20px;height: 600px;">
+                                <ChatItem v-for="(message ,index) in this.messageRecordList" :key="index"
+                                          :message="message"/>
+                            </ul>
+                        </a-modal>
 
                     </div>
                 </div>
@@ -65,7 +66,7 @@
         },
         data() {
             return {
-                userList:[],
+                userList: [],
                 messageList: [],
                 messageRecordList: [],
                 user: this.$store.getters.name,
@@ -73,6 +74,8 @@
                 stompClient: '',
                 content: '',
                 visible: false,
+                url:'http://175.24.45.179:8081'
+                // url: 'http://127.0.0.1:8081'
             }
         },
         methods: {
@@ -81,33 +84,33 @@
                     console.log(res)
                 })
             },
-            getCurentUser() {
-                this.$http.get('http://175.24.45.179:8081/chat/chatUser' ).then(res => {
+            getCurentUser(){
+                this.$http.get(this.url + '/chat/chatUser').then(res => {
                     console.log(res.data)
                     this.userList = res.data
-                }).catch(e=>{
+                }).catch(e => {
                     console.log(e)
                 })
             },
             getMessageRecordList() {
-                let type='';
-                if(this.roles===0){
-                        type=1
-                }else if(this.roles===1 || this.roles===2){
-                        type=2
-                }else if(this.roles===3){
-                    type=3
+                let type = '';
+                if (this.roles === 0) {
+                    type = 1
+                } else if (this.roles === 1 || this.roles === 2) {
+                    type = 2
+                } else if (this.roles === 3) {
+                    type = 3
                 }
-                this.$http.get('http://175.24.45.179/chat/chatMessage/'+type).then(res => {
+                this.$http.get(this.url + '/chat/chatMessage/' + type).then(res => {
                     console.log(res.data)
                     this.messageRecordList = res.data
-                }).catch(e=>{
+                }).catch(e => {
                     console.log(e)
                 })
             },
             getStompClient() {
-                // let socket = new SockJS('http://127.0.0.1:8081/zyb')
-                let socket = new SockJS('http://175.24.45.179:8081/zyb')
+                let socket = new SockJS(this.url + '/zyb')
+                // let socket = new SockJS('http://175.24.45.179:8081/zyb')
                 // 获取STOMP子协议的客户端对象
                 this.stompClient = Stomp.over(socket)
                 return Stomp.over(socket)
@@ -133,12 +136,12 @@
                 });
             },
             messageListAdd(message) {
-                let index=this.userList.indexOf(message.sender);
-                if(message.type==='JOIN' && index===-1){
-                   this.userList.push(message.sender)
+                let index = this.userList.indexOf(message.sender);
+                if (message.type === 'JOIN' && index === -1) {
+                    this.userList.push(message.sender)
                 }
-                 if(message.type==='LEAVE'&& index!=-1){
-                   this.userList.splice(index,1)
+                if (message.type === 'LEAVE' && index != -1) {
+                    this.userList.splice(index, 1)
                 }
                 this.messageList.push(message)
             },
@@ -166,7 +169,7 @@
                     1000
                 )
             },
-            clickShowModal(){
+            clickShowModal() {
                 this.getMessageRecordList()
                 this.showModal()
             },
@@ -218,7 +221,8 @@
         background-size: 100% 100%;
         background-position: center;
     }
-    #userElement:hover{
+
+    #userElement:hover {
         background-color: #fde3cf;
     }
 
@@ -227,7 +231,7 @@
         margin-left: auto;
         margin-right: auto;
         margin-top: 40px;
-        background-color: rgb(163,205,200);
+        background-color: rgb(163, 205, 200);
         box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
         height: 100%;
         max-height: 80%;
@@ -262,7 +266,7 @@
 
     /*聊天界面样式*/
     #chatList {
-        background-color: rgb(167,205,214);
+        background-color: rgb(167, 205, 214);
         margin-top: 20px;
         margin-bottom: 10px;
         height: 80%;
