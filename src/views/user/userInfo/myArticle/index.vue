@@ -1,146 +1,155 @@
 <template>
   <!-- 加载 -->
   <div style="minHeight: 878px">
+    <span class="user-info-index">我的文章</span>
+    <a-divider :style="{ marginTop: '1px' }" />
+    <div>
+      <div v-for="item in page.list" :key="item">
+        <h1>{{item.articleTitle}}</h1>
+        <p>{{item.typeName}} - {{item.createdTime}} </p>
+        <a-divider :style="{ marginTop: '1px' }" />
+      </div>
+    </div>
     <!-- 搜索栏 模糊查询-->
-    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini" :style="{marginTop: '10px'}">
-      <el-form-item label="文章标题">
-        <el-input v-model="page.params.articleTitle" placeholder="文章标题" clearable />
-      </el-form-item>
-      <el-form-item label="分类">
-        <el-select v-model="page.params.articleType" placeholder="分类" clearable filterable>
-          <el-option v-for="item in typeList" :key="item.typeName" :label="item.typeName" :value="item.typeId" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="起始日期">
-        <el-date-picker
-          v-model="page.params.articleTime"
-          type="daterange"
-          align="right"
-          unlink-panels
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
-          :picker-options="pickerOptions"
-          format="yyyy 年 MM 月 dd 日"
-          value-format="yyyy-MM-dd HH:mm:ss"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="success" icon="el-icon-search" sizi="mini" @click="search">查询</el-button>
-        <el-button type="warning" icon="el-icon-refresh-left" size="mini" @click="refresh">恢复</el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-plus" class="add-button" size="mini" @click="openAddDialog">添加</el-button>
-      </el-form-item>
-    </el-form>
-    <!-- 分割线 -->
+<!--    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini" :style="{marginTop: '10px'}">-->
+<!--      <el-form-item label="文章标题">-->
+<!--        <el-input v-model="page.params.articleTitle" placeholder="文章标题" clearable />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="分类">-->
+<!--        <el-select v-model="page.params.articleType" placeholder="分类" clearable filterable>-->
+<!--          <el-option v-for="item in typeList" :key="item.typeName" :label="item.typeName" :value="item.typeId" />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="起始日期">-->
+<!--        <el-date-picker-->
+<!--          v-model="page.params.articleTime"-->
+<!--          type="daterange"-->
+<!--          align="right"-->
+<!--          unlink-panels-->
+<!--          range-separator="至"-->
+<!--          start-placeholder="开始日期"-->
+<!--          end-placeholder="结束日期"-->
+<!--          :default-time="['00:00:00', '23:59:59']"-->
+<!--          :picker-options="pickerOptions"-->
+<!--          format="yyyy 年 MM 月 dd 日"-->
+<!--          value-format="yyyy-MM-dd HH:mm:ss"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item>-->
+<!--        <el-button type="success" icon="el-icon-search" sizi="mini" @click="search">查询</el-button>-->
+<!--        <el-button type="warning" icon="el-icon-refresh-left" size="mini" @click="refresh">恢复</el-button>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" icon="el-icon-plus" class="add-button" size="mini" @click="openAddDialog">添加</el-button>-->
+<!--      </el-form-item>-->
+<!--    </el-form>-->
+<!--    &lt;!&ndash; 分割线 &ndash;&gt;-->
 
-    <!-- 列表 -->
-    <!--
-      1. :data v-bind:model="page.list" 绑定数据 分页对象的的list数据
-      2. show-overflow-tooltip 超出部分隐藏
-      3. @selection-change="handleSelectionChange" selection-change	当选择项发生变化时会触发该事件
-      4. @sort-change="changeSort" sort-change 事件回中可以获取当前排序的字段名[prop]和排序顺序[order]
-     -->
-    <el-table
-      :data="page.list"
-      border
-      style="width: 100%"
-      @sort-change="changeSort"
-    >
-      <el-table-column type="index" fixed="left" label="#" width="60" align="center" />
-      <el-table-column prop="articleTitle" align="center" label="标题" width="200" show-overflow-tooltip />
-      <el-table-column prop="typeName" label="分类" width="120" align="center" />
-      <el-table-column prop="articleAuthor" label="作者" width="160" align="center" />
-      <el-table-column prop="articleImage" label="图片" width="120" align="center">
-        <template slot-scope="scope">
-          <el-image
-            style="width: 100%;height: 50px"
-            :src="scope.row.articleImage"
-            :preview-src-list="[scope.row.articleImage]"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column prop="articleGood" label="点赞数" width="100" sortable="custom" align="center" />
-      <el-table-column prop="articleRead" label="阅读数" width="100" sortable="custom" align="center" />
-      <el-table-column prop="articleCollection" label="收藏数" width="100" sortable="custom" align="center" />
-      <el-table-column prop="articleComment" label="评论数" width="100" sortable="custom" align="center" />
-      <el-table-column prop="articleSource" label="文章来源" width="130" align="center" />
-      <el-table-column prop="createdTime" label="创建时间" width="200" sortable="custom" align="center" />
-      <el-table-column prop="updateTime" label="修改时间" width="200" sortable="custom" align="center" />
-      <el-table-column prop="enable" label="状态" width="100" align="center">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.isEnabled === 1">启用</el-tag>
-          <el-tag v-else type="info">弃用</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" fixed="right" width="120" align="center">
-        <template slot-scope="scope">
-          <el-dropdown>
-            <el-button type="primary" size="mini">
-              操作
-              <i class="el-icon-arrow-down el-icon--right" />
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>
-                <el-button size="mini" type="primary" icon="el-icon-edit" @click="toUpdate(scope.row.articleId)">编辑</el-button>
-              </el-dropdown-item>
-              <el-dropdown-item>
-                <el-button size="mini" type="primary" icon="el-icon-view" @click="toRead(scope.row.articleId)">查看</el-button>
-              </el-dropdown-item>
-              <el-dropdown-item>
-                <el-button v-if="scope.row.isEnabled === 0" icon="el-icon-check" size="mini" type="success" @click="toEnable(scope.row.articleId)">启用</el-button>
-              </el-dropdown-item>
-              <el-dropdown-item>
-                <el-button v-if="scope.row.isEnabled === 1" icon="el-icon-close" size="mini" type="warning" @click="toDisable(scope.row.articleId)">弃用</el-button>
-              </el-dropdown-item>
-              <el-dropdown-item>
-                <el-button size="mini" type="danger" icon="el-icon-delete" @click="toDelete(scope.row.articleId)">删除</el-button>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!--
-      分页组件-最完整版
-      class : 分页组件
-      current-page : 当前页 此处为动态绑定page对象的currentPage属性
-      page-sizes : 每页显示个数选择器的选项设置
-      page-size : 每页大小
-      layout : 组件布局
-      total : 总条目数 此处动态绑定page对象的totalCount属性
-      @size-change="handleSizeChange"  pageSize 改变时会触发  参数:每页条数
-      @current-change="handleCurrentChange" currentPage 改变时会触发 参数:当前页
-     -->
-    <el-pagination
-      v-if="page.totalCount > page.list.length"
-      align="center"
-      class="pagination"
-      :current-page="page.currentPage"
-      :page-sizes="[5, 9]"
-      :page-size="page.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="page.totalCount"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-    <!-- 添加弹窗 -->
-    <el-dialog title="添加" :visible.sync="addDialog" width="80%">
-      <article-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
-    </el-dialog>
-    <!--
-      修改弹窗
-      :article="article" 用于传递参数对象
-    -->
-    <el-dialog title="修改" :visible.sync="updateDialog" width="80%">
-      <article-update :article="article" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />
-    </el-dialog>
-    <!-- 阅读弹窗 -->
-    <el-dialog title="文章内容" :visible.sync="readDialog" width="80%">
-      <div v-html="article.articleContent" />
-    </el-dialog>
+<!--    &lt;!&ndash; 列表 &ndash;&gt;-->
+<!--    &lt;!&ndash;-->
+<!--      1. :data v-bind:model="page.list" 绑定数据 分页对象的的list数据-->
+<!--      2. show-overflow-tooltip 超出部分隐藏-->
+<!--      3. @selection-change="handleSelectionChange" selection-change	当选择项发生变化时会触发该事件-->
+<!--      4. @sort-change="changeSort" sort-change 事件回中可以获取当前排序的字段名[prop]和排序顺序[order]-->
+<!--     &ndash;&gt;-->
+<!--    <el-table-->
+<!--      :data="page.list"-->
+<!--      border-->
+<!--      style="width: 100%"-->
+<!--      @sort-change="changeSort"-->
+<!--    >-->
+<!--      <el-table-column type="index" fixed="left" label="#" width="60" align="center" />-->
+<!--      <el-table-column prop="articleTitle" align="center" label="标题" width="200" show-overflow-tooltip />-->
+<!--      <el-table-column prop="typeName" label="分类" width="120" align="center" />-->
+<!--      <el-table-column prop="articleAuthor" label="作者" width="160" align="center" />-->
+<!--      <el-table-column prop="articleImage" label="图片" width="120" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-image-->
+<!--            style="width: 100%;height: 50px"-->
+<!--            :src="scope.row.articleImage"-->
+<!--            :preview-src-list="[scope.row.articleImage]"-->
+<!--          />-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column prop="articleGood" label="点赞数" width="100" sortable="custom" align="center" />-->
+<!--      <el-table-column prop="articleRead" label="阅读数" width="100" sortable="custom" align="center" />-->
+<!--      <el-table-column prop="articleCollection" label="收藏数" width="100" sortable="custom" align="center" />-->
+<!--      <el-table-column prop="articleComment" label="评论数" width="100" sortable="custom" align="center" />-->
+<!--      <el-table-column prop="articleSource" label="文章来源" width="130" align="center" />-->
+<!--      <el-table-column prop="createdTime" label="创建时间" width="200" sortable="custom" align="center" />-->
+<!--      <el-table-column prop="updateTime" label="修改时间" width="200" sortable="custom" align="center" />-->
+<!--      <el-table-column prop="enable" label="状态" width="100" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-tag v-if="scope.row.isEnabled === 1">启用</el-tag>-->
+<!--          <el-tag v-else type="info">弃用</el-tag>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="操作" fixed="right" width="120" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-dropdown>-->
+<!--            <el-button type="primary" size="mini">-->
+<!--              操作-->
+<!--              <i class="el-icon-arrow-down el-icon&#45;&#45;right" />-->
+<!--            </el-button>-->
+<!--            <el-dropdown-menu slot="dropdown">-->
+<!--              <el-dropdown-item>-->
+<!--                <el-button size="mini" type="primary" icon="el-icon-edit" @click="toUpdate(scope.row.articleId)">编辑</el-button>-->
+<!--              </el-dropdown-item>-->
+<!--              <el-dropdown-item>-->
+<!--                <el-button size="mini" type="primary" icon="el-icon-view" @click="toRead(scope.row.articleId)">查看</el-button>-->
+<!--              </el-dropdown-item>-->
+<!--              <el-dropdown-item>-->
+<!--                <el-button v-if="scope.row.isEnabled === 0" icon="el-icon-check" size="mini" type="success" @click="toEnable(scope.row.articleId)">启用</el-button>-->
+<!--              </el-dropdown-item>-->
+<!--              <el-dropdown-item>-->
+<!--                <el-button v-if="scope.row.isEnabled === 1" icon="el-icon-close" size="mini" type="warning" @click="toDisable(scope.row.articleId)">弃用</el-button>-->
+<!--              </el-dropdown-item>-->
+<!--              <el-dropdown-item>-->
+<!--                <el-button size="mini" type="danger" icon="el-icon-delete" @click="toDelete(scope.row.articleId)">删除</el-button>-->
+<!--              </el-dropdown-item>-->
+<!--            </el-dropdown-menu>-->
+<!--          </el-dropdown>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--    </el-table>-->
+<!--    &lt;!&ndash;-->
+<!--      分页组件-最完整版-->
+<!--      class : 分页组件-->
+<!--      current-page : 当前页 此处为动态绑定page对象的currentPage属性-->
+<!--      page-sizes : 每页显示个数选择器的选项设置-->
+<!--      page-size : 每页大小-->
+<!--      layout : 组件布局-->
+<!--      total : 总条目数 此处动态绑定page对象的totalCount属性-->
+<!--      @size-change="handleSizeChange"  pageSize 改变时会触发  参数:每页条数-->
+<!--      @current-change="handleCurrentChange" currentPage 改变时会触发 参数:当前页-->
+<!--     &ndash;&gt;-->
+<!--    <el-pagination-->
+<!--      v-if="page.totalCount > page.list.length"-->
+<!--      align="center"-->
+<!--      class="pagination"-->
+<!--      :current-page="page.currentPage"-->
+<!--      :page-sizes="[5, 9]"-->
+<!--      :page-size="page.pageSize"-->
+<!--      layout="total, sizes, prev, pager, next, jumper"-->
+<!--      :total="page.totalCount"-->
+<!--      @size-change="handleSizeChange"-->
+<!--      @current-change="handleCurrentChange"-->
+<!--    />-->
+<!--    &lt;!&ndash; 添加弹窗 &ndash;&gt;-->
+<!--    <el-dialog title="添加" :visible.sync="addDialog" width="80%">-->
+<!--      <article-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />-->
+<!--    </el-dialog>-->
+<!--    &lt;!&ndash;-->
+<!--      修改弹窗-->
+<!--      :article="article" 用于传递参数对象-->
+<!--    &ndash;&gt;-->
+<!--    <el-dialog title="修改" :visible.sync="updateDialog" width="80%">-->
+<!--      <article-update :article="article" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />-->
+<!--    </el-dialog>-->
+<!--    &lt;!&ndash; 阅读弹窗 &ndash;&gt;-->
+<!--    <el-dialog title="文章内容" :visible.sync="readDialog" width="80%">-->
+<!--      <div v-html="article.articleContent" />-->
+<!--    </el-dialog>-->
 
   </div>
 </template>
@@ -355,3 +364,10 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .user-info-index{
+    margin-left: 10px;
+    font-size: 18px;
+    white-space: nowrap;
+  }
+</style>

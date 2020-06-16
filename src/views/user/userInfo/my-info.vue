@@ -1,16 +1,20 @@
 <template>
   <div>
     <el-upload
-      class="avatar-uploader"
       :action="uploadUrl"
       :show-file-list="false"
       :on-success="uploadSuccess"
       :headers="headers"
     >
-      <img v-if="imageUrl" :src="imageUrl" class="avatar">
-      <i v-else class="el-icon-plus avatar-uploader-icon" />
+      <div class="avatar-uploader">
+        <div v-if="imageUrl" class="imgbox" data-text="修改我的头像">
+          <img slot="trigger" :src="imageUrl" class="avatar">
+        </div>
+        <div v-else class="imgbox" data-text="修改我的头像">
+          <img slot="trigger" src="http://175.24.45.179/group1/M00/00/03/rBEABV7oMn6AVvq2AADLWerupHQ582.jpg" class="avatar">
+        </div>
+      </div>
     </el-upload>
-    <h1>用户名:{{ name }}</h1>
   </div>
 </template>
 <script>
@@ -32,7 +36,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'name', 'userId'
+      'userName', 'userId'
     ])
   },
   methods: {
@@ -50,27 +54,48 @@ export default {
 }
 </script>
 <style scoped>
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
+  .avatar-uploader{
+    width: 160px;
+    height: 160px;
+    margin: 20px 20px;
+  }
+  .imgbox{
+    border: 4px solid #fff;
+    border-radius: 4px;
+    width: 160px;
+    height: 160px;
+    position:relative;
     overflow: hidden;
   }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
+  .imgbox:after{
+    position:absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    width:100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    content: attr(data-text);
+    transform: translateY(-100%);
+    font-size: 16px;
+    color: #FFF;
   }
+  .imgbox:hover:after{
+    transform: translateY(0);
+  }
+  .avatar {
+    border-radius: 4px;
+    width: 160px;
+    height: 160px;
+    display: block;
+  }
+
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 178px;
-    height: 178px;
+    width: 160px;
+    height: 160px;
     line-height: 178px;
     text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-layout  id="content" :style="{display:'flex', marginTop: '55px' , minHeight: '300px',width: '50%' }">
+    <a-layout class="content" :style="{display:'flex', marginTop: '55px' , minHeight: '300px',width: '50%' }">
       <a-layout-header :style="{height:'59px', background: '#fff', zIndex: 1, width: '100%' }">
         <a-menu v-model="current" mode="horizontal">
           <a-menu-item key="login" @click="login=true">登录</a-menu-item>
@@ -35,7 +35,7 @@ export default {
 </script>
 
 <style scoped>
-#content{
+.content{
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;

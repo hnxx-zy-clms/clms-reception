@@ -9,7 +9,8 @@ const getDefaultState = () => {
     userId: '',
     roles: '',
     userIcon: '',
-    userName: ''
+    userName: '',
+    userInfo: ''
   }
 }
 
@@ -39,6 +40,9 @@ const mutations = {
   },
   SET_USERICON: (state, usericon) => {
     state.userIcon = usericon
+  },
+  SET_USERINFO: (state, userInfo) => {
+    state.userInfo = userInfo
   }
 }
 
@@ -88,6 +92,7 @@ const actions = {
         } else {
           reject(new Error('getInfo: 用户权限不能为空 !'))
         }
+        commit('SET_USERINFO', user)
         commit('SET_USERNAME', user.userName)
         commit('SET_NAME', user.name)
         commit('SET_USERID', user.userId)

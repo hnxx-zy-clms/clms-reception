@@ -44,7 +44,7 @@
             <div :style="{float:'left'}">
               <a target="_blank" href="https://github.com/hnxx-zy-clms/">
               <div class="clms-index-icon-text-card-item-title">项目GitHub</div>
-              <div class="clms-index-icon-text-card-item-text">clms项目GitHub地址</div>
+              <div class="clms-index-icon-text-card-item-text">项目GitHub地址</div>
               </a>
             </div>
             <a-icon type="github" :style="{ fontSize: '50px', color: 'black'}" />
@@ -55,7 +55,7 @@
             <div :style="{float:'left'}">
               <a target="_blank" href="https://github.com/hnxx-zy-clms/">
               <div class="clms-index-icon-text-card-item-title">项目gitee</div>
-              <div class="clms-index-icon-text-card-item-text">clms项目gitee地址</div>
+              <div class="clms-index-icon-text-card-item-text">项目gitee地址</div>
               </a>
             </div>
             <img :style="{height:'50px',width: '50px' }" src="https://ai.bdstatic.com/file/B4220CD9991547E58FBD0D5BC77264B0">
@@ -65,7 +65,7 @@
           <div :style="{margin:'25px 0px'}">
             <div :style="{float:'left'}">
               <div class="clms-index-icon-text-card-item-title">联系与反馈</div>
-              <div class="clms-index-icon-text-card-item-text">有问题？联系我们！</div>
+              <div class="clms-index-icon-text-card-item-text">联系我们！</div>
             </div>
             <a-icon type="message" :style="{ fontSize: '50px', color: 'black'}" />
           </div>

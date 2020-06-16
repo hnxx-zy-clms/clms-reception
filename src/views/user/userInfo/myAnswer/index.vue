@@ -1,108 +1,111 @@
 <template>
   <!-- 加载 -->
   <div class="question-container">
+    <span class="user-info-index">我的答复</span>
+    <a-divider :style="{ marginTop: '2px' }" />
+    <a-empty />
     <!-- 搜索栏 模糊查询-->
-    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini" :style="{marginTop: '10px'}">
-      <el-form-item label="问题id">
-        <el-input v-model="page.params.questionId" placeholder="请输入问题id" clearable />
-      </el-form-item>
-      <el-form-item label="答复内容">
-        <el-input v-model="page.params.answerContent" placeholder="请输入答复内容的关键字" clearable />
-      </el-form-item>
-      <el-form-item label="答复状态">
-        <el-select v-model="page.params.answerMark" placeholder="答复状态" width="80" clearable filterable>
-          <el-option label="未采纳" :value="0" />
-          <el-option label="已采纳" :value="1" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="起始日期">
-        <el-date-picker
-          v-model="page.params.answerTime"
-          type="daterange"
-          align="right"
-          unlink-panels
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :default-time="['00:00:00', '23:59:59']"
-          :picker-options="pickerOptions"
-          format="yyyy 年 MM 月 dd 日"
-          value-format="yyyy-MM-dd HH:mm:ss"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="success" icon="el-icon-search" sizi="mini" @click="getByPage">查询</el-button>
-        <el-button type="warning" icon="el-icon-refresh-left" size="mini" @click="refresh">恢复</el-button>
-      </el-form-item>
-    </el-form>
-    <!-- 列表 -->
-    <!--
-      1. :data v-bind:model="page.list" 绑定数据 分页对象的的list数据
-      2. show-overflow-tooltip 超出部分隐藏
-      3. @selection-change="handleSelectionChange" selection-change	当选择项发生变化时会触发该事件
-      4. @sort-change="changeSort" sort-change 事件回中可以获取当前排序的字段名[prop]和排序顺序[order]
-     -->
-    <el-table
-      :data="page.list"
-      border
-      fit
-      style="width: 100%"
-      @sort-change="changeSort"
-    >
-      <el-table-column type="index" fixed="left" label="#" width="60" align="center" />
-      <el-table-column prop="answerContent" label="答复内容" width="150" align="center" show-overflow-tooltip />
-      <el-table-column prop="questionId" label="问题id" width="100" align="center" show-overflow-tooltip />
-      <el-table-column prop="answerAuthor" label="答复人" width="100" align="center" />
-      <el-table-column prop="answerGood" label="点赞量" width="100" align="center" sortable="custom" />
-      <el-table-column prop="answerTime" label="答复时间" width="200" align="center" sortable="custom" />
-      <el-table-column prop="updateTime" label="修改时间" width="200" align="center" sortable="custom" />
-      <el-table-column prop="enable" label="状态" width="100" align="center">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.answerMark === 0" type="danger">未采纳</el-tag>
-          <el-tag v-else>已采纳</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="360" align="center">
-        <template slot-scope="scope">
-          <el-button icon="el-icon-edit" size="mini" type="primary" @click="toUpdate(scope.row.answerId)">修改</el-button>
-          <el-button v-if="scope.row.answerMark === 0" icon="el-icon-s-tools" size="mini" type="success" @click="toIsAdopt(scope.row.answerId)">设置已采纳</el-button>
-          <el-button v-if="scope.row.answerMark === 1" icon="el-icon-s-tools" size="mini" type="warning" @click="toNoAdopt(scope.row.answerId)">设置未采纳</el-button>
-          <el-button icon="el-icon-delete" size="mini" type="danger" @click="toDelete(scope.row.answerId)">删除</el-button>
+<!--    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini" :style="{marginTop: '10px'}">-->
+<!--      <el-form-item label="问题id">-->
+<!--        <el-input v-model="page.params.questionId" placeholder="请输入问题id" clearable />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="答复内容">-->
+<!--        <el-input v-model="page.params.answerContent" placeholder="请输入答复内容的关键字" clearable />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="答复状态">-->
+<!--        <el-select v-model="page.params.answerMark" placeholder="答复状态" width="80" clearable filterable>-->
+<!--          <el-option label="未采纳" :value="0" />-->
+<!--          <el-option label="已采纳" :value="1" />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="起始日期">-->
+<!--        <el-date-picker-->
+<!--          v-model="page.params.answerTime"-->
+<!--          type="daterange"-->
+<!--          align="right"-->
+<!--          unlink-panels-->
+<!--          range-separator="至"-->
+<!--          start-placeholder="开始日期"-->
+<!--          end-placeholder="结束日期"-->
+<!--          :default-time="['00:00:00', '23:59:59']"-->
+<!--          :picker-options="pickerOptions"-->
+<!--          format="yyyy 年 MM 月 dd 日"-->
+<!--          value-format="yyyy-MM-dd HH:mm:ss"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item>-->
+<!--        <el-button type="success" icon="el-icon-search" sizi="mini" @click="getByPage">查询</el-button>-->
+<!--        <el-button type="warning" icon="el-icon-refresh-left" size="mini" @click="refresh">恢复</el-button>-->
+<!--      </el-form-item>-->
+<!--    </el-form>-->
+<!--    &lt;!&ndash; 列表 &ndash;&gt;-->
+<!--    &lt;!&ndash;-->
+<!--      1. :data v-bind:model="page.list" 绑定数据 分页对象的的list数据-->
+<!--      2. show-overflow-tooltip 超出部分隐藏-->
+<!--      3. @selection-change="handleSelectionChange" selection-change	当选择项发生变化时会触发该事件-->
+<!--      4. @sort-change="changeSort" sort-change 事件回中可以获取当前排序的字段名[prop]和排序顺序[order]-->
+<!--     &ndash;&gt;-->
+<!--    <el-table-->
+<!--      :data="page.list"-->
+<!--      border-->
+<!--      fit-->
+<!--      style="width: 100%"-->
+<!--      @sort-change="changeSort"-->
+<!--    >-->
+<!--      <el-table-column type="index" fixed="left" label="#" width="60" align="center" />-->
+<!--      <el-table-column prop="answerContent" label="答复内容" width="150" align="center" show-overflow-tooltip />-->
+<!--      <el-table-column prop="questionId" label="问题id" width="100" align="center" show-overflow-tooltip />-->
+<!--      <el-table-column prop="answerAuthor" label="答复人" width="100" align="center" />-->
+<!--      <el-table-column prop="answerGood" label="点赞量" width="100" align="center" sortable="custom" />-->
+<!--      <el-table-column prop="answerTime" label="答复时间" width="200" align="center" sortable="custom" />-->
+<!--      <el-table-column prop="updateTime" label="修改时间" width="200" align="center" sortable="custom" />-->
+<!--      <el-table-column prop="enable" label="状态" width="100" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-tag v-if="scope.row.answerMark === 0" type="danger">未采纳</el-tag>-->
+<!--          <el-tag v-else>已采纳</el-tag>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="操作" width="360" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button icon="el-icon-edit" size="mini" type="primary" @click="toUpdate(scope.row.answerId)">修改</el-button>-->
+<!--          <el-button v-if="scope.row.answerMark === 0" icon="el-icon-s-tools" size="mini" type="success" @click="toIsAdopt(scope.row.answerId)">设置已采纳</el-button>-->
+<!--          <el-button v-if="scope.row.answerMark === 1" icon="el-icon-s-tools" size="mini" type="warning" @click="toNoAdopt(scope.row.answerId)">设置未采纳</el-button>-->
+<!--          <el-button icon="el-icon-delete" size="mini" type="danger" @click="toDelete(scope.row.answerId)">删除</el-button>-->
 
-        </template>
-      </el-table-column>
-    </el-table>
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--    </el-table>-->
 
-    <!--
-      分页组件-最完整版
-      class : 分页组件
-      current-page : 当前页 此处为动态绑定page对象的currentPage属性
-      page-sizes : 每页显示个数选择器的选项设置
-      page-size : 每页大小
-      layout : 组件布局
-      total : 总条目数 此处动态绑定page对象的totalCount属性
-      @size-change="handleSizeChange"  pageSize 改变时会触发  参数:每页条数
-      @current-change="handleCurrentChange" currentPage 改变时会触发 参数:当前页
-     -->
-    <el-pagination
-      v-if="page.totalCount > page.list.length"
-      align="center"
-      class="pagination"
-      :current-page="page.currentPage"
-      :page-sizes="[5,10,20,50]"
-      :page-size="page.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="page.totalCount"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-    <!--
-      修改弹窗
-      :answer="answer" 用于传递参数对象
-    -->
-    <el-dialog title="修改" :visible.sync="updateDialog">
-      <answer-update :answer="answer" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />
-    </el-dialog>
+<!--    &lt;!&ndash;-->
+<!--      分页组件-最完整版-->
+<!--      class : 分页组件-->
+<!--      current-page : 当前页 此处为动态绑定page对象的currentPage属性-->
+<!--      page-sizes : 每页显示个数选择器的选项设置-->
+<!--      page-size : 每页大小-->
+<!--      layout : 组件布局-->
+<!--      total : 总条目数 此处动态绑定page对象的totalCount属性-->
+<!--      @size-change="handleSizeChange"  pageSize 改变时会触发  参数:每页条数-->
+<!--      @current-change="handleCurrentChange" currentPage 改变时会触发 参数:当前页-->
+<!--     &ndash;&gt;-->
+<!--    <el-pagination-->
+<!--      v-if="page.totalCount > page.list.length"-->
+<!--      align="center"-->
+<!--      class="pagination"-->
+<!--      :current-page="page.currentPage"-->
+<!--      :page-sizes="[5,10,20,50]"-->
+<!--      :page-size="page.pageSize"-->
+<!--      layout="total, sizes, prev, pager, next, jumper"-->
+<!--      :total="page.totalCount"-->
+<!--      @size-change="handleSizeChange"-->
+<!--      @current-change="handleCurrentChange"-->
+<!--    />-->
+<!--    &lt;!&ndash;-->
+<!--      修改弹窗-->
+<!--      :answer="answer" 用于传递参数对象-->
+<!--    &ndash;&gt;-->
+<!--    <el-dialog title="修改" :visible.sync="updateDialog">-->
+<!--      <answer-update :answer="answer" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />-->
+<!--    </el-dialog>-->
 
   </div>
 </template>
@@ -293,3 +296,10 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .user-info-index{
+    margin-left: 10px;
+    font-size: 18px;
+    white-space: nowrap;
+  }
+</style>

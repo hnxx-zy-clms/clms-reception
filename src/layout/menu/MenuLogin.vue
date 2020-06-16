@@ -51,7 +51,7 @@ export default {
   },
   created() {
     this.userName = this.$store.getters.userName
-    if (this.$store.getters.userName !== null) {
+    if (this.$store.getters.userName !== '') {
       this.getMessageList()
     }
   },

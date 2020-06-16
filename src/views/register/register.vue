@@ -22,17 +22,17 @@
             <div :class="['user-register', passwordLevelClass]">强度：<span>{{ passwordLevelName }}</span></div>
             <a-progress :percent="state.percent" :show-info="false" :stroke-color=" passwordLevelColor " />
             <div style="margin-top: 10px;">
-              <span>请至少输入 6 个字符。请不要使用容易被猜到的密码。</span>
+              <span>密码长度应为6-12位。请不要使用容易被猜到的密码。</span>
             </div>
           </div>
         </template>
         <a-form-item>
           <a-input
-            v-decorator="['userPassword', {rules: [{ required: true, message: '至少6位密码，区分大小写'}, { validator: handlePasswordLevel }], validateTrigger: ['change', 'blur']}]"
+            v-decorator="['userPassword', {rules: [{ required: true, message: '密码长度应为6-12位，区分大小写'}, { validator: handlePasswordLevel }], validateTrigger: ['change', 'blur']}]"
             size="large"
             type="password"
             autocomplete="false"
-            placeholder="至少6位密码，区分大小写"
+            placeholder="密码长度应为6-12位，区分大小写"
             @click="handlePasswordInputClick"
           />
         </a-form-item>
@@ -40,7 +40,7 @@
 
       <a-form-item>
         <a-input
-          v-decorator="['password2', {rules: [{ required: true, message: '至少6位密码，区分大小写' }, { validator: handlePasswordCheck }], validateTrigger: ['change', 'blur']}]"
+          v-decorator="['password2', {rules: [{ required: true, message: '密码长度应为6-12位，区分大小写' }, { validator: handlePasswordCheck }], validateTrigger: ['change', 'blur']}]"
           size="large"
           type="password"
           autocomplete="false"
@@ -165,6 +165,9 @@ export default {
       if (/[a-zA-Z]/.test(value)) {
         level = level + 2
       }
+      if (value.length < 4 || value.length > 8) {
+        callback(new Error('用户名长度应为4-8位'))
+      }
       if (level >= 2) {
         callback()
       } else {
@@ -173,7 +176,6 @@ export default {
     },
     handlePasswordLevel(rule, value, callback) {
       let level = 0
-
       // 判断这个字符串中有没有数字
       if (/[0-9]/.test(value)) {
         level++
@@ -185,6 +187,9 @@ export default {
       // 判断字符串中有没有特殊符号
       if (/[^0-9a-zA-Z_]/.test(value)) {
         level++
+      }
+      if (value.length < 6 || value.length > 12) {
+        callback(new Error('密码长度应为6-12位'))
       }
       this.state.passwordLevel = level
       this.state.percent = level * 30

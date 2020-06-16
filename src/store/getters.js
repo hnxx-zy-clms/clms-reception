@@ -7,6 +7,7 @@ const getters = {
   routers: state => state.settings.routers,
   addRouters: state => state.settings.addRouters,
   typeList: state => state.global.typeList,
-  userIcon: state => state.user.userIcon
+  userIcon: state => state.user.userIcon,
+  userInfo: state => state.user.userInfo
 }
 export default getters

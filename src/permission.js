@@ -20,6 +20,7 @@ router.beforeEach((to, from, next) => {
       NProgress.done()
     } else {
       if (store.getters.roles.length === 0) {
+        store.dispatch('global/getList').then(r => null)
         store
           .dispatch('user/getInfo')
           .then(res => {
