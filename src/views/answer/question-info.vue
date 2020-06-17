@@ -66,7 +66,7 @@
           <div class="user-answer">
             <tinymce v-model="content" />
             <div class="answer-button">
-              <a-button type="primary" @click="saveAnswer(content)">发表答复</a-button>
+              <a-button type="primary" :loading="answerLoading" @click="saveAnswer(content)">发表答复</a-button>
               <div v-show="countShow" class="content-count">
                 还能输入 {{ answerContentCount }} 个字符
               </div>
@@ -173,6 +173,7 @@ export default {
   },
   data() {
     return {
+      answerLoading: false,
       userName: this.$store.getters.userName,
       userIcon: this.$store.getters.userIcon,
       isGoodQuestion: false, // 判断是否已经点赞
@@ -312,9 +313,11 @@ export default {
     },
     // 答复
     saveAnswer(content) {
+      this.answerLoading = true
       this.answer.questionId = this.$route.params.id
       this.answer.answerContent = this.content
       answerApi.save(this.answer).then(res => {
+        this.answerLoading = false
         this.getAnswerPage()
         this.$message.success(res.msg)
         this.content = ''

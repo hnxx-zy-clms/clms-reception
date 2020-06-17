@@ -18,19 +18,19 @@
               <a-icon class="action-icon" type="eye" /><span class="count-num"> {{ article.articleRead }} 阅读</span>
               <a-icon class="action-icon" type="heart" /><span class="count-num"> {{ article.articleCollection }} 收藏</span>
               <a-icon class="action-icon" type="like" /><span class="count-num"> {{ article.articleGood }} 点赞</span>
-              <a href="javascript:void(0);"><span class="do-editer" @click="toUpdate(article.articleId)">编辑</span></a>
+              <a v-if="article.articleAuthor === userName" href="javascript:void(0);"><span class="do-editer" @click="toUpdate(article.articleId)">编辑</span></a>
             </div>
           </div>
           <div class="article-content" v-html="article.articleContent" />
           <!-- 文章操作 -->
           <div class="article-action">
             <div class="article-good">
-              <a href="javascript:void(0);" :class="isGoodArticle ? 'article-good meta-active' : 'article-good'" @click="saveGoodForArticle">
+              <a :loading="goodLoading" href="javascript:void(0);" :class="isGoodArticle ? 'article-good meta-active' : 'article-good'" @click="saveGoodForArticle">
                 <a-icon type="like" /> 点赞
               </a>
             </div>
             <div class="article-collection">
-              <a href="javascript:void(0);" :class="isCollection ? 'article-collection meta-active' : 'article-collection'" @click="saveCollection">
+              <a :loading="collectionLoading" href="javascript:void(0);" :class="isCollection ? 'article-collection meta-active' : 'article-collection'" @click="saveCollection">
                 <a-icon type="heart" /> 收藏
               </a>
             </div>
@@ -42,7 +42,7 @@
         <div class="user-comment">
           <a-textarea v-model="content" placeholder="请输入内容，不超过300字" :rows="3" />
           <div class="comment-button">
-            <a-button type="primary" @click="saveComment(content)">发表评论</a-button>
+            <a-button type="primary" :loading="commentLoading" @click="saveComment(content)">发表评论</a-button>
             <div v-show="countShow" class="content-count">
               还能输入 {{ commentContentCount }} 个字符
             </div>
@@ -191,6 +191,9 @@ export default {
   },
   data() {
     return {
+      commentLoading: false,
+      goodLoading: false,
+      collectionLoading: false,
       refrehFlag: false,
       focusCtrl: 0,
       currentIndex: 0,
@@ -288,19 +291,26 @@ export default {
       const newValLength = newVal ? newVal.length : 0
       const oldValLength = oldVal ? oldVal.length : 0
       this.commentContentCount = this.commentContentCount - (newValLength - oldValLength)
+    },
+    '$route': function() {
+      this.read(this.$route.params.id)
+      this.article.articleId = this.$route.params.id
+      this.getCommentList()
+      this.getGoodForArticle()
+      this.getCollection()
     }
   },
   created() {
-    this.read()
+    this.read(this.$route.params.id)
     this.article.articleId = this.$route.params.id
     this.getCommentList()
     this.getGoodForArticle()
     this.getCollection()
   },
   methods: {
-    read() {
+    read(val) {
       this.loading = true
-      this.id = this.$route.params.id
+      this.id = val
       articleApi.read(this.id).then(res => {
         this.article = res.data
         this.loading = false
@@ -384,11 +394,13 @@ export default {
     },
     saveGoodForArticle() {
       // 点赞
+      this.goodLoading = true
       if (!this.isGoodArticle) {
         this.good = {}
         this.good.articleId = this.$route.params.id
         goodApi.save(this.good).then(res => {
           this.$message.success(res.msg)
+          this.goodLoading = false
           this.getGoodForArticle()
         })
       } else {
@@ -426,15 +438,22 @@ export default {
     },
     // 添加文章评论
     saveComment(content) {
-      this.comment.parentCommentUser = null
-      this.comment.commentArticle = this.id
-      this.comment.commentContent = this.content
-      this.comment.commentType = 0
-      commentApi.save(this.comment).then(res => {
-        this.getCommentList()
-        this.$message.success(res.msg)
-        this.content = ''
-      })
+      this.commentLoading = true
+      if (content.length <= 0) {
+        this.$message.error('评论不能为空！')
+        this.commentLoading = false
+      } else {
+        this.comment.parentCommentUser = null
+        this.comment.commentArticle = this.id
+        this.comment.commentContent = this.content
+        this.comment.commentType = 0
+        commentApi.save(this.comment).then(res => {
+          this.commentLoading = false
+          this.getCommentList()
+          this.$message.success(res.msg)
+          this.content = ''
+        })
+      }
     },
     // 点击回复，定位到二级评论输入框
     doSaveChildComment(val) {
@@ -521,7 +540,9 @@ export default {
       this.getByPage(this.childPage)
     },
     goBack() {
-      this.$router.go(-1)
+      this.$router.push({
+        path: '/article'
+      })
     }
   }
 }

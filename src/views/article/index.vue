@@ -121,7 +121,7 @@ export default {
   },
   created() {
     this.getTypeList()
-    // this.getRecomRead()
+    this.getRecomRead()
   },
   methods: {
     getTypeList() {

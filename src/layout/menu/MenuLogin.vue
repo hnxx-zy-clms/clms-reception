@@ -40,26 +40,30 @@ export default {
       isLogin: this.$store.getters.token !== undefined,
       userName: '',
       messageCount: 0, // 消息计数
-      websocketUrl: process.env.VUE_APP_BASE_API + '/push/websocket',
+      // 开发环境客户端地址
+      // websocketUrlDev: 'ws://localhost:8080/push/websocket',
+      // 生产环境客户端地址
+      // websocketUrlProd: 'ws://175.24.45.179:8080/push/websocket',
       messageList: []
     }
   },
-  watch: {
-    'temp': function() {
-
-    }
-  },
+  // watch: {
+  //   '$store': function() {
+  //     if (this.$store.getters.userName !== '') {
+  //       this.getMessageList()
+  //     }
+  //   }
+  // },
   created() {
     this.userName = this.$store.getters.userName
-    if (this.$store.getters.userName !== '') {
+    if (this.$store.getters.token) {
       this.getMessageList()
     }
   },
   mounted() {
     // WebSocket
     if ('WebSocket' in window) {
-      this.websocket = new WebSocket('ws://localhost:8080/push/websocket')
-      // this.websocket = new WebSocket('ws://175.24.45.179:8080/push/websocket')
+      this.websocket = new WebSocket(process.env.VUE_APP_WEBSOCKET_URL)
       // alert('连接浏览器')
       this.initWebSocket()
     } else {
@@ -96,13 +100,97 @@ export default {
       // 根据服务器推送的消息做自己的业务处理
       console.log('服务端返回：' + event.data)
       this.temp = JSON.parse(event.data)
-      console.log(this.temp)
-      console.log(this.temp.receiveUser)
-      console.log(this.$store.getters.userName)
       if (this.temp.receiveUser === this.$store.getters.userName) {
-        console.log(this.temp)
         this.messageCount++
-        console.log(this.messageCount)
+      }
+      if (this.temp.sendUser !== this.$store.getters.userName) {
+        switch (this.temp.messageType) {
+          case 1:
+            this.$message({
+              customClass: 'message-model',
+              message: `${this.temp.sendUser} 评论了 ${this.temp.receiveUser} 的文章 ${this.temp.messageDesc}`,
+              type: 'success'
+            })
+            break
+          case 2:
+            this.$message({
+              customClass: 'message-model',
+              message: `${this.temp.sendUser} 回复了 ${this.temp.receiveUser} 的评论 ${this.temp.messageDesc}`,
+              type: 'success'
+            })
+            break
+          case 3:
+            this.$message({
+              customClass: 'message-model',
+              message: `${this.temp.sendUser} 点赞了 ${this.temp.receiveUser} 的文章 ${this.temp.messageDesc}`,
+              type: 'success'
+            })
+            break
+          case 4:
+            this.$message({
+              customClass: 'message-model',
+              message: `${this.temp.sendUser} 点赞了 ${this.temp.receiveUser} 的评论 ${this.temp.messageDesc}`,
+              type: 'success'
+            })
+            break
+          case 5:
+            this.$message({
+              customClass: 'message-model',
+              message: `${this.temp.sendUser} 点赞了 ${this.temp.receiveUser} 的提问 ${this.temp.messageDesc}`,
+              type: 'success'
+            })
+            break
+          case 6:
+            this.$message({
+              customClass: 'message-model',
+              message: `${this.temp.sendUser} 点赞了 ${this.temp.receiveUser} 的答复 ${this.temp.messageDesc}`,
+              type: 'success'
+            })
+            break
+          case 7:
+            break
+          case 8:
+            this.$message({
+              customClass: 'message-model',
+              message: `${this.temp.sendUser} 收藏了 ${this.temp.receiveUser} 的文章 ${this.temp.messageDesc}`,
+              type: 'success'
+            })
+            break
+          case 9:
+            this.$message({
+              customClass: 'message-model',
+              message: `${this.temp.sendUser} 收藏了 ${this.temp.receiveUser} 的提问 ${this.temp.messageDesc}`,
+              type: 'success'
+            })
+            break
+          case 10:
+            this.$message({
+              customClass: 'message-model',
+              message: `${this.temp.sendUser} 收藏了 ${this.temp.receiveUser} 的答复 ${this.temp.messageDesc}`,
+              type: 'success'
+            })
+            break
+          case 12:
+            this.$message({
+              customClass: 'message-model',
+              message: `${this.temp.sendUser} 批阅了 ${this.temp.receiveUser} 的报告 ${this.temp.messageDesc}`,
+              type: 'success'
+            })
+            break
+          case 13:
+            this.$message({
+              customClass: 'message-model',
+              message: `${this.temp.sendUser} 答复了 ${this.temp.receiveUser} 的提问 ${this.temp.messageDesc}`,
+              type: 'success'
+            })
+            break
+          default:
+            this.$message({
+              customClass: 'message-model',
+              message: `${this.temp.sendUser} 评论了 ${this.temp.receiveUser} 的文章 ${this.temp.messageDesc}`,
+              type: 'success'
+            })
+        }
       }
     },
     setOncloseMessage() {
@@ -132,6 +220,11 @@ export default {
 </script>
 
 <style scoped>
+    .message-model {
+      width: 1000px !important;
+      overflow: hidden;
+    }
+
     #menu-item{
         float: right;
     }
