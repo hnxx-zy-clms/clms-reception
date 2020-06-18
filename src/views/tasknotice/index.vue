@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="roles===0">
+  <div class="container" v-if="roles===0 || roles===1 || roles===2">
     <!--通知待办区域-->
     <div class="noticetodo">
       <a-card :body-style="bodystyle">
