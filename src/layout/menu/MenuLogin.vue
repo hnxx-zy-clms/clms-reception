@@ -47,13 +47,12 @@ export default {
       messageList: []
     }
   },
-  // watch: {
-  //   '$store': function() {
-  //     if (this.$store.getters.userName !== '') {
-  //       this.getMessageList()
-  //     }
-  //   }
-  // },
+  watch: {
+    // 'this.$store': function() {
+    //   console.log('xxx')
+    //   this.messageCount = this.$store.getters.messageCount
+    // }
+  },
   created() {
     this.userName = this.$store.getters.userName
     if (this.$store.getters.token) {
@@ -212,6 +211,7 @@ export default {
           if (element.messageState === 0) {
             this.messageCount++
           }
+          this.$store.commit('global/SET_MESSAGE_COUNT', this.messageCount)
         })
       })
     }

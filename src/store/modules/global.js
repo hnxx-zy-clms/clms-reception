@@ -2,12 +2,16 @@
 import typeApi from '@/api/article/type'
 
 const state = {
-  typeList: [] // 分类列表
+  typeList: [], // 分类列表
+  messageCount: [] // 消息提示计数
 }
 
 const mutations = {
   SET_TYPE: (state, typeList) => {
     state.typeList = typeList
+  },
+  SET_MESSAGE_COUNT: (state, messageCount) => {
+    state.messageCount = messageCount
   }
 }
 const actions = {

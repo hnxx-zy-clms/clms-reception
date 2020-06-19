@@ -20,10 +20,17 @@ export default {
       data: page
     })
   },
-  read(id) { // 阅读
+  confirmMessageById(id) { // 根据id确认消息
     return request({
-      url: `/${group_name}/read/${id}`,
-      method: 'get'
+      url: `/${group_name}/confirmMessageById/${id}`,
+      method: 'put'
+    })
+  },
+  confirmMessageByIds(ids) {
+    return request({
+      url: `/${group_name}/confirmMessageByIds`,
+      method: 'put',
+      data: ids
     })
   },
   delete(id) { // 删除

@@ -2,8 +2,7 @@
   <div class="good-message-container">
     <!-- 消息顶层操作 -->
     <div class="top-action">
-      <span><a>清空所有消息</a></span>
-      <span><a>确认所有消息</a></span>
+      <span><a @click="confirmMessageByIds()">确认所有消息</a></span>
     </div>
     <!-- 消息中间列表 -->
     <div class="message-list">
@@ -44,8 +43,7 @@
               <a>{{ item.messageDesc }}</a>
             </router-link>
           </div>
-          <a slot="actions">确认</a>
-          <a slot="actions">删除</a>
+          <a slot="actions" @click="confirmMessageById(item.messageId)">确认</a>
         </a-list-item>
       </a-list>
     </div>
@@ -67,6 +65,7 @@ import messageApi from '@/api/article/message'
 export default {
   data() {
     return {
+      selectMessageId: [],
       page: {
         currentPage: 1,
         pageSize: 15,
@@ -90,6 +89,25 @@ export default {
     getByPage() {
       messageApi.getByPage(this.page).then(res => {
         this.page = res.data
+      })
+    },
+    confirmMessageById(val) {
+      messageApi.confirmMessageById(val).then(res => {
+        this.$message.success(res.msg)
+        this.getByPage()
+        // let messageCount = this.this.$store.getters.messageCount
+        // messageCount = messageCount - 1
+        // this.$store.commit('global/SET_MESSAGE_COUNT', messageCount)
+      })
+    },
+    confirmMessageByIds() {
+      this.page.list.forEach(item => {
+        console.log(item.messageId)
+        this.selectMessageId.push(item.messageId)
+      })
+      messageApi.confirmMessageByIds(this.selectMessageId).then(res => {
+        this.$message.success(res.msg)
+        this.getByPage()
       })
     },
     // 每页大小改变 参数 value 为每页大小(pageSize)
