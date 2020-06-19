@@ -612,4 +612,10 @@ export default {
     /* 超出部分省略号 */
     text-overflow: ellipsis;
   }
+  .mce-edit-area {
+      min-height: 100px !important;
+    }
+    .mce-edit-area iframe {
+      min-height: 100px;
+    }
 </style>

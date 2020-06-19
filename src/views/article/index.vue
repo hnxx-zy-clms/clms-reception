@@ -23,7 +23,8 @@
       </div>
       <!-- 右侧容器 - 放推荐与广告-->
       <div class="right-container">
-        <el-button type="primary" class="write-article" icon="el-icon-edit" @click="openAddDialog">发表文章</el-button>
+        <el-button type="primary" class="write-article" icon="el-icon-edit" @click="toCreate">创作中心</el-button>
+        <!-- <el-button type="primary" class="write-article" icon="el-icon-edit" @click="openAddDialog">发表文章</el-button> -->
         <!-- 走马灯 -->
         <div class="cneter-carousel">
           <a-card title="校园新闻" :head-style="headStyle" :body-style="adStyle">
@@ -137,6 +138,11 @@ export default {
     },
     revocer() {
       this.type = {}
+    },
+    toCreate() {
+      this.$router.push({
+        path: '/create/index'
+      })
     },
     // 模块功能组件
     openAddDialog() {

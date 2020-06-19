@@ -34,7 +34,7 @@
         <tinymce v-model="article.articleContent" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" size="mini" @click="onSubmit">提交</el-button>
+        <el-button type="primary" size="mini" :loading="updateLoading" @click="onSubmit">提交</el-button>
         <el-button size="mini" @click="close">取消</el-button>
       </el-form-item>
     </el-form>
@@ -59,6 +59,7 @@ export default {
   },
   data() {
     return {
+      updateLoading: false,
       imageUrl: this.article.articleImage, // 上传图片回显
       headers: { // 上传文件的请求头
         Authorization: getToken()
@@ -82,10 +83,12 @@ export default {
      * 2、子组件可以使用 $emit 触发父组件的自定义事件
      */
     onSubmit() {
+      this.updateLoading = true
       articleApi.update(this.article).then(res => {
         this.$message.success(res.msg)
+        this.updateLoading = false
         this.$emit('closeUpdateDialog')
-        this.$emit('read')
+        this.$emit('read', this.article.articleId)
       })
     },
     uploadSuccess(res, file) {
@@ -99,3 +102,12 @@ export default {
   }
 }
 </script>
+
+<style scope>
+  .mce-edit-area {
+        min-height: 400px !important;
+    }
+    .mce-edit-area iframe {
+      min-height: 400px;
+    }
+</style>

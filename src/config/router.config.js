@@ -15,6 +15,7 @@ const Reply = () => import('../views/tasknotice/reply')
 const Register = () => import('../views/register/index')
 const NotFoundComponent = () => import('../views/exception/404')
 const Search = () => import('../views/search/index')
+const Create = () => import('../views/create/index')
 const Video = () => import('../views/video/index')
 const Details = () => import('../views/tasknotice/task/task-details')
 const TeacherReply = () => import('../views/tasknotice/task/task-reply')
@@ -59,7 +60,7 @@ export const constantRouterMap = [
     mate: {
       title: '会议',
       icon: 'schedule',
-      isLoading: true
+      isLoading: false
     }
   },
   {
@@ -69,7 +70,7 @@ export const constantRouterMap = [
     mate: {
       title: '班级',
       icon: 'usergroup-add',
-      isLoading: true
+      isLoading: false
     }
   },
   {
@@ -129,6 +130,15 @@ export const constantRouterMap = [
     mate: {
       title: '编辑文章',
       icon: 'book',
+      isLoading: false
+    }
+  },
+  {
+    path: '/create/index',
+    name: 'Create',
+    component: Create,
+    mate: {
+      title: '创作中心',
       isLoading: false
     }
   },
