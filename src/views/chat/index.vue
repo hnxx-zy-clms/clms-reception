@@ -8,20 +8,29 @@
                     <h3 :style="{ margin: '16px 0' }">
                         在线用户列表 <span style="color:#108ee9">{{userList.length}}</span>
                     </h3>
+                    <h3 :style="{ margin: '16px 0' }">
+                        <div style=" text-align: center;width: 100% ;height: 100%;" class="userElement"
+                             @click="manyChatInit()" id="manyChatInit" >多人群聊
+                        </div>
+                    </h3>
                     <a-list size="small" bordered :data-source="userList" style="height:80%;overflow: auto;">
-                        <a-list-item slot="renderItem" slot-scope="item" id="userElement">
-                            <div style=" text-align: center;width: 100% ;height: 100%;">{{ item }}</div>
+                        <a-list-item slot="renderItem" slot-scope="item" class="userElement" :id="item">
+                            <div style=" text-align: center;width: 100% ;height: 100%;" v-if="user===item">{{ item }}
+                            </div>
+                            <div style=" text-align: center;width: 100% ;height: 100%;" v-else
+                                 @click="pointToPointChatInit(item)">{{ item }}
+                            </div>
                         </a-list-item>
                     </a-list>
                 </div>
             </div>
             <!--            聊天界面-->
-            <div style="height: 100% ;float: left  ; width: 80%;  background-color: rgb(167,205,214);">
+            <div style="height: 100% ;float: left  ; width: 80%;  background-color: rgb(167,205,214);" v-if="this.chat">
                 <div class="chat-header">
-                    <h2>聊天窗口</h2>
+                    <h2>多人群聊</h2>
                 </div>
-                <div id="chatList">
-                    <ul id="messageArea">
+                <div class="chatList">
+                    <ul class="messageArea">
                         <ChatItem v-for="(message ,index) in messageList" :key="index" :message="message"/>
                     </ul>
                 </div>
@@ -32,7 +41,6 @@
                         <a-button type="primary" @click="sendMessage">
                             发送
                         </a-button>
-
                         <!--                       聊天记录-->
                         <a-button type="primary" @click="clickShowModal">
                             聊天记录
@@ -47,6 +55,39 @@
                     </div>
                 </div>
             </div>
+            <div style="height: 100% ;float: left  ; width: 80%;  background-color: rgb(167,205,214);"
+                 v-if="this.pointChat">
+                <div class="chat-header">
+                    <h2>{{pointUser}}</h2>
+                </div>
+                <div class="chatList">
+                    <ul class="messageArea">
+                        <ChatItem v-for="(message ,index) in oneToOneMessage" :key="index" :message="message"/>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <div class="input-group clearfix">
+                        <input v-model="content" @keyup.enter="sendPointMessage(pointUser)" type="text"
+                               class="form-control"
+                               placeholder="Type a message...">
+                        <a-button type="primary" @click="sendPointMessage(pointUser)">
+                            发送
+                        </a-button>
+                        <!--                        &lt;!&ndash;                       聊天记录&ndash;&gt;-->
+                        <!--                        <a-button type="primary" @click="clickShowModal">-->
+                        <!--                            聊天记录-->
+                        <!--                        </a-button>-->
+                        <!--                        <a-modal v-model="visible" title="聊天记录" @ok="handleOk">-->
+                        <!--                            <ul style=" list-style-type: none;margin: 0; overflow: auto;overflow-y: scroll;padding: 0 20px 0px 20px;height: 600px;">-->
+                        <!--                                <ChatItem v-for="(message ,index) in this.messageRecordList" :key="index"-->
+                        <!--                                          :message="message"/>-->
+                        <!--                            </ul>-->
+                        <!--                        </a-modal>-->
+
+                    </div>
+                </div>
+            </div>
+
         </div>
         <div v-else class="chat-login">
             <h4>请先进行账号登录！！</h4>
@@ -69,13 +110,18 @@
                 userList: [],
                 messageList: [],
                 messageRecordList: [],
+                oneToOneMessageList: [],
+                oneToOneMessage: [],
                 user: this.$store.getters.name,
                 roles: this.$store.getters.roles,
+                chat: true,
+                pointChat: false,
+                pointUser: '',
                 stompClient: '',
                 content: '',
                 visible: false,
-                url:'http://175.24.45.179:8081'
-                // url: 'http://127.0.0.1:8081'
+                // url: 'http://175.24.45.179:8081'
+                url: 'http://127.0.0.1:8081'
             }
         },
         methods: {
@@ -84,7 +130,7 @@
                     console.log(res)
                 })
             },
-            getCurentUser(){
+            getCurentUser() {
                 this.$http.get(this.url + '/chat/chatUser').then(res => {
                     console.log(res.data)
                     this.userList = res.data
@@ -92,8 +138,22 @@
                     console.log(e)
                 })
             },
+            manyChatInit() {
+                this.chat = true;
+                this.pointChat = false;
+                document.querySelector('#manyChatInit').style.backgroundColor = ''
+            },
+            pointToPointChatInit(item) {
+                this.chat = false;
+                this.pointChat = true;
+                this.pointUser = item
+                document.querySelector('#' + item).style.backgroundColor = ''
+                this.oneToOneMessage = this.oneToOneMessageList.filter(e => {
+                    return (e.sender === this.user && e.receiver === item) || (e.sender === item && e.receiver === this.user)
+                })
+            },
             getMessageRecordList() {
-                let type = '';
+                let type = 1;
                 if (this.roles === 0) {
                     type = 1
                 } else if (this.roles === 1 || this.roles === 2) {
@@ -110,7 +170,6 @@
             },
             getStompClient() {
                 let socket = new SockJS(this.url + '/zyb')
-                // let socket = new SockJS('http://175.24.45.179:8081/zyb')
                 // 获取STOMP子协议的客户端对象
                 this.stompClient = Stomp.over(socket)
                 return Stomp.over(socket)
@@ -123,12 +182,25 @@
                     stompClient.subscribe('/topic/public', (msg) => {
                         let chatMessage = JSON.parse(msg.body);
                         this.messageListAdd(chatMessage)
+                        if(chatMessage.sender!==this.user){
+                        document.querySelector('#manyChatInit').style.backgroundColor = 'rgb(255,156,0)'
+                        }
+                    }, {});
+                    // 回调方法，如果消息到达订阅一对一主题，则会调用该方法
+                    stompClient.subscribe('/chat/point/' + this.user, (msg) => {
+                        let chatMessage = JSON.parse(msg.body);
+                        if (this.userList.indexOf(chatMessage.sender) != -1) {
+                            this.oneToOneMessageList.push(chatMessage)
+                            this.oneToOneMessage.push(chatMessage)
+                            document.querySelector('#' + chatMessage.sender).style.backgroundColor = 'rgb(255,156,0)'
+                        }
                     }, {});
                     // 向/app/chat.addUser发送消息将该用户的名称告知服务器
                     stompClient.send("/app/chat.addUser",
                         {},
                         JSON.stringify({sender: this.user, type: 'JOIN', icon: this.$store.getters.userIcon})
-                    )  //用户加入接口
+                    );  //用户加入接口
+
                 }, (err) => {
                     // 连接发生错误时的处理函数
                     const chatMessage = {sender: '', content: '连接聊天室出错，请重试！！', type: 'ERROR', createdTime: ''}
@@ -161,6 +233,25 @@
                     alert("发送的消息不能为空噢！！ 快捷发送，回车即可！！")
                 }
             },
+            sendPointMessage(pointUser) {
+                let content = this.content.trim()
+                if (content) {
+                    let chatMessage = {
+                        sender: this.user,
+                        receiver: pointUser,
+                        content: content,
+                        type: 'CHAT',
+                        icon: this.$store.getters.userIcon,
+                        createdTime: ''
+                    }
+                    this.stompClient.send("/app/chat.oneToOne", {}, JSON.stringify(chatMessage));
+                    this.content = ''
+                    this.oneToOneMessageList.push(chatMessage)
+                    this.oneToOneMessage.push(chatMessage)
+                } else {
+                    alert("发送的消息不能为空噢！！ 快捷发送，回车即可！！")
+                }
+            },
             // 断开连接
             disconnect() {
                 this.stompClient.send("/app/chat.leftUser", {}, JSON.stringify({sender: this.user, type: 'LEAVE'}));
@@ -184,7 +275,7 @@
         watch: {
             'messageList': function (newVal, oldVal) {
                 setTimeout(function () {
-                    let messageArea = document.querySelector('#messageArea');
+                    let messageArea = document.querySelector('.messageArea');
                     messageArea.scrollTop = messageArea.scrollHeight;
                 }, 200)
             },
@@ -222,7 +313,7 @@
         background-position: center;
     }
 
-    #userElement:hover {
+    .userElement:hover {
         background-color: #fde3cf;
     }
 
@@ -265,7 +356,7 @@
     }
 
     /*聊天界面样式*/
-    #chatList {
+    .chatList {
         background-color: rgb(167, 205, 214);
         margin-top: 20px;
         margin-bottom: 10px;
@@ -273,7 +364,7 @@
         border-bottom: 1px solid #ececec;
     }
 
-    #messageArea {
+    .messageArea {
         list-style-type: none;
         margin: 0;
         overflow: auto;
