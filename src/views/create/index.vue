@@ -12,13 +12,13 @@
         <mavon-editor
           v-if="editorModeState"
           ref="md"
-          v-model="article.articleContent"
+          v-model="markdownContent"
           code-style="monokai"
           :ishljs="true"
           style="zIndex: 1"
           @save="saveMavon"
         />
-        <tinymce v-else v-model="article.articleContent" />
+        <tinymce v-else v-model="tinymceContent" />
       </a-layout-content>
     </a-layout>
 
@@ -76,7 +76,12 @@ export default {
         Authorization: getToken()
       },
       typeList: this.$store.getters.typeList,
-      article: {},
+      article: {
+        articleTitle: '',
+        articleType: ''
+      },
+      markdownContent: '',
+      tinymceContent: '',
       editorModeState: true,
       editorModeName: 'MarkDown',
       addDialog: false,
@@ -101,27 +106,40 @@ export default {
       }
     },
     openAddDialog() {
-      this.addDialog = true
+      if (this.article.articleTitle === '') {
+        this.$message.error('文章标题不能为空！')
+      } else if (this.markdownContent === '' && this.editorModeName === 'MarkDown') {
+        this.$message.error('文章内容不能为空！')
+      } else if (this.tinymceContent === '' && this.editorModeName === 'TinyMce') {
+        this.$message.error('文章内容不能为空！')
+      } else {
+        this.addDialog = true
+      }
     },
     saveMavon(value, render) {
       console.log('this is render' + render)
       console.log('this is value' + value)
     },
     saveArticle() {
-      this.addLoading = true
-      if (this.editorModeName === 'MarkDown') {
-        console.log('???')
-        this.article.articleContent = this.$refs.md.d_render
-      }
-      articleApi.save(this.article).then(res => {
-        this.$message.success(res.msg)
-        this.addLoading = false
-        this.addDialog = false
-        this.closeAddDialog()
-        this.$router.push({
-          path: '/article'
+      if (this.article.articleType === '') {
+        this.$message.error('文章类型不能为空！')
+      } else {
+        this.addLoading = true
+        if (this.editorModeName === 'MarkDown') {
+          this.article.articleContent = this.$refs.md.d_render
+        } else {
+          this.article.articleContent = this.tingymceContent
+        }
+        articleApi.save(this.article).then(res => {
+          this.$message.success(res.msg)
+          this.addLoading = false
+          this.addDialog = false
+          this.closeAddDialog()
+          this.$router.push({
+            path: '/article'
+          })
         })
-      })
+      }
     },
     closeAddDialog() {
       // 关闭添加弹窗

@@ -93,6 +93,10 @@ export default {
     },
     addTodo() {
       this.todo.userId = this.userId
+      if (this.todo.comContent === '' || this.todo.comContent === null) {
+        this.$message.warning('请输入内容')
+        return
+      }
       todoApi.addTodo(this.todo).then(res => {
         todoApi.getTodoByIdAndTime(this.userId, this.date).then(res => {
           this.data = res.data
