@@ -313,15 +313,19 @@ export default {
     },
     // 答复
     saveAnswer(content) {
-      this.answerLoading = true
-      this.answer.questionId = this.$route.params.id
-      this.answer.answerContent = this.content
-      answerApi.save(this.answer).then(res => {
-        this.answerLoading = false
-        this.getAnswerPage()
-        this.$message.success(res.msg)
-        this.content = ''
-      })
+      if (content === '') {
+        this.$message.error('答复内容不能为空！')
+      } else {
+        this.answerLoading = true
+        this.answer.questionId = this.$route.params.id
+        this.answer.answerContent = this.content
+        answerApi.save(this.answer).then(res => {
+          this.answerLoading = false
+          this.getAnswerPage()
+          this.$message.success(res.msg)
+          this.content = ''
+        })
+      }
     },
     // 采纳答复
     toAdoptAnwer(val) {

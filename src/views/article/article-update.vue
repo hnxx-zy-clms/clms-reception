@@ -83,13 +83,21 @@ export default {
      * 2、子组件可以使用 $emit 触发父组件的自定义事件
      */
     onSubmit() {
-      this.updateLoading = true
-      articleApi.update(this.article).then(res => {
-        this.$message.success(res.msg)
-        this.updateLoading = false
-        this.$emit('closeUpdateDialog')
-        this.$emit('read', this.article.articleId)
-      })
+      if (this.article.articleTitle === '') {
+        this.$message.error('文章标题不能为空！')
+      } else if (this.article.articleType === '') {
+        this.$message.error('文章类型不能为空！')
+      } else if (this.article.articleContent === '') {
+        this.$message.error('文章内容不能为空！')
+      } else {
+        this.updateLoading = true
+        articleApi.update(this.article).then(res => {
+          this.$message.success(res.msg)
+          this.updateLoading = false
+          this.$emit('closeUpdateDialog')
+          this.$emit('read', this.article.articleId)
+        })
+      }
     },
     uploadSuccess(res, file) {
       this.$message.success(res.msg)
