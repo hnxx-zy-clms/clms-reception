@@ -7,30 +7,42 @@
     <a-layout-content :style="{margin:'0 15%',width:'70%',height:'330px',minWidth:'1100px'}">
       <div :style="{float:'left',width:'23%',height:'330px',minWidth:'230px'}"><carousel /></div>
       <div class="paddle-operator-gird-item" :style="{width:'100%',height:'330px'}">
-        <a-card :style="{margin:'0px 0px 10px 10px',float:'left',width:'24.5%',height:'160px',minWidth:'230px'}" hoverable>
-          <div class="clms-index-icon-text-card-item-title">写报告</div>
-          <div class="clms-operator-gird-item-extra">立即前往 <a-icon type="right" /></div>
-        </a-card>
+        <router-link :to="{path:'/report'}">
+          <a-card :style="{margin:'0px 0px 10px 10px',float:'left',width:'24.5%',height:'160px',minWidth:'230px'}" hoverable>
+            <div class="clms-index-icon-text-card-item-title">写报告</div>
+            <div class="clms-operator-gird-item-extra">立即前往 <a-icon type="right" /></div>
+          </a-card>
+        </router-link>
+        <router-link :to="{path:'/article'}">
         <a-card :style="{margin:'0px 0px 10px 10px',float:'left',width:'24.5%',height:'160px',minWidth:'230px'}" hoverable>
           <p class="clms-index-icon-text-card-item-title">看文章</p>
           <div class="clms-operator-gird-item-extra">立即前往 <a-icon type="right" /></div>
         </a-card>
+        </router-link>
+        <router-link :to="{path:'/answer'}">
         <a-card :style="{margin:'0px 0px 10px 10px',float:'left',width:'24.5%',height:'160px',minWidth:'230px'}" hoverable>
           <p class="clms-index-icon-text-card-item-title">提问题</p>
           <div class="clms-operator-gird-item-extra">立即前往 <a-icon type="right" /></div>
         </a-card>
+        </router-link>
+        <router-link :to="{path:'/tasknotice'}">
         <a-card :style="{margin:'0px 0px 10px 10px',float:'left',width:'24.5%',height:'160px',minWidth:'230px'}" hoverable>
           <p class="clms-index-icon-text-card-item-title">读通知</p>
           <div class="clms-operator-gird-item-extra">立即前往 <a-icon type="right" /></div>
         </a-card>
+        </router-link>
+        <router-link :to="{path:'/statistics'}">
         <a-card :style="{margin:'0px 0px 10px 10px',float:'left',width:'24.5%',height:'160px',minWidth:'230px'}" hoverable>
           <p class="clms-index-icon-text-card-item-title">数据统计</p>
           <div class="clms-operator-gird-item-extra">立即前往 <a-icon type="right" /></div>
         </a-card>
+        </router-link>
+        <router-link :to="{path:'/userInfo'}">
         <a-card :style="{margin:'0px 0px 10px 10px',float:'left',width:'24.5%',height:'160px',minWidth:'230px'}" hoverable>
           <p class="clms-index-icon-text-card-item-title">个人中心</p>
           <div class="clms-operator-gird-item-extra">立即前往 <a-icon type="right" /></div>
         </a-card>
+        </router-link>
       </div>
     </a-layout-content>
     <a-layout-content :style="{margin:'25px 15%'}">
@@ -43,8 +55,8 @@
           <div :style="{margin:'25px 0px'}">
             <div :style="{float:'left'}">
               <a target="_blank" href="https://github.com/hnxx-zy-clms/">
-              <div class="clms-index-icon-text-card-item-title">项目GitHub</div>
-              <div class="clms-index-icon-text-card-item-text">项目GitHub地址</div>
+                <div class="clms-index-icon-text-card-item-title">项目GitHub</div>
+                <div class="clms-index-icon-text-card-item-text">项目GitHub地址</div>
               </a>
             </div>
             <a-icon type="github" :style="{ fontSize: '50px', color: 'black'}" />
@@ -54,8 +66,8 @@
           <div :style="{margin:'25px 0px'}">
             <div :style="{float:'left'}">
               <a target="_blank" href="https://github.com/hnxx-zy-clms/">
-              <div class="clms-index-icon-text-card-item-title">项目gitee</div>
-              <div class="clms-index-icon-text-card-item-text">项目gitee地址</div>
+                <div class="clms-index-icon-text-card-item-title">项目gitee</div>
+                <div class="clms-index-icon-text-card-item-text">项目gitee地址</div>
               </a>
             </div>
             <img :style="{height:'50px',width: '50px' }" src="https://ai.bdstatic.com/file/B4220CD9991547E58FBD0D5BC77264B0">
@@ -126,7 +138,7 @@
           <a-card :style="{margin:'0px 0px 10px 10px',float:'left',width:'24%',height:'250px',minWidth:'230px'}" hoverable>
             <img
               slot="cover"
-              alt="example"
+              :alt="item.title"
               style="height: 150px"
               :src="item.coverUrl"
             >

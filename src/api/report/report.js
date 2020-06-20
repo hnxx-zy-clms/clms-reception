@@ -47,5 +47,17 @@ export default {
       url: `/${group_name}/getTime`,
       method: 'get'
     })
+  },
+  setTime(i) {
+    return request({
+      url: `/${group_name}/setTime/${i}`,
+      method: 'put'
+    })
+  },
+  getNotReport(group, date) {
+    return request({
+      url: `/${group_name}/getNotReport/${group}/${date}`,
+      method: 'get'
+    })
   }
 }

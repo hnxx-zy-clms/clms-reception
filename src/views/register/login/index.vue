@@ -50,13 +50,13 @@
             },
           ]"
         >
-          Remember me
+          记住我
         </a-checkbox>
-        <a class="login-form-forgot" href="#">
+        <a class="login-form-forgot" target="_blank" href="/passwordReset">
           忘记密码？
         </a>
         <a-button type="primary" html-type="submit" class="login-form-button">
-          Log in
+          登录
         </a-button>
       </a-form-item>
     </a-form>

@@ -1,9 +1,9 @@
 <template>
   <a-carousel arrows autoplay>
-    <div><img :style="{height:'330px',width: '100%' }" src="http://175.24.45.179/group1/M00/00/02/rBEABV7jWoGALii7AAL8e7Q89tM042.jpg"></div>
-    <div><img :style="{height:'330px',width: '100%' }" src="http://175.24.45.179/group1/M00/00/02/rBEABV7jWs-AK8kEAAKR2JqUeyU777.jpg"></div>
-    <div><img :style="{height:'330px',width: '100%' }" src="http://175.24.45.179/group1/M00/00/02/rBEABV7jWuSAK0rcAAMfXSYnxs8576.jpg"></div>
-    <div><img :style="{height:'330px',width: '100%' }" src="http://175.24.45.179/group1/M00/00/02/rBEABV7jWvWAS6CcAAKj-AouHM4215.jpg"></div>
+    <div><img :style="{height:'330px',width: '100%' }" src="http://175.24.9.127:8888/group1/M00/00/00/rxgJf17tqPOAFD_pAAKj-AouHM4682.jpg"></div>
+    <div><img :style="{height:'330px',width: '100%' }" src="http://175.24.9.127:8888/group1/M00/00/00/rxgJf17tqReAYxHaAAKR2JqUeyU085.jpg"></div>
+    <div><img :style="{height:'330px',width: '100%' }" src="http://175.24.9.127:8888/group1/M00/00/00/rxgJf17tqTSAVJM9AAMfXSYnxs8728.jpg"></div>
+    <div><img :style="{height:'330px',width: '100%' }" src="http://175.24.9.127:8888/group1/M00/00/00/rxgJf17tqVCAcz9YAAL8e7Q89tM517.jpg"></div>
   </a-carousel>
 </template>
 <script>
