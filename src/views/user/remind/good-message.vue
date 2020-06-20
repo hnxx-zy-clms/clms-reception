@@ -65,6 +65,7 @@ import messageApi from '@/api/article/message'
 export default {
   data() {
     return {
+      messageCount: '',
       selectMessageId: [],
       page: {
         currentPage: 1,
@@ -95,7 +96,7 @@ export default {
       messageApi.confirmMessageById(val).then(res => {
         this.$message.success(res.msg)
         this.getByPage()
-        let messageCount = this.this.$store.getters.messageCount
+        let messageCount = this.$store.getters.messageCount
         messageCount = messageCount - 1
         this.$store.commit('global/SET_MESSAGE_COUNT', messageCount)
       })

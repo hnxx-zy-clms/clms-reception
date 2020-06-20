@@ -1,299 +1,319 @@
 <template>
-    <div id="chatBox">
+  <div id="chatBox">
 
-        <div id="chat-container" v-if="user">
-            <!--            用户列表-->
-            <div style="width:10%;float:left;height:100%;margin: 10px 0px 10px 20px; ">
-                <div>
-                    <h3 :style="{ margin: '16px 0' }">
-                        在线用户列表 <span style="color:#108ee9">{{userList.length}}</span>
-                    </h3>
-                    <h3 :style="{ margin: '16px 0' }">
-                        <div style=" text-align: center;width: 100% ;height: 100%;" class="userElement"
-                             @click="manyChatInit()" id="manyChatInit" >多人群聊
-                        </div>
-                    </h3>
-                    <a-list size="small" bordered :data-source="userList" style="height:80%;overflow: auto;">
-                        <a-list-item slot="renderItem" slot-scope="item" class="userElement" :id="item">
-                            <div style=" text-align: center;width: 100% ;height: 100%;" v-if="user===item">{{ item }}
-                            </div>
-                            <div style=" text-align: center;width: 100% ;height: 100%;" v-else
-                                 @click="pointToPointChatInit(item)">{{ item }}
-                            </div>
-                        </a-list-item>
-                    </a-list>
-                </div>
+    <div v-if="user" id="chat-container">
+      <!--            用户列表-->
+      <div style="width:10%;float:left;height:100%;margin: 10px 0px 10px 20px; ">
+        <div>
+          <h3 :style="{ margin: '16px 0' }">
+            在线用户列表 <span style="color:#108ee9">{{ userList.length }}</span>
+          </h3>
+          <h3 :style="{ margin: '16px 0' }">
+            <div
+              id="manyChatInit"
+              style=" text-align: center;width: 100% ;height: 100%;"
+              class="userElement"
+              @click="manyChatInit()"
+            >多人群聊
             </div>
-            <!--            聊天界面-->
-            <div style="height: 100% ;float: left  ; width: 80%;  background-color: rgb(167,205,214);" v-if="this.chat">
-                <div class="chat-header">
-                    <h2>多人群聊</h2>
-                </div>
-                <div class="chatList">
-                    <ul class="messageArea">
-                        <ChatItem v-for="(message ,index) in messageList" :key="index" :message="message"/>
-                    </ul>
-                </div>
-                <div class="form-group">
-                    <div class="input-group clearfix">
-                        <input v-model="content" @keyup.enter="sendMessage" type="text" class="form-control"
-                               placeholder="Type a message...">
-                        <a-button type="primary" @click="sendMessage">
-                            发送
-                        </a-button>
-                        <!--                       聊天记录-->
-                        <a-button type="primary" @click="clickShowModal">
-                            聊天记录
-                        </a-button>
-                        <a-modal v-model="visible" title="聊天记录" @ok="handleOk">
-                            <ul style=" list-style-type: none;margin: 0; overflow: auto;overflow-y: scroll;padding: 0 20px 0px 20px;height: 600px;">
-                                <ChatItem v-for="(message ,index) in this.messageRecordList" :key="index"
-                                          :message="message"/>
-                            </ul>
-                        </a-modal>
-
-                    </div>
-                </div>
-            </div>
-            <div style="height: 100% ;float: left  ; width: 80%;  background-color: rgb(167,205,214);"
-                 v-if="this.pointChat">
-                <div class="chat-header">
-                    <h2>{{pointUser}}</h2>
-                </div>
-                <div class="chatList">
-                    <ul class="messageArea">
-                        <ChatItem v-for="(message ,index) in oneToOneMessage" :key="index" :message="message"/>
-                    </ul>
-                </div>
-                <div class="form-group">
-                    <div class="input-group clearfix">
-                        <input v-model="content" @keyup.enter="sendPointMessage(pointUser)" type="text"
-                               class="form-control"
-                               placeholder="Type a message...">
-                        <a-button type="primary" @click="sendPointMessage(pointUser)">
-                            发送
-                        </a-button>
-                        <!--                        &lt;!&ndash;                       聊天记录&ndash;&gt;-->
-                        <!--                        <a-button type="primary" @click="clickShowModal">-->
-                        <!--                            聊天记录-->
-                        <!--                        </a-button>-->
-                        <!--                        <a-modal v-model="visible" title="聊天记录" @ok="handleOk">-->
-                        <!--                            <ul style=" list-style-type: none;margin: 0; overflow: auto;overflow-y: scroll;padding: 0 20px 0px 20px;height: 600px;">-->
-                        <!--                                <ChatItem v-for="(message ,index) in this.messageRecordList" :key="index"-->
-                        <!--                                          :message="message"/>-->
-                        <!--                            </ul>-->
-                        <!--                        </a-modal>-->
-
-                    </div>
-                </div>
-            </div>
-
+          </h3>
+          <a-list size="small" bordered :data-source="userList" style="height:80%;overflow: auto;">
+            <a-list-item :id="item" slot="renderItem" slot-scope="item" class="userElement">
+              <div v-if="user===item" style=" text-align: center;width: 100% ;height: 100%;">{{ item }}
+              </div>
+              <div
+                v-else
+                style=" text-align: center;width: 100% ;height: 100%;"
+                @click="pointToPointChatInit(item)"
+              >{{ item }}
+              </div>
+            </a-list-item>
+          </a-list>
         </div>
-        <div v-else class="chat-login">
-            <h4>请先进行账号登录！！</h4>
+      </div>
+      <!--            聊天界面-->
+      <div v-if="this.chat" style="height: 100% ;float: left  ; width: 80%;  background-color: rgb(167,205,214);">
+        <div class="chat-header">
+          <h2>多人群聊</h2>
         </div>
+        <div class="chatList">
+          <ul class="messageArea">
+            <ChatItem v-for="(message ,index) in messageList" :key="index" :message="message" />
+          </ul>
+        </div>
+        <div class="form-group">
+          <div class="input-group clearfix">
+            <input
+              v-model="content"
+              type="text"
+              class="form-control"
+              placeholder="Type a message..."
+              @keyup.enter="sendMessage"
+            >
+            <a-button type="primary" @click="sendMessage">
+              发送
+            </a-button>
+            <!--                       聊天记录-->
+            <a-button type="primary" @click="clickShowModal">
+              聊天记录
+            </a-button>
+            <a-modal v-model="visible" title="聊天记录" @ok="handleOk">
+              <ul style=" list-style-type: none;margin: 0; overflow: auto;overflow-y: scroll;padding: 0 20px 0px 20px;height: 600px;">
+                <ChatItem
+                  v-for="(message ,index) in this.messageRecordList"
+                  :key="index"
+                  :message="message"
+                />
+              </ul>
+            </a-modal>
+
+          </div>
+        </div>
+      </div>
+      <div
+        v-if="this.pointChat"
+        style="height: 100% ;float: left  ; width: 80%;  background-color: rgb(167,205,214);"
+      >
+        <div class="chat-header">
+          <h2>{{ pointUser }}</h2>
+        </div>
+        <div class="chatList">
+          <ul class="messageArea">
+            <ChatItem v-for="(message ,index) in oneToOneMessage" :key="index" :message="message" />
+          </ul>
+        </div>
+        <div class="form-group">
+          <div class="input-group clearfix">
+            <input
+              v-model="content"
+              type="text"
+              class="form-control"
+              placeholder="Type a message..."
+              @keyup.enter="sendPointMessage(pointUser)"
+            >
+            <a-button type="primary" @click="sendPointMessage(pointUser)">
+              发送
+            </a-button>
+            <!--                        &lt;!&ndash;                       聊天记录&ndash;&gt;-->
+            <!--                        <a-button type="primary" @click="clickShowModal">-->
+            <!--                            聊天记录-->
+            <!--                        </a-button>-->
+            <!--                        <a-modal v-model="visible" title="聊天记录" @ok="handleOk">-->
+            <!--                            <ul style=" list-style-type: none;margin: 0; overflow: auto;overflow-y: scroll;padding: 0 20px 0px 20px;height: 600px;">-->
+            <!--                                <ChatItem v-for="(message ,index) in this.messageRecordList" :key="index"-->
+            <!--                                          :message="message"/>-->
+            <!--                            </ul>-->
+            <!--                        </a-modal>-->
+
+          </div>
+        </div>
+      </div>
+
     </div>
+    <div v-else class="chat-login">
+      <h4>请先进行账号登录！！</h4>
+    </div>
+  </div>
 </template>
 
 <script>
-    import ChatItem from './chat-item'
-    import SockJS from "sockjs-client";
-    import Stomp from "stompjs";
-    import {isLogin} from '../../api/user.js';
+import ChatItem from './chat-item'
+import SockJS from 'sockjs-client'
+import Stomp from 'stompjs'
+import { isLogin } from '../../api/user.js'
 
-    export default {
-        components: {
-            ChatItem,
-        },
-        data() {
-            return {
-                userList: [],
-                messageList: [],
-                messageRecordList: [],
-                oneToOneMessageList: [],
-                oneToOneMessage: [],
-                user: this.$store.getters.name,
-                roles: this.$store.getters.roles,
-                chat: true,
-                pointChat: false,
-                pointUser: '',
-                stompClient: '',
-                content: '',
-                visible: false,
-                // url: 'http://175.24.45.179:8081'
-                url: 'http://127.0.0.1:8081'
-            }
-        },
-        methods: {
-            isLogin() {
-                isLogin().then(res => {
-                    console.log(res)
-                })
-            },
-            getCurentUser() {
-                this.$http.get(this.url + '/chat/chatUser').then(res => {
-                    console.log(res.data)
-                    this.userList = res.data
-                }).catch(e => {
-                    console.log(e)
-                })
-            },
-            manyChatInit() {
-                this.chat = true;
-                this.pointChat = false;
-                document.querySelector('#manyChatInit').style.backgroundColor = ''
-            },
-            pointToPointChatInit(item) {
-                this.chat = false;
-                this.pointChat = true;
-                this.pointUser = item
-                document.querySelector('#' + item).style.backgroundColor = ''
-                this.oneToOneMessage = this.oneToOneMessageList.filter(e => {
-                    return (e.sender === this.user && e.receiver === item) || (e.sender === item && e.receiver === this.user)
-                })
-            },
-            getMessageRecordList() {
-                let type = 1;
-                if (this.roles === 0) {
-                    type = 1
-                } else if (this.roles === 1 || this.roles === 2) {
-                    type = 2
-                } else if (this.roles === 3) {
-                    type = 3
-                }
-                this.$http.get(this.url + '/chat/chatMessage/' + type).then(res => {
-                    console.log(res.data)
-                    this.messageRecordList = res.data
-                }).catch(e => {
-                    console.log(e)
-                })
-            },
-            getStompClient() {
-                let socket = new SockJS(this.url + '/zyb')
-                // 获取STOMP子协议的客户端对象
-                this.stompClient = Stomp.over(socket)
-                return Stomp.over(socket)
-            },
-            initWebSocket() {
-                // 建立连接对象
-                let stompClient = this.getStompClient()
-                stompClient.connect({}, () => {
-                    // 回调方法，如果消息到达订阅主题，则会调用该方法
-                    stompClient.subscribe('/topic/public', (msg) => {
-                        let chatMessage = JSON.parse(msg.body);
-                        this.messageListAdd(chatMessage)
-                        if(chatMessage.sender!==this.user){
-                        document.querySelector('#manyChatInit').style.backgroundColor = 'rgb(255,156,0)'
-                        }
-                    }, {});
-                    // 回调方法，如果消息到达订阅一对一主题，则会调用该方法
-                    stompClient.subscribe('/chat/point/' + this.user, (msg) => {
-                        let chatMessage = JSON.parse(msg.body);
-                        if (this.userList.indexOf(chatMessage.sender) != -1) {
-                            this.oneToOneMessageList.push(chatMessage)
-                            this.oneToOneMessage.push(chatMessage)
-                            document.querySelector('#' + chatMessage.sender).style.backgroundColor = 'rgb(255,156,0)'
-                        }
-                    }, {});
-                    // 向/app/chat.addUser发送消息将该用户的名称告知服务器
-                    stompClient.send("/app/chat.addUser",
-                        {},
-                        JSON.stringify({sender: this.user, type: 'JOIN', icon: this.$store.getters.userIcon})
-                    );  //用户加入接口
-
-                }, (err) => {
-                    // 连接发生错误时的处理函数
-                    const chatMessage = {sender: '', content: '连接聊天室出错，请重试！！', type: 'ERROR', createdTime: ''}
-                    this.messageListAdd(chatMessage)
-                });
-            },
-            messageListAdd(message) {
-                let index = this.userList.indexOf(message.sender);
-                if (message.type === 'JOIN' && index === -1) {
-                    this.userList.push(message.sender)
-                }
-                if (message.type === 'LEAVE' && index != -1) {
-                    this.userList.splice(index, 1)
-                }
-                this.messageList.push(message)
-            },
-            sendMessage() {
-                let content = this.content.trim()
-                if (content) {
-                    let chatMessage = {
-                        sender: this.user,
-                        content: content,
-                        type: 'CHAT',
-                        icon: this.$store.getters.userIcon,
-                        createdTime: ''
-                    }
-                    this.stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
-                    this.content = ''
-                } else {
-                    alert("发送的消息不能为空噢！！ 快捷发送，回车即可！！")
-                }
-            },
-            sendPointMessage(pointUser) {
-                let content = this.content.trim()
-                if (content) {
-                    let chatMessage = {
-                        sender: this.user,
-                        receiver: pointUser,
-                        content: content,
-                        type: 'CHAT',
-                        icon: this.$store.getters.userIcon,
-                        createdTime: ''
-                    }
-                    this.stompClient.send("/app/chat.oneToOne", {}, JSON.stringify(chatMessage));
-                    this.content = ''
-                    this.oneToOneMessageList.push(chatMessage)
-                    this.oneToOneMessage.push(chatMessage)
-                } else {
-                    alert("发送的消息不能为空噢！！ 快捷发送，回车即可！！")
-                }
-            },
-            // 断开连接
-            disconnect() {
-                this.stompClient.send("/app/chat.leftUser", {}, JSON.stringify({sender: this.user, type: 'LEAVE'}));
-                setTimeout(
-                    this.stompClient.disconnect(),
-                    1000
-                )
-            },
-            clickShowModal() {
-                this.getMessageRecordList()
-                this.showModal()
-            },
-            showModal() {
-                this.visible = true;
-            },
-            handleOk(e) {
-                this.visible = false;
-            },
-
-        },
-        watch: {
-            'messageList': function (newVal, oldVal) {
-                setTimeout(function () {
-                    let messageArea = document.querySelector('.messageArea');
-                    messageArea.scrollTop = messageArea.scrollHeight;
-                }, 200)
-            },
-        },
-        beforeDestroy: function () {
-            this.disconnect()
-        },
-        // 初始化连接
-        mounted() {
-            if (this.user) {
-                this.initWebSocket();
-                this.getCurentUser();
-            } else {
-                this.isLogin()
-            }
-        }
-
+export default {
+  components: {
+    ChatItem
+  },
+  data() {
+    return {
+      userList: [],
+      messageList: [],
+      messageRecordList: [],
+      oneToOneMessageList: [],
+      oneToOneMessage: [],
+      user: this.$store.getters.name,
+      roles: this.$store.getters.roles,
+      chat: true,
+      pointChat: false,
+      pointUser: '',
+      stompClient: '',
+      content: '',
+      visible: false,
+      // url: 'http://175.24.45.179:8081'
+      url: process.env.VUE_APP_CHAT_URL
     }
+  },
+  watch: {
+    'messageList': function(newVal, oldVal) {
+      setTimeout(function() {
+        const messageArea = document.querySelector('.messageArea')
+        messageArea.scrollTop = messageArea.scrollHeight
+      }, 200)
+    }
+  },
+  beforeDestroy: function() {
+    this.disconnect()
+  },
+  // 初始化连接
+  mounted() {
+    if (this.user) {
+      this.initWebSocket()
+      this.getCurentUser()
+    } else {
+      this.isLogin()
+    }
+  },
+  methods: {
+    isLogin() {
+      isLogin().then(res => {
+        console.log(res)
+      })
+    },
+    getCurentUser() {
+      this.$http.get(this.url + '/chat/chatUser').then(res => {
+        console.log(res.data)
+        this.userList = res.data
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+    manyChatInit() {
+      this.chat = true
+      this.pointChat = false
+      document.querySelector('#manyChatInit').style.backgroundColor = ''
+    },
+    pointToPointChatInit(item) {
+      this.chat = false
+      this.pointChat = true
+      this.pointUser = item
+      document.querySelector('#' + item).style.backgroundColor = ''
+      this.oneToOneMessage = this.oneToOneMessageList.filter(e => {
+        return (e.sender === this.user && e.receiver === item) || (e.sender === item && e.receiver === this.user)
+      })
+    },
+    getMessageRecordList() {
+      let type = 1
+      if (this.roles === 0) {
+        type = 1
+      } else if (this.roles === 1 || this.roles === 2) {
+        type = 2
+      } else if (this.roles === 3) {
+        type = 3
+      }
+      this.$http.get(this.url + '/chat/chatMessage/' + type).then(res => {
+        console.log(res.data)
+        this.messageRecordList = res.data
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+    getStompClient() {
+      const socket = new SockJS(this.url + '/zyb')
+      // 获取STOMP子协议的客户端对象
+      this.stompClient = Stomp.over(socket)
+      return Stomp.over(socket)
+    },
+    initWebSocket() {
+      // 建立连接对象
+      const stompClient = this.getStompClient()
+      stompClient.connect({}, () => {
+        // 回调方法，如果消息到达订阅主题，则会调用该方法
+        stompClient.subscribe('/topic/public', (msg) => {
+          const chatMessage = JSON.parse(msg.body)
+          this.messageListAdd(chatMessage)
+          if (chatMessage.sender !== this.user) {
+            document.querySelector('#manyChatInit').style.backgroundColor = 'rgb(255,156,0)'
+          }
+        }, {})
+        // 回调方法，如果消息到达订阅一对一主题，则会调用该方法
+        stompClient.subscribe('/chat/point/' + this.user, (msg) => {
+          const chatMessage = JSON.parse(msg.body)
+          if (this.userList.indexOf(chatMessage.sender) != -1) {
+            this.oneToOneMessageList.push(chatMessage)
+            this.oneToOneMessage.push(chatMessage)
+            document.querySelector('#' + chatMessage.sender).style.backgroundColor = 'rgb(255,156,0)'
+          }
+        }, {})
+        // 向/app/chat.addUser发送消息将该用户的名称告知服务器
+        stompClient.send('/app/chat.addUser',
+          {},
+          JSON.stringify({ sender: this.user, type: 'JOIN', icon: this.$store.getters.userIcon })
+        ) // 用户加入接口
+      }, (err) => {
+        // 连接发生错误时的处理函数
+        const chatMessage = { sender: '', content: '连接聊天室出错，请重试！！', type: 'ERROR', createdTime: '' }
+        this.messageListAdd(chatMessage)
+      })
+    },
+    messageListAdd(message) {
+      const index = this.userList.indexOf(message.sender)
+      if (message.type === 'JOIN' && index === -1) {
+        this.userList.push(message.sender)
+      }
+      if (message.type === 'LEAVE' && index != -1) {
+        this.userList.splice(index, 1)
+      }
+      this.messageList.push(message)
+    },
+    sendMessage() {
+      const content = this.content.trim()
+      if (content) {
+        const chatMessage = {
+          sender: this.user,
+          content: content,
+          type: 'CHAT',
+          icon: this.$store.getters.userIcon,
+          createdTime: ''
+        }
+        this.stompClient.send('/app/chat.sendMessage', {}, JSON.stringify(chatMessage))
+        this.content = ''
+      } else {
+        alert('发送的消息不能为空噢！！ 快捷发送，回车即可！！')
+      }
+    },
+    sendPointMessage(pointUser) {
+      const content = this.content.trim()
+      if (content) {
+        const chatMessage = {
+          sender: this.user,
+          receiver: pointUser,
+          content: content,
+          type: 'CHAT',
+          icon: this.$store.getters.userIcon,
+          createdTime: ''
+        }
+        this.stompClient.send('/app/chat.oneToOne', {}, JSON.stringify(chatMessage))
+        this.content = ''
+        this.oneToOneMessageList.push(chatMessage)
+        this.oneToOneMessage.push(chatMessage)
+      } else {
+        alert('发送的消息不能为空噢！！ 快捷发送，回车即可！！')
+      }
+    },
+    // 断开连接
+    disconnect() {
+      this.stompClient.send('/app/chat.leftUser', {}, JSON.stringify({ sender: this.user, type: 'LEAVE' }))
+      setTimeout(
+        this.stompClient.disconnect(),
+        1000
+      )
+    },
+    clickShowModal() {
+      this.getMessageRecordList()
+      this.showModal()
+    },
+    showModal() {
+      this.visible = true
+    },
+    handleOk(e) {
+      this.visible = false
+    }
+
+  }
+
+}
 </script>
 
 <style scoped>
