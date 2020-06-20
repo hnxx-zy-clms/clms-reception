@@ -212,14 +212,14 @@ export const constantRouterMap = [
       isLoading: true
     }
   },
-  {
-    path: '/passwordReset',
-    name: 'passwordReset',
-    component: () => import('../views/register/passwordReset'),
-    mate: {
-      isLoading: false
-    }
-  },
+  // {
+  //   path: '/passwordReset',
+  //   name: 'passwordReset',
+  //   component: () => import('../views/register/passwordReset'),
+  //   mate: {
+  //     isLoading: false
+  //   }
+  // },
   {
     path: '/exception/403',
     name: '403',
