@@ -29,9 +29,8 @@
                 <div slot="header" class="clearfix">
                   <span>文章类型统计</span>
                 </div>
-                <div class="grid-content bg-purple">
-                  <article-type class="articletypecount" />
-                  <div class="mytable">
+                <article-type class="articletypecount" />
+                <!-- <div class="mytable">
                     <el-card class="table-box-card">
                       <el-table :data="tableData" class="ranktable">
                         <el-table-column prop="rank" label="名次" width="130" />
@@ -39,8 +38,7 @@
                         <el-table-column prop="count" label="发表数" />
                       </el-table>
                     </el-card>
-                  </div>
-                </div>
+                </div> -->
               </el-card>
             </el-col>
             <el-col :span="9">
@@ -279,11 +277,11 @@ export default {
   width: 440px;
   height: 250px;
 }
-.articletypecount {
+/* .articletypecount {
   position: relative;
   float: left;
   margin-right: 50px;
-}
+} */
 .table-box-card {
   height: 250px;
 }
