@@ -167,7 +167,11 @@ export default {
     // 条件排序 e 和 val 都行
     changeSort(e) {
       this.page.sortColumn = e.key
-      this.page.pageSize = this.page.list.length
+      if (this.page.list.length >= 30) {
+        this.page.pageSize = 10
+      } else {
+        this.page.pageSize = this.page.list.length
+      }
       this.page.currentPage = 1
       this.getByPage(this.page)
     }

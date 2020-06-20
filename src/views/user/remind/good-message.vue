@@ -95,9 +95,9 @@ export default {
       messageApi.confirmMessageById(val).then(res => {
         this.$message.success(res.msg)
         this.getByPage()
-        // let messageCount = this.this.$store.getters.messageCount
-        // messageCount = messageCount - 1
-        // this.$store.commit('global/SET_MESSAGE_COUNT', messageCount)
+        let messageCount = this.this.$store.getters.messageCount
+        messageCount = messageCount - 1
+        this.$store.commit('global/SET_MESSAGE_COUNT', messageCount)
       })
     },
     confirmMessageByIds() {

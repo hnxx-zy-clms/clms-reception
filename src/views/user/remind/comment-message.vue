@@ -44,6 +44,7 @@ import messageApi from '@/api/article/message'
 export default {
   data() {
     return {
+      messageCount: '',
       selectMessageId: [],
       page: {
         currentPage: 1,
@@ -74,19 +75,21 @@ export default {
       messageApi.confirmMessageById(val).then(res => {
         this.$message.success(res.msg)
         this.getByPage()
-        // let messageCount = this.this.$store.getters.messageCount
-        // messageCount = messageCount - 1
-        // this.$store.commit('global/SET_MESSAGE_COUNT', messageCount)
+        this.messageCount = this.$store.getters.messageCount
+        this.messageCount = this.messageCount - 1
+        this.$store.commit('global/SET_MESSAGE_COUNT', this.messageCount)
       })
     },
     confirmMessageByIds() {
       this.page.list.forEach(item => {
-        console.log(item.messageId)
         this.selectMessageId.push(item.messageId)
       })
       messageApi.confirmMessageByIds(this.selectMessageId).then(res => {
         this.$message.success(res.msg)
         this.getByPage()
+        this.messageCount = this.$store.getters.messageCount
+        this.messageCount = this.messageCount - this.page.list.length
+        this.$store.commit('global/SET_MESSAGE_COUNT', this.messageCount)
       })
     },
     // 每页大小改变 参数 value 为每页大小(pageSize)

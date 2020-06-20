@@ -1,33 +1,33 @@
 <template>
   <div>
-    <a-card v-for="item in page.list" :key="item.answerId" class="answer-card">
+    <a-card v-for="item in page.list" :key="item.questionId" class="question-card">
       <div>
-        <router-link :to="{ path: '/QuestionInfo/' + item.questionId}" class="answer-main">
+        <router-link :to="{ path: '/questionInfo/' + item.questionId}" class="question-main">
           <!-- 左侧提问人头像 flex-start -->
-          <div class="answer-author-img">
+          <div class="question-author-img">
             <img class="author-img" :src="item.userIcon" alt="">
           </div>
           <!-- 右侧问题主体 space-between link位置 -->
-          <div class="answer-container">
+          <div class="question-container">
             <!-- 上层信息 row -->
-            <div class="answer-top-content">
+            <div class="question-top-content">
               <!-- 问题状态标记 -->
-              <div class="answer-mark">
-                <a-tag v-if="item.answerMark===0" color="red">未采纳</a-tag>
-                <a-tag v-if="item.answerMark===1" color="green">已采纳</a-tag>
+              <div class="question-mark">
+                <a-tag v-if="item.questionMark===0" color="red">未解答</a-tag>
+                <a-tag v-if="item.questionMark===1" color="green">已解答</a-tag>
               </div>
               <!-- 问题标题/描述 -->
-              <div class="answer-content" v-html="item.answerContent" />
+              <div class="question-description" v-html="item.questionDescription" />
             </div>
             <!-- 下层信息 -->
-            <div class="answer-bottom-content">
-              <div class="answer-meta">
-                <div class="author-name">{{ item.answerAuthor }}</div>
+            <div class="question-bottom-content">
+              <div class="question-meta">
+                <div class="author-name">{{ item.questionAuthor }}</div>
                 <!-- <div class="author-type">学生</div> -->
-                <div class="answer-time">{{ item.answerTime }}</div>
+                <div class="question-time">{{ item.questionTime }}</div>
               </div>
-              <div class="answer-action">
-                <a-icon class="action-icon" type="like" /><span class="count-num"> {{ item.answerGood }} </span>
+              <div class="question-action">
+                <a-icon class="action-icon" type="like" /><span class="count-num"> {{ item.questionGood }} </span>
                 <a-icon class="action-icon" type="message" /><span class="count-num"> {{ item.answerCount }} </span>
               </div>
             </div>
@@ -57,7 +57,7 @@ export default {
 </script>
 
 <style scoped>
-    .answer-main {
+    .question-main {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -68,31 +68,31 @@ export default {
     height: 50px;
     border-radius: 50%;
   }
-  .answer-container {
+  .question-container {
     display: flex;
     flex-direction: column;
     width: 100%;
     margin-left: 24px;
   }
-  .answer-top-content {
+  .question-top-content {
     display: flex;
     flex-direction: row;
     margin-bottom: 3px;
   }
-  .answer-content {
+  .question-description {
     max-width: 600px;
     font-size: 16px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .answer-bottom-content {
+  .question-bottom-content {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-top: 3px;
   }
-  .answer-meta {
+  .question-meta {
     color: #9c9ea8;
     display: flex;
     flex-direction: row;
@@ -110,7 +110,7 @@ export default {
   .count-num {
     color: #349edf;
   }
-  .answer-pagination {
+  .question-pagination {
       margin-top: 20px;
   }
 </style>

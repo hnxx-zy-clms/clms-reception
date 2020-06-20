@@ -14,5 +14,12 @@ export default {
       method: 'post',
       data: searchPage
     })
+  },
+  autoRecommend(searchPage) {
+    return request({
+      url: `/${group_name}/autoRecommend`,
+      method: 'post',
+      data: searchPage
+    })
   }
 }

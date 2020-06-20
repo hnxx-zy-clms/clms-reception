@@ -8,7 +8,8 @@
     <div class="scree-menu">
       <a-menu v-model="current" mode="horizontal" :style="{ backgroundColor: 'black', color: 'white', border: 'none' }" @click="changeParams">
         <a-menu-item key="report">报告</a-menu-item>
-        <a-menu-item key="answer">问答</a-menu-item>
+        <a-menu-item key="question">提问</a-menu-item>
+        <a-menu-item key="answer">答复</a-menu-item>
         <a-menu-item key="article">文章</a-menu-item>
         <a-menu-item key="notic">通知</a-menu-item>
         <a-menu-item key="othor">其他</a-menu-item>
@@ -22,7 +23,11 @@
               <!-- 文章卡片 -->
               <article-card :page="searchPage" @doSearch="doSearch" />
             </div>
-            <!-- 问答卡片 -->
+            <!-- 提问卡片 -->
+            <div v-if="(current+'') == 'question'">
+              <question-card :page="searchPage" @doSearch="doSearch" />
+            </div>
+            <!-- 答复卡片 -->
             <div v-if="(current+'') == 'answer'">
               <answer-card :page="searchPage" @doSearch="doSearch" />
             </div>
@@ -42,10 +47,12 @@
 <script>
 import searchApi from '@/api/search/search'
 import ArticleCard from '@/views/search/article-card'
+import QuestionCard from '@/views/search/question-card'
 import AnswerCard from '@/views/search/answer-card'
 export default {
   components: {
     ArticleCard,
+    QuestionCard,
     AnswerCard
   },
   data() {
@@ -130,11 +137,17 @@ export default {
         this.searchPage.index = 'clms_article_index'
         this.searchPage.keyFields = ['articleTitle', 'articleDesc']
         this.doSearch(this.searchPage)
-      } else if ((this.current + '') === 'answer') {
-        console.log('执行了问题搜索')
+      } else if ((this.current + '') === 'question') {
+        console.log('执行了提问搜索')
         this.searchPage.pageSize = 10
         this.searchPage.index = 'clms_question_index'
         this.searchPage.keyFields = ['questionDescription']
+        this.doSearch(this.searchPage)
+      } else if ((this.current + '') === 'answer') {
+        console.log('执行了提问搜索')
+        this.searchPage.pageSize = 10
+        this.searchPage.index = 'clms_answer_index'
+        this.searchPage.keyFields = ['answerContent']
         this.doSearch(this.searchPage)
       } else {
         console.log('其他')

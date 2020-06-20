@@ -22,7 +22,7 @@
       </a-layout-content>
     </a-layout>
 
-    <el-dialog width="80%" title="创作文章" :visible.sync="addDialog">
+    <el-dialog width="50%" title="创作文章" :visible.sync="addDialog">
       <el-form ref="addForm" :model="article" label-width="40px" size="mini">
         <el-form-item label="分类">
           <el-select v-model="article.articleType" clearable filterable placeholder="请选择" style="width: 40%">
@@ -78,7 +78,7 @@ export default {
       typeList: this.$store.getters.typeList,
       article: {},
       editorModeState: true,
-      editorModeName: 'TinyMce',
+      editorModeName: 'MarkDown',
       addDialog: false,
       addLoading: false
     }
@@ -94,7 +94,7 @@ export default {
   methods: {
     changeEditor() {
       this.editorModeState = !this.editorModeState
-      if (this.editorModeState === true) {
+      if (this.editorModeState === false) {
         this.editorModeName = 'TinyMce'
       } else {
         this.editorModeName = 'MarkDown'
@@ -109,7 +109,10 @@ export default {
     },
     saveArticle() {
       this.addLoading = true
-      this.article.articleContent = this.$refs.md.d_render
+      if (this.editorModeName === 'MarkDown') {
+        console.log('???')
+        this.article.articleContent = this.$refs.md.d_render
+      }
       articleApi.save(this.article).then(res => {
         this.$message.success(res.msg)
         this.addLoading = false
@@ -161,7 +164,7 @@ export default {
     }
     .editor-input-title {
         height: 100%;
-        width: 300px;
+        width: 900px;
         margin-right: 10px;
         border: none;
         outline: none;

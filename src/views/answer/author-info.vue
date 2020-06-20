@@ -18,13 +18,13 @@
       </a-card>
     </div>
     <!-- 热门问题 -->
-    <!-- <a-card title="热门问题" :head-style="headStyle">
+    <a-card title="热门问题" :head-style="headStyle">
       <a-list item-layout="horizontal">
         <a-list-item slot="renderItem">
           <a-list-item-meta />
         </a-list-item>
       </a-list>
-    </a-card> -->
+    </a-card>
     <!-- 最新回答 -->
     <a-card title="最新回答" :head-style="headStyle">
       <a-list item-layout="horizontal">

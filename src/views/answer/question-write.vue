@@ -4,11 +4,11 @@
     <el-form ref="addForm" :model="question" size="mini">
       <a-divider>问题描述</a-divider>
       <el-form-item>
-        <el-input v-model="question.questionDescription" type="textarea" rows="1" />
+        <el-input v-model="question.questionDescription" type="textarea" rows="2" />
       </el-form-item>
       <a-divider>问题内容</a-divider>
       <el-form-item>
-        <tinymce v-model="question.questionContent" type="textarea" />
+        <tinymce v-model="question.questionContent" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" size="mini" :loading="addLoading" @click="onSubmit">提交</el-button>
@@ -19,20 +19,41 @@
     </el-form>
     <!-- 推荐容器 -->
     <div class="recom-cotainer">
-      <!-- 相似问题推荐 -->
-      <div v-if="recomQuestionShow" class="recom-question">
-        推荐问题
-      </div>
-      <!-- 推荐问题答复 -->
-      <div v-if="recomAnswerShow" class="recom-answwer">
-        推荐回复
-      </div>
+      <a-row>
+        <a-col :span="12">
+          <!-- 相似问题推荐 -->
+          <div v-if="recomQuestionShow" class="recom-question">
+            推荐问题
+            <a-list bordered :data-source="questionList">
+              <a-list-item slot="renderItem" slot-scope="item">
+                <router-link :to="{ path: '/questionInfo/' + item.questionId}" class="question-main">
+                  <div v-html="item.questionDescription" />
+                </router-link>
+              </a-list-item>
+            </a-list>
+          </div>
+        </a-col>
+        <a-col :span="12">
+          <!-- 推荐问题答复 -->
+          <div v-if="recomAnswerShow" class="recom-answwer">
+            推荐回复
+            <a-list bordered :data-source="answerList">
+              <a-list-item slot="renderItem" slot-scope="item">
+                <router-link :to="{ path: '/questionInfo/' + item.questionId}" class="answer-main">
+                  <div v-html="item.answerContent" />
+                </router-link>
+              </a-list-item>
+            </a-list>
+          </div>
+        </a-col>
+      </a-row>
     </div>
   </div>
 </template>
 
 <script>
 import questionApi from '@/api/answer/question'
+import searchApi from '@/api/search/search'
 import Tinymce from '@/views/common/Tinymce/index'
 export default {
   // 注册组件
@@ -41,8 +62,22 @@ export default {
   },
   data() {
     return {
+      searchPage: {
+        keyword: '测试',
+        pageNo: 1,
+        pageSize: 5,
+        keyFields: ['questionDescription', 'questionContent'],
+        // params: 'questionDescription',
+        index: 'clms_question_index',
+        // index: 'clms_question_index',
+        list: []
+      },
       question: {},
       addLoading: false,
+      questionList: [],
+      answerList: [],
+      recomQuestionLoading: false,
+      recomAnswerLoading: false,
       recomQuestionShow: false,
       recomAnswerShow: false
     }
@@ -64,12 +99,30 @@ export default {
       })
     },
     // 展示推荐的相似问题
-    doRecomQuestions() {
-      this.recomQuestionShow = true
+    doRecomQuestions(val) {
+      this.recomQuestionLoading = true
+      this.searchPage.keyword = val.questionDescription
+      this.searchPage.index = 'clms_question_index'
+      this.searchPage.keyFields = ['questionDescription']
+      searchApi.autoRecommend(this.searchPage).then(res => {
+        this.recomQuestionShow = true
+        this.searchPage = res.data
+        this.questionList = this.searchPage.list
+        this.recomQuestionLoading = false
+      })
     },
     // 展示推荐的回答
-    doRecomAnswers() {
-      this.recomAnswerShow = true
+    doRecomAnswers(val) {
+      this.recomAnswerLoading = true
+      this.searchPage.keyword = val.questionDescription
+      this.searchPage.index = 'clms_answer_index'
+      this.searchPage.keyFields = ['answerContent']
+      searchApi.autoRecommend(this.searchPage).then(res => {
+        this.recomAnswerShow = true
+        this.searchPage = res.data
+        this.answerList = this.searchPage.list
+        this.recomAnswerLoading = false
+      })
     },
     close() {
       this.$emit('closeAddDialog')
@@ -87,19 +140,10 @@ export default {
         /* border: 1px solid #9c9ea8; */
         background-color: white;
     }
-    .recom-cotainer {
-      display: flex;
-      flex-direction: row;
-      width: 100%;
+    .mce-panel {
+      border: none !important;
     }
-    .recom-question {
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-    }
-    .recom-answer {
-      width: 50%;
-      display: flex;
-      flex-direction: column;
+    .mce-tinymce .mce-container .mce-panel {
+      border-width: 0 !important;
     }
 </style>

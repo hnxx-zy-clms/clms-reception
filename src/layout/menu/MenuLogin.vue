@@ -48,10 +48,9 @@ export default {
     }
   },
   watch: {
-    // 'this.$store': function() {
-    //   console.log('xxx')
-    //   this.messageCount = this.$store.getters.messageCount
-    // }
+    '$store.getters.messageCount': function() {
+      this.messageCount = this.$store.getters.messageCount
+    }
   },
   created() {
     this.userName = this.$store.getters.userName
@@ -101,6 +100,7 @@ export default {
       this.temp = JSON.parse(event.data)
       if (this.temp.receiveUser === this.$store.getters.userName) {
         this.messageCount++
+        this.$store.commit('global/SET_MESSAGE_COUNT', this.messageCount)
       }
       if (this.temp.sendUser !== this.$store.getters.userName) {
         switch (this.temp.messageType) {
@@ -211,8 +211,8 @@ export default {
           if (element.messageState === 0) {
             this.messageCount++
           }
-          this.$store.commit('global/SET_MESSAGE_COUNT', this.messageCount)
         })
+        this.$store.commit('global/SET_MESSAGE_COUNT', this.messageCount)
       })
     }
   }

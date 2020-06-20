@@ -97,7 +97,7 @@
                   /> {{ item.answerGood }}
                 </span>
                 <span v-show="(userName === item.answerAuthor) || (userName === question.questionAuthor)" slot="actions" @click="deleteAnswer(item)">删除</span>
-                <span slot="actions" @click="toAdoptAnwer(item)">采纳</span>
+                <span v-show="(userName === question.questionAuthor) && (userName != item.answerAuthor)" slot="actions" @click="toAdoptAnwer(item)">采纳</span>
                 <span slot="actions" key="comment-nested-reply-to">回复</span>
                 <span slot="actions" :style="{ margin:'20px 50px'}">共N条回复
                   <a>点击查看</a>
@@ -613,9 +613,9 @@ export default {
     text-overflow: ellipsis;
   }
   .mce-edit-area {
-      min-height: 100px !important;
-    }
-    .mce-edit-area iframe {
-      min-height: 100px;
-    }
+      min-height: 200px !important;
+  }
+  .mce-edit-area iframe {
+    min-height: 200px;
+  }
 </style>

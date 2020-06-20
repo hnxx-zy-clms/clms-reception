@@ -190,14 +190,14 @@ export default {
   }
   .left-container {
     width: 100px;
-    height: 888px;
+    height: 1333px;
     margin-right: 3px;
     background-color: white;
     display: flex;
     flex-direction: column;
   }
   .type-list {
-    max-height: 888px;
+    max-height: 1333px;
     overflow: auto;
     list-style: none;
     width: 100px;
@@ -211,7 +211,7 @@ export default {
     color: white;
     text-align: center;
     line-height: 32px;
-    margin-bottom: 2px;
+    /* margin-bottom: 2px; */
   }
   .top-type-tag {
     /* position: fixed; */
@@ -229,7 +229,7 @@ export default {
     text-align: center;
     line-height: 32px;
     color: rgb(112,105,89);
-    margin-top: 5px;
+    /* margin-top: 5px; */
   }
   .type-list a:hover {
     background-color:rgb(255,46,47);
@@ -250,7 +250,7 @@ export default {
   }
   .right-container  {
     width: 350px;
-    height: 888px;
+    height: 1333px;
     /* border: 1px solid #9c9ea8; */
     background-color: white;
     margin-left: 3px;

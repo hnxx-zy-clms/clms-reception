@@ -60,7 +60,7 @@ export const constantRouterMap = [
     mate: {
       title: '会议',
       icon: 'schedule',
-      isLoading: false
+      isLoading: true
     }
   },
   {

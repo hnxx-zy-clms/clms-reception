@@ -15,7 +15,7 @@
     </div>
 
     <!-- 添加弹窗 -->
-    <el-dialog width="80%" title="发表问题" :visible.sync="addDialog">
+    <el-dialog width="80%" title="提问" :visible.sync="addDialog">
       <question-write ref="questionwrite" @closeAddDialog="closeAddDialog" @freshen="freshen" />
     </el-dialog>
   </div>
