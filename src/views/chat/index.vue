@@ -6,7 +6,7 @@
                     <div style="width: 20%;float: left;margin: 10px 20px 10px 10px">
                         <a-avatar
                                 shape="circle"
-                                :src="this.$store.getters.icon"
+                                :src="userIcon"
                                 style="color: #f56a00; backgroundColor: #fde3cf;height: 42px;width: 42px;"
                         />
                     </div>
@@ -120,6 +120,7 @@
         oneToOneMessage: [],
         user: this.$store.getters.name,
         roles: this.$store.getters.roles,
+        userIcon: this.$store.getters.userIcon,
         manyChat: true,
         pointChat: false,
         pointUser: '',
