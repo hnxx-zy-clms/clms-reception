@@ -10,6 +10,12 @@
         <a href="/remind">
           <a-icon type="bell" :style="{color:'#fff',fontSize:'20px'}" />
         </a>
+        </a-badge>
+         <a-divider type="vertical" />
+      <a-badge :count="1">
+        <a href="/chat">
+          <a-icon type="message" :style="{color:'#fff',fontSize:'20px'}" />
+        </a>
       </a-badge>
       <a-divider type="vertical" />
       <login-box />

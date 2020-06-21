@@ -1,5 +1,5 @@
 // 用户操作
-import { login, getInfo, smsLogin, register } from '../../api/user'
+import { logout, login, getInfo, smsLogin, register } from '../../api/user'
 import { getToken, setToken, removeToken } from '../../utils/auth'
 
 const getDefaultState = () => {
@@ -107,6 +107,7 @@ const actions = {
   // 登出
   logout({ commit, state }) {
     return new Promise((resolve) => {
+      logout()
       removeToken()
       resolve()
       commit('SET_TOKEN', '')

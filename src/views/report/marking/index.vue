@@ -59,6 +59,9 @@
                 周报
               </a-radio-button>
             </a-radio-group>
+            <router-link v-if="roles === 3" :to="'/reportSetting'">
+              <a-button :style="{marginLeft:'5px'}"> <a-icon type="setting" />报告设置 </a-button>
+            </router-link>
             <div v-if="!markingState" style="margin-bottom: 16px">
               <a-button type="primary" :disabled="!hasSelected" :loading="spinning" @click="start">
                 <a-icon type="check-square" />
@@ -79,7 +82,7 @@
               @ok="handleOk"
               @cancel="handleCancel"
             >
-              <a-rate v-model="marking.groupLeaderScore" :count="10" />
+              <a-rate v-model="marking.groupLeaderScore" :allow-clear="false" :count="10" />
               <a-divider />
               <a-textarea
                 v-model="marking.groupLeaderComment"

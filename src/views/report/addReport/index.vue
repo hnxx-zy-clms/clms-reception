@@ -1,11 +1,12 @@
 <template>
   <div>
-    <a-button :style="{background:'#87d068',color:'#fff'}" @click="showDrawer"> <a-icon type="plus" /> 新建报告 </a-button>
+    <a-button v-if="new Date().getHours() < stape && (daily || weekly)" :style="{background:'#87d068',color:'#fff'}" @click="showDrawer"> <a-icon type="plus" /> 新建报告 </a-button>
+    <a-button v-else disabled> <a-icon type="plus" /> 新建报告 </a-button>
     <router-link v-if="roles > 0" :to="'/reportMarking'">
       <a-button type="primary" :style="{marginLeft:'5px'}"> <a-icon type="check-square" /> 批阅报告 </a-button>
     </router-link>
     <router-link v-if="roles > 1" :to="'/reportSetting'">
-      <a-button  :style="{marginLeft:'5px'}"> <a-icon type="setting" />报告设置 </a-button>
+      <a-button :style="{marginLeft:'5px'}"> <a-icon type="setting" />报告设置 </a-button>
     </router-link>
     <a-drawer
       title="新建报告"
@@ -15,11 +16,11 @@
       :body-style="{ paddingBottom: '80px' }"
       @close="onClose"
     >
-      <a-radio-group default-value="0" @change="handleFormLayoutChange">
-        <a-radio-button value="0">
+      <a-radio-group :default-value="reportType" @change="handleFormLayoutChange">
+        <a-radio-button v-if="daily" value="0">
           日报
         </a-radio-button>
-        <a-radio-button value="1">
+        <a-radio-button v-if="weekly" value="1">
           周报
         </a-radio-button>
       </a-radio-group>
@@ -39,11 +40,11 @@
                 v-decorator="[
                   'workContent',
                   {
-                    rules: [{ required: true, message: 'Please enter workContent' }],
+                    rules: [{ required: true, message: '工作内容' }],
                   },
                 ]"
                 :rows="4"
-                placeholder="please enter workContent"
+                placeholder="请输入工作内容"
               />
             </a-form-item>
           </a-col>
@@ -55,11 +56,11 @@
                 v-decorator="[
                   'difficulty',
                   {
-                    rules: [{ required: true, message: 'Please enter difficulty' }],
+                    rules: [{ required: true, message: '遇到的困难' }],
                   },
                 ]"
                 :rows="4"
-                placeholder="please enter difficulty"
+                placeholder="请输入遇到的困难"
               />
             </a-form-item>
           </a-col>
@@ -71,11 +72,11 @@
                 v-decorator="[
                   'solution',
                   {
-                    rules: [{ required: true, message: 'Please enter solution' }],
+                    rules: [{ required: true, message: '解决方法' }],
                   },
                 ]"
                 :rows="4"
-                placeholder="please enter solution"
+                placeholder="请输入解决方法"
               />
             </a-form-item>
           </a-col>
@@ -87,11 +88,11 @@
                 v-decorator="[
                   'experience',
                   {
-                    rules: [{ required: true, message: 'Please enter experience' }],
+                    rules: [{ required: true, message: '心得体会' }],
                   },
                 ]"
                 :rows="4"
-                placeholder="please enter experience"
+                placeholder="请输入心得体会"
               />
             </a-form-item>
           </a-col>
@@ -103,11 +104,11 @@
                 v-decorator="[
                   'plan',
                   {
-                    rules: [{ required: true, message: 'Please enter plan' }],
+                    rules: [{ required: true, message: '后续计划' }],
                   },
                 ]"
                 :rows="4"
-                placeholder="please enter plan"
+                placeholder="请输入后续计划"
               />
             </a-form-item>
           </a-col>
@@ -141,9 +142,11 @@ export default {
   data() {
     return {
       form: this.$form.createForm(this, { name: 'report-form' }),
-      reportType: 0,
+      reportType: '0',
       stape: 21,
-      visible: false
+      visible: false,
+      daily: false,
+      weekly: false
     }
   },
   computed: {
@@ -152,17 +155,32 @@ export default {
     ])
   },
   created() {
+    ReportApi.getReportTime().then(res => {
+      const reportTime = res.data
+      const dailyTime = reportTime[0].split(',')
+      const weeklyTime = reportTime[1].split(',')
+      const valDate = new Date().getDay()
+      for (const value of dailyTime) {
+        if (parseInt(value) === valDate) {
+          this.daily = true
+          break
+        }
+      }
+      for (const value of weeklyTime) {
+        if (parseInt(value) === valDate) {
+          this.weekly = true
+          this.reportType = '1'
+          break
+        }
+      }
+    })
     ReportApi.getTime().then(res => {
       this.stape = res.data
     })
   },
   methods: {
     showDrawer() {
-      if (new Date().getHours() < this.stape) {
-        this.visible = true
-      } else {
-        this.$message.error('今日提交时间截止！')
-      }
+      this.visible = true
     },
     onClose() {
       this.visible = false

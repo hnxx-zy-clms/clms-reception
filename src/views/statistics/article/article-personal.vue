@@ -37,7 +37,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'name'
+      'userName'
     ])
   },
   watch: {
@@ -52,7 +52,7 @@ export default {
   },
   created() {
     this.getData()
-    this.userparam.params.articleAuthor = this.name
+    this.userparam.params.articleAuthor = this.userName
   },
   methods: {
     getData() {

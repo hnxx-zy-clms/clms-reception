@@ -5,7 +5,7 @@
       <a-card style="min-width: 480px;height: 100%">
         <a-tag color="blue">批阅通知</a-tag>
         <a-timeline :style="{marginTop: '15px' }">
-          <a-timeline-item v-for="(item,i) in minReportInfo" :key="item.reportId">
+          <a-timeline-item v-for="item in minReportInfo" :key="item.reportId">
             {{ item.updatedTime }} : {{ item.isChecked }} 批阅了 {{ item.createdTime }} 的{{ item.reportType }}</a-timeline-item>
         </a-timeline>
       </a-card>
@@ -14,7 +14,7 @@
     <a-col style="width: 33%;" :span="6" :pull="-5">
       <a-card style="min-width: 480px;height: 100%">
         <a-row :gutter="16" :style="{ background: '#fff', marginTop: '15px' ,marginRight:'15px',marginBottom:'20px'}">
-          <a-col :span="12">
+          <a-col v-if="daily" :span="12">
             <a-statistic-countdown
               title="距今日日报截止时间"
               :value="getFullTime()"
@@ -22,8 +22,14 @@
               style="margin-right: 50px"
             />
           </a-col>
-          <a-col :span="24" style="margin-top: 32px;">
+          <a-col v-else :span="12">
+            <h2>日报提交未开启</h2>
+          </a-col>
+          <a-col v-if="weekly" :span="24" style="margin-top: 32px;">
             <a-statistic-countdown title="距本周周报截止时间" :value="getWeekDay()" format="D 天 H 时 m 分 s 秒" />
+          </a-col>
+          <a-col v-else :span="24" style="margin-top: 32px;">
+            <h2>周报提交未开启</h2>
           </a-col>
           <a-col :span="36">
             <a-tag color="orange" style="margin-top: 16px;height: 36px;">
@@ -55,10 +61,30 @@ export default {
   data() {
     return {
       minReportInfo: {},
-      stape: '22'
+      stape: '22',
+      daily: false,
+      weekly: false
     }
   },
   created() {
+    ReportApi.getReportTime().then(res => {
+      const reportTime = res.data
+      const dailyTime = reportTime[0].split(',')
+      const weeklyTime = reportTime[1].split(',')
+      const valDate = new Date().getDay()
+      for (const value of dailyTime) {
+        if (parseInt(value) === valDate) {
+          this.daily = true
+          break
+        }
+      }
+      for (const value of weeklyTime) {
+        if (parseInt(value) === valDate) {
+          this.weekly = true
+          break
+        }
+      }
+    })
     ReportApi.getTime().then(res => {
       this.stape = res.data
     })

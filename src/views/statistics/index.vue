@@ -29,9 +29,8 @@
                 <div slot="header" class="clearfix">
                   <span>文章类型统计</span>
                 </div>
-                <div class="grid-content bg-purple">
-                  <article-type class="articletypecount" />
-                  <div class="mytable">
+                <article-type class="articletypecount" />
+                <!-- <div class="mytable">
                     <el-card class="table-box-card">
                       <el-table :data="tableData" class="ranktable">
                         <el-table-column prop="rank" label="名次" width="130" />
@@ -39,8 +38,7 @@
                         <el-table-column prop="count" label="发表数" />
                       </el-table>
                     </el-card>
-                  </div>
-                </div>
+                </div> -->
               </el-card>
             </el-col>
             <el-col :span="9">
@@ -83,7 +81,7 @@
                       <span>日(周)报提交情况</span>
                       <el-popover placement="right" width="350" trigger="click" class="myseletor">
                         <div class="namelist">
-                          <el-tag v-for="o in 8" :key="o" type="danger" class="mytab">标签五</el-tag>
+                          <el-tag v-for="o in notNames" :key="o" type="danger" class="mytab">{{o}}</el-tag>
                         </div>
                         <el-button slot="reference" type="primary" plain class="mybutton">查看未提交名单</el-button>
                       </el-popover>
@@ -96,6 +94,7 @@
                         :picker-options="pickerOptions"
                         format="yyyy 年 MM 月 dd 日"
                         value-format="yyyy-MM-dd"
+                        @change="getNotReport"
                       />
                       <!-- @change="findByDate" -->
                     </div>
@@ -129,6 +128,7 @@
 
 <script>
 import articleApi from '@/api/article/article'
+import ReportApi from '@/api/report/report.js'
 import ArticleType from '@/views/statistics/article/article-type'
 import ArticlePersonal from '@/views/statistics/article/article-personal'
 import ReportGroup from '@/views/statistics/report/report-group'
@@ -137,6 +137,7 @@ import ClassSex from '@/views/statistics/class/class-sex'
 import ClassClasses from '@/views/statistics/class/class-classes'
 import ReportSubmit from '@/views/statistics/report/report-submit'
 import ReportCount from '@/views/statistics/report/report-count'
+import Moment from "moment";
 export default {
   components: {
     ArticleType,
@@ -178,8 +179,9 @@ export default {
           label: '第四组'
         }
       ],
+      notNames: [],
       value: '选项1',
-      mytime: '',
+      mytime: '2020-06-11',
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now()
@@ -211,10 +213,19 @@ export default {
       }
     }
   },
+  created() {
+    this.mytime = Moment(new Date()).format('YYYY-MM-DD')
+    this.getNotReport()
+  },
   mounted() {
     this.getTopData()
   },
   methods: {
+    getNotReport() {
+      ReportApi.getNotReport(0, this.mytime).then(res => {
+        this.notNames = res.data
+      })
+    },
     getTopData() {
       articleApi.getArticleCountInfo(this.topparam).then(res => {
         this.tableData = []
@@ -279,11 +290,11 @@ export default {
   width: 440px;
   height: 250px;
 }
-.articletypecount {
+/* .articletypecount {
   position: relative;
   float: left;
   margin-right: 50px;
-}
+} */
 .table-box-card {
   height: 250px;
 }

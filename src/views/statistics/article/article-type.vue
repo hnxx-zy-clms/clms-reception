@@ -53,7 +53,7 @@ export default {
       const chart1 = new Chart({
         container: 'c1',
         autoFit: true,
-        height: 250
+        height: 320
       })
 
       chart1.data(this.mydata)
@@ -83,9 +83,10 @@ export default {
 <style scoped>
 #c1 {
   position: relative;
-  height: 250px;
-  width: 450px;
+  height: 320px;
+  width: 800px;
   margin-left: 50px;
+  /* margin-right: 50px; */
   /* border: solid; */
   /* float: left; */
 }

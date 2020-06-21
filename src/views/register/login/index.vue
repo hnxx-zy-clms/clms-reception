@@ -19,7 +19,7 @@
         <a-input
           v-decorator="[
             'username',
-            { rules: [{ required: true, message: 'Please input your username!' }] },
+            { rules: [{ required: true, message: '请输入用户名/手机号!' }] },
           ]"
           size="large"
           placeholder="用户名/手机号"
@@ -31,7 +31,7 @@
         <a-input
           v-decorator="[
             'password',
-            { rules: [{ required: true, message: 'Please input your Password!' }] },
+            { rules: [{ required: true, message: '请输入密码!' }] },
           ]"
           size="large"
           type="password"
@@ -50,13 +50,13 @@
             },
           ]"
         >
-          Remember me
+          记住我
         </a-checkbox>
-        <a class="login-form-forgot" href="#">
+        <a class="login-form-forgot" target="_blank" href="/passwordReset">
           忘记密码？
         </a>
         <a-button type="primary" html-type="submit" class="login-form-button">
-          Log in
+          登录
         </a-button>
       </a-form-item>
     </a-form>

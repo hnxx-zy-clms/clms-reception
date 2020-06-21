@@ -60,7 +60,7 @@ export const constantRouterMap = [
     mate: {
       title: '会议',
       icon: 'schedule',
-      isLoading: true
+      isLoading: false
     }
   },
   {
@@ -70,16 +70,6 @@ export const constantRouterMap = [
     mate: {
       title: '班级',
       icon: 'usergroup-add',
-      isLoading: false
-    }
-  },
-  {
-    path: '/statistics',
-    name: 'Statistics',
-    component: Statistics,
-    mate: {
-      title: '数据统计',
-      icon: 'bar-chart',
       isLoading: true
     }
   },
@@ -203,6 +193,16 @@ export const constantRouterMap = [
     }
   },
   {
+    path: '/statistics',
+    name: 'Statistics',
+    component: Statistics,
+    mate: {
+      title: '数据统计',
+      icon: 'bar-chart',
+      isLoading: true
+    }
+  },
+  {
     path: '/about',
     name: 'About',
     component: About,
@@ -212,6 +212,14 @@ export const constantRouterMap = [
       isLoading: true
     }
   },
+  // {
+  //   path: '/passwordReset',
+  //   name: 'passwordReset',
+  //   component: () => import('../views/register/passwordReset'),
+  //   mate: {
+  //     isLoading: false
+  //   }
+  // },
   {
     path: '/exception/403',
     name: '403',

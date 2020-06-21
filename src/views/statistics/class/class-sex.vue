@@ -4,21 +4,37 @@
 
 <script>
 import { Chart, getEngine } from '@antv/g2'
+import classApi from '@/api/classes/classes.js'
 const G = getEngine('canvas')
 export default {
   data() {
     return {
       chart: null,
       data: [
-        { sex: '男', percent: 0.76 },
-        { sex: '女', percent: 0.24 }
+        // { sex: '男', percent: 0.76 },
+        // { sex: '女', percent: 0.24 }
       ]
+    }
+  },
+  watch: {
+    data(b, a) {
+      this.chart.changeData(b)
+      this.chart.render()
     }
   },
   mounted() {
     this.initComponent()
   },
+  created() {
+    this.getData()
+  },
   methods: {
+    getData() {
+      classApi.getSexPercent().then(res => {
+        this.data = res.data
+        console.log(this.data)
+      })
+    },
     initComponent() {
       const chart = new Chart({
         container: 'c6',
@@ -42,7 +58,7 @@ export default {
         .interval()
         .adjust('stack')
         .position('percent')
-        .color('sex', ['#1890ff', '#f04864'])
+        .color('sex', ['#f04864', '#1890ff'])
         .label('percent', {
           content: obj => {
             const group = new G.Group({})
@@ -68,7 +84,7 @@ export default {
                 text: obj.sex,
                 textAlign: 'center',
                 textBaseline: 'top',
-                fill: obj.sex === "男" ? '#1890ff' : '#f04864'
+                fill: obj.sex === '男' ? '#1890ff' : '#f04864'
               }
             })
             return group
@@ -76,7 +92,7 @@ export default {
         })
 
       chart.interaction('element-active')
-
+      this.chart = chart
       chart.render()
     }
   }

@@ -64,10 +64,7 @@ export function SmsCaptcha(mobile) {
 export function logout() {
   return request({
     url: '/logout',
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
+    method: 'post'
   })
 }
 

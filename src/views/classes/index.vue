@@ -1,8 +1,8 @@
 <template>
   <a-layout id="content" :style="{display:'flex'}">
     <!--      头部-->
-    <a-layout-header :style="{height:'59px', background: '#fff', width: '100%' }">
-      班级管理
+    <a-layout-header :style="{height:'60px', background: '#fff', width: '100%'}">
+      <b>卓越工程师班</b>----<span style="font-size: 12px">我们只追求卓越!!</span>
     </a-layout-header>
     <!--      中间Tips-->
     <a-layout-content :style="{ background: '#fff', marginTop: '5px'}">
