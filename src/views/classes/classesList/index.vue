@@ -1,6 +1,6 @@
 <template>
     <div>
-    <a-table :columns="columns" :data-source="page.list">
+    <a-table :columns="columns" :data-source="page.list" :pagination="false">
         <a slot="name" slot-scope="text">{{ text }}</a>
     </a-table>
         <!--    底部分页栏-->
@@ -11,6 +11,7 @@
                 :page-size="page.pageSize"
                 :total="page.totalCount"
                 show-quick-jumper
+                align="center"
                 @change="pageChange"
         />
     </div>
@@ -59,7 +60,7 @@ export default {
   methods: {
     // 分页获取数据
     getByPage() {
-      classesApi.getByPage(this.page.currentPage, this.page.pageSize).then(res => {
+      classesApi.getByPage(this.page.currentPage, this.page.pageSize,null).then(res => {
         this.page.currentPage = res.data.pageNum
         this.page.pageSize = res.data.pageSize
         this.page.totalPage = res.data.pages

@@ -70,7 +70,7 @@ export const constantRouterMap = [
     mate: {
       title: '班级',
       icon: 'usergroup-add',
-      isLoading: false
+      isLoading: true
     }
   },
   {
