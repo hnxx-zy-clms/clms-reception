@@ -2,7 +2,7 @@
   <div class="good-message-container">
     <!-- 消息顶层操作 -->
     <div class="top-action">
-      <span><a @click="confirmMessageByIds()">确认所有消息</a></span>
+      <span><a v-if="page.list.length > 0" @click="confirmMessageByIds()">确认所有消息</a></span>
     </div>
     <!-- 消息中间列表 -->
     <div class="message-list">
@@ -11,7 +11,7 @@
           <div v-if="item.messageType === 13">
             <a-tag color="orange">提问</a-tag>
             <a> {{ item.sendUser }} </a><span>{{ item.createdTime }}</span> 答复了您的提问
-            <router-link :to="'questionInfo/'+item.messageContent">
+            <router-link :to="'questionInfo/'+item.messageContent" @click.native="confirmMessageById(item.messageId)">
               <a>{{ item.messageDesc }}</a>
             </router-link>
           </div>

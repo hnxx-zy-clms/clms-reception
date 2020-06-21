@@ -1,13 +1,4 @@
 <template>
-  <!--  <div class="user-center-container">-->
-  <!--    <a-radio-group v-model="mode" :style="{ marginBottom: '8px' }">-->
-  <!--      &lt;!&ndash; <a-radio-button value="top">-->
-  <!--        Horizontal-->
-  <!--      </a-radio-button>-->
-  <!--      <a-radio-button value="left">-->
-  <!--        Vertical-->
-  <!--      </a-radio-button> &ndash;&gt;-->
-  <!--    </a-radio-group>-->
   <div class="container">
     <a-layout>
       <a-layout :style="{width:'1100px',minHeight: '360px',background: '#FFFFFF'}">
@@ -18,8 +9,8 @@
           >
           <my-info style="position:absolute;width:160px;z-index:2;margin-left:10px;top: 230px;" />
           <div class="ProfileHeader-name">{{ userName }}</div>
-          <div class="ProfileHeader-description">{{userInfo.userDescription}}</div>
-          <a-button  :style="{float:'right',marginRight:'10px',marginTop:'5px'}"> 编辑个人资料 </a-button>
+          <div class="ProfileHeader-description">{{ userInfo.userDescription }}</div>
+          <a-button :style="{float:'right',marginRight:'10px',marginTop:'5px'}"> 编辑个人资料 </a-button>
         </a-layout-content>
       </a-layout>
       <a-layout :style="{width:'1100px',margin:'10px 0px'}">
@@ -59,13 +50,13 @@
               <span slot="tab"><a-icon type="message" />评论</span>
               <my-comment />
             </a-tab-pane>
-            <a-tab-pane key="mymoney" >
-            <span slot="tab"><a-icon type="money-collect" />钱包</span>
+            <a-tab-pane key="mymoney">
+              <span slot="tab"><a-icon type="money-collect" />钱包</span>
               <a-empty />
             </a-tab-pane>
           </a-tabs>
         </a-layout-content>
-        <a-layout-sider :style="{height:'230px',marginLeft:'10px',background: '#FFFFFF'}" >
+        <a-layout-sider :style="{height:'230px',marginLeft:'10px',background: '#FFFFFF'}">
           <a-empty />
         </a-layout-sider>
       </a-layout>

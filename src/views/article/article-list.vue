@@ -129,7 +129,7 @@ export default {
     scrollLoadMore(e) {
       // !this.moreLoading 没有在加载状态，触发加载更多时，把this.moreLoading置未true
       // !this.noMore 没有更多的状态为false，当我们取到的数据长度小于1页的数量时，就没有更多了数据了，把 this.noMore置为true，这样就不会触发无意义的加载更多了
-      if (e.srcElement.scrollTop + e.srcElement.offsetHeight > e.srcElement.scrollHeight && !this.loadingMore && !this.noMore) {
+      if (e.srcElement.scrollTop + e.srcElement.offsetHeight > e.srcElement.scrollHeight - 100 && !this.loadingMore && !this.noMore) {
         this.loadMore()
       }
     },

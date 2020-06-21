@@ -2,7 +2,7 @@
   <div class="good-message-container">
     <!-- 消息顶层操作 -->
     <div class="top-action">
-      <span><a @click="confirmMessageByIds()">确认所有消息</a></span>
+      <span><a v-if="page.list.length > 0" @click="confirmMessageByIds()">确认所有消息</a></span>
     </div>
     <!-- 消息中间列表 -->
     <div class="message-list">
@@ -11,35 +11,35 @@
           <div v-if="item.messageType === 3">
             <a-tag color="green">文章</a-tag>
             <a> {{ item.sendUser }} </a><span>{{ item.createdTime }}</span> 点赞了您的文章
-            <router-link :to="'articleRead/'+item.messageContent">
+            <router-link :to="'articleRead/'+item.messageContent" @click.native="confirmMessageById(item.messageId)">
               <a>{{ item.messageDesc }}</a>
             </router-link>
           </div>
           <div v-if="item.messageType === 4">
             <a-tag color="red">评论</a-tag>
             <a> {{ item.sendUser }} </a><span>{{ item.createdTime }}</span> 点赞了您的评论
-            <router-link :to="'articleRead/'+item.messageContent">
+            <router-link :to="'articleRead/'+item.messageContent" @click.native="confirmMessageById(item.messageId)">
               <a>{{ item.messageDesc }}</a>
             </router-link>
           </div>
           <div v-if="item.messageType === 5">
             <a-tag color="orange">提问</a-tag>
             <a> {{ item.sendUser }} </a><span>{{ item.createdTime }}</span> 点赞了您的提问
-            <router-link :to="'questionInfo/'+item.messageContent">
+            <router-link :to="'questionInfo/'+item.messageContent" @click.native="confirmMessageById(item.messageId)">
               <a>{{ item.messageDesc }}</a>
             </router-link>
           </div>
           <div v-if="item.messageType === 6">
             <a-tag color="purple">答复</a-tag>
             <a> {{ item.sendUser }} </a><span>{{ item.createdTime }}</span> 点赞了您的答复
-            <router-link :to="'questionInfo/'+item.messageContent">
+            <router-link :to="'questionInfo/'+item.messageContent" @click.native="confirmMessageById(item.messageId)">
               <a>{{ item.messageDesc }}</a>
             </router-link>
           </div>
           <div v-if="item.messageType === 7">
             <a-tag color="cyan">视频</a-tag>
             <a> {{ item.sendUser }} </a> <span>{{ item.createdTime }}</span>点赞了您的视频
-            <router-link :to="'questionInfo/'+item.messageContent">
+            <router-link :to="'questionInfo/'+item.messageContent" @click.native="confirmMessageById(item.messageId)">
               <a>{{ item.messageDesc }}</a>
             </router-link>
           </div>

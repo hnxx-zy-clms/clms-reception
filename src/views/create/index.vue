@@ -3,7 +3,7 @@
     <a-layout>
       <a-layout-content class="editor-header">
         <a-input v-model="article.articleTitle" class="editor-input-title" placeholder="请输入标题" />
-        <a-button @click="changeEditor">切换 {{ editorModeName }} 编辑器</a-button>
+        <a-button @click="changeEditor">切换编辑器:当前为{{ editorModeName }}</a-button>
         <a-button type="primary" @click="openAddDialog">
           发布
         </a-button>
