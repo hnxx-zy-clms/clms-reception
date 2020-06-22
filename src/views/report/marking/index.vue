@@ -7,7 +7,7 @@
         <p v-if="roles === 1" :style="{float:'left',fontSize:'20px',marginRight:'10px'}">组长批阅报告</p>
         <p v-if="roles === 2" :style="{float:'left',fontSize:'20px',marginRight:'10px'}">班长批阅报告</p>
         <div :style="{marginTop:'5px'}">
-          <a-tag v-if="day < 21" color="blue">
+          <a-tag v-if="day < stape" color="blue">
             今日日报提交中
           </a-tag>
           <a-tag v-else color="red">
@@ -136,6 +136,7 @@
 
 <script>
 import Moment from 'moment'
+import ReportApi from '@/api/report/report'
 import MarkingApi from '@/api/report/marking'
 import Marking from '../reportList/marking'
 import { mapGetters } from 'vuex'
@@ -221,6 +222,7 @@ export default {
       columns,
       week: new Date().getDay(),
       day: new Date().getHours(),
+      stape: 22,
       page: {
         currentPage: 1,
         pageSize: 5,
@@ -247,10 +249,13 @@ export default {
   created() {
     this.spinning = true
     this.getByPage()
+    ReportApi.getTime().then(res => {
+      this.stape = res.data
+    })
   },
   methods: {
     weekly() {
-      return this.day > 21 && this.week === 0
+      return this.day > this.stape && this.week === 0
     },
     // 分页获取数据
     getByPage() {

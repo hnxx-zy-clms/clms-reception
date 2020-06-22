@@ -81,7 +81,7 @@
                       <span>日(周)报提交情况</span>
                       <el-popover placement="right" width="350" trigger="click" class="myseletor">
                         <div class="namelist">
-                          <el-tag v-for="o in notNames" :key="o" type="danger" class="mytab">{{o}}</el-tag>
+                          <el-tag v-for="o in notNames" :key="o" type="danger" class="mytab">{{ o }}</el-tag>
                         </div>
                         <el-button slot="reference" type="primary" plain class="mybutton">查看未提交名单</el-button>
                       </el-popover>
@@ -128,7 +128,7 @@
 
 <script>
 import articleApi from '@/api/article/article'
-import ReportApi from '@/api/report/report.js'
+import ReportApi from '@/api/report/report'
 import ArticleType from '@/views/statistics/article/article-type'
 import ArticlePersonal from '@/views/statistics/article/article-personal'
 import ReportGroup from '@/views/statistics/report/report-group'
@@ -137,7 +137,7 @@ import ClassSex from '@/views/statistics/class/class-sex'
 import ClassClasses from '@/views/statistics/class/class-classes'
 import ReportSubmit from '@/views/statistics/report/report-submit'
 import ReportCount from '@/views/statistics/report/report-count'
-import Moment from "moment";
+import Moment from 'moment'
 export default {
   components: {
     ArticleType,
@@ -248,12 +248,6 @@ export default {
   padding-top: 30px;
   padding-bottom: 30px;
   background: white;
-}
-.el-row {
-  margin-bottom: 20px;
-  &:last-child {
-    margin-bottom: 0;
-  }
 }
 .el-col {
   border-radius: 4px;

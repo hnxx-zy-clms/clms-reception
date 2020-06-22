@@ -109,6 +109,9 @@ export default {
       messageApi.confirmMessageByIds(this.selectMessageId).then(res => {
         this.$message.success(res.msg)
         this.getByPage()
+        this.messageCount = this.$store.getters.messageCount
+        this.messageCount = this.messageCount - this.page.list.length
+        this.$store.commit('global/SET_MESSAGE_COUNT', this.messageCount)
       })
     },
     // 每页大小改变 参数 value 为每页大小(pageSize)

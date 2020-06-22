@@ -12,6 +12,7 @@
       title="新建报告"
       :width="720"
       :visible="visible"
+      okText="提交"
       placement="left"
       :body-style="{ paddingBottom: '80px' }"
       @close="onClose"

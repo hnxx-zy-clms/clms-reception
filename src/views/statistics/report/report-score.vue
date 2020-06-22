@@ -11,7 +11,7 @@
 import { mapGetters } from 'vuex'
 import G2 from '@antv/g2'
 import { Chart } from '@antv/g2'
-import reportApi from '@/api/report/marking.js'
+import reportApi from '@/api/report/marking'
 export default {
   name: 'Top3',
   data() {

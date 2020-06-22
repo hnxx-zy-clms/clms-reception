@@ -52,7 +52,7 @@
                 <a-textarea
                   v-model="videoCommentContent"
                   :style="{float:'left',margin:'20px 20px',maxWidth:'70%'}"
-                  placeholder="请自觉遵守互联网相关的政策法规，严禁发布色情、暴力和发动的言论！"
+                  placeholder="请自觉遵守互联网相关的政策法规，严禁发布色情、暴力和反动的言论！"
                   :auto-size="{ minRows: 3, maxRows: 5 }"
                 />
                 <a-button type="primary" :style="{height:'70px',float:'left',margin:'20px 0px'}" @click="primaryCommentTop">发表评论</a-button>

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import classApi from '@/api/classes/classes.js'
+import classApi from '@/api/classes/classes'
 import G2 from '@antv/g2'
 import { Chart } from '@antv/g2'
 export default {

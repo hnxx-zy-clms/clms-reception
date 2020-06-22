@@ -18,7 +18,7 @@
           <a-tabs
             default-active-key="my"
             tab-position="top"
-            :style="{ width: '100%', marginBottom: '20px', backgroundColor: 'white' }"
+            :style="{ width: '100%', backgroundColor: 'white' }"
             @prevClick="callback"
             @nextClick="callback"
           >
@@ -38,17 +38,9 @@
               <span slot="tab"><a-icon type="book" />文章</span>
               <my-article />
             </a-tab-pane>
-            <a-tab-pane key="mygood">
-              <span slot="tab"><a-icon type="like" />点赞</span>
-              <my-good />
-            </a-tab-pane>
             <a-tab-pane key="mycollection">
               <span slot="tab"><a-icon type="star" />收藏</span>
               <my-collection />
-            </a-tab-pane>
-            <a-tab-pane key="mycomment">
-              <span slot="tab"><a-icon type="message" />评论</span>
-              <my-comment />
             </a-tab-pane>
             <a-tab-pane key="mymoney">
               <span slot="tab"><a-icon type="money-collect" />钱包</span>
@@ -57,7 +49,16 @@
           </a-tabs>
         </a-layout-content>
         <a-layout-sider :style="{height:'230px',marginLeft:'10px',background: '#FFFFFF'}">
-          <a-empty />
+          <div class="my-answer-container">
+            <a-card hoverable title="个人成就">
+              <a-card-meta title="积分: 999" />
+              <div>
+                <a-tag style="marginTop: 10px" color="#f50">答疑能手</a-tag><br><span>回复了 10 个问题</span>
+                <br>
+                <a-tag style="marginTop: 10px" color="#2db7f5">创作狂人</a-tag><br><span>写了 25 篇文章</span>
+              </div>
+            </a-card>
+          </div>
         </a-layout-sider>
       </a-layout>
     </a-layout>
@@ -69,9 +70,7 @@ import MyReport from '@/views/user/userInfo/myReport/index'
 import MyQuestion from '@/views/user/userInfo/myQuestion/index'
 import MyAnswer from '@/views/user/userInfo/myAnswer/index'
 import MyArticle from '@/views/user/userInfo/myArticle/index'
-import MyGood from '@/views/user/userInfo/myGood/index'
 import MyCollection from '@/views/user/userInfo/myCollection/index'
-import MyComment from '@/views/user/userInfo/myComment/index'
 import { mapGetters } from 'vuex'
 export default {
   components: {
@@ -80,9 +79,7 @@ export default {
     MyAnswer,
     MyQuestion,
     MyArticle,
-    MyGood,
-    MyCollection,
-    MyComment
+    MyCollection
   },
   data() {
     return {
