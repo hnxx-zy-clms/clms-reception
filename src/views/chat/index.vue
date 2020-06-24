@@ -129,7 +129,6 @@ import ChatItem from './chat-item'
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
 import { isLogin } from '../../api/user.js'
-window.οnbefοreunlοad = this.disconnect()
 export default {
   components: {
     ChatItem
