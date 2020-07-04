@@ -11,7 +11,7 @@
       </div>
     </el-card>
 
-    <el-divider content-position="left">已完成{{ numDid.numdid }}人,未完成{{ numDid.numnotdid }}人</el-divider>
+    <el-divider content-position="left">已完成{{ numDid }}人,未完成{{ page.totalCount - numDid }}人</el-divider>
     <el-table
       ref="singleTable"
       :data="situation"
@@ -74,6 +74,7 @@ export default {
         sortColumn: 'created_time', // 排序列
         sortMethod: 'desc' // 排序方式
       },
+      numDid: 0, // 任务完成人数
       loading: false, // 控制是否显示加载效果
       selectTask: [], // 被选中的模版列
       addDialog: false, // 控制添加弹窗显示
@@ -82,26 +83,11 @@ export default {
       situation: [] // 任务完成情况
     }
   },
-  computed: {
-    numDid() {
-      const num = {
-        numdid: 0,
-        numnotdid: 0
-      }
-      for (const i of this.situation) {
-        if (i.isDid === true) {
-          num.numdid++
-        } else {
-          num.numnotdid++
-        }
-      }
-      return num
-    }
-  },
   created() {
     this.loading = true
-    this.getTaskSituation()
     this.getTask(this.taskId)
+    this.getTaskSituation()
+    this.getTaskDidNum()
   },
   methods: {
     // 每页大小改变 参数 value 为每页大小(pageSize)
@@ -147,6 +133,11 @@ export default {
     getTask(taskId) {
       taskApi.getTask(taskId).then(res => {
         this.task = res.data
+      })
+    },
+    getTaskDidNum() {
+      taskApi.getTaskDidNum(this.taskId).then(res => {
+        this.numDid = res.data
       })
     }
   }

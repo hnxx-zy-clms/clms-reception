@@ -93,5 +93,11 @@ export default {
       url: `/${group_name}/setlevel/${id}/${level}`,
       method: 'put'
     })
+  },
+  getTaskDidNum(taskId) { // 获取任务完成人数
+    return request({
+      url: `/${group_name}/getTaskDidNum/${taskId}`,
+      method: 'get'
+    })
   }
 }
