@@ -124,6 +124,9 @@ export default {
     this.getTypeList()
     this.getRecomRead()
   },
+  mounted() {
+    hljs.highlightCode()
+  },
   methods: {
     getTypeList() {
       // 查询类型列表

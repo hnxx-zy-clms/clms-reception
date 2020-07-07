@@ -17,6 +17,9 @@ export default {
   components: {
     Layout
   }
+  // created() {
+  //   document.body.removeChild(document.getElementById('Loading')) // 加载页面完后移除加载动画
+  // }
 }
 </script>
 

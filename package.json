@@ -46,9 +46,11 @@
     "prettier": "^1.19.1",
     "sass": "^1.26.3",
     "sass-loader": "^8.0.2",
+    "script-ext-html-webpack-plugin": "2.1.3",
     "stompjs": "^2.3.3",
     "vue": "^2.6.11",
     "vue-resource": "^1.5.1",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "webpack-bundle-analyzer": "^3.8.0"
   }
 }

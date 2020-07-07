@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import '@/config/md.js'
 import articleApi from '@/api/article/article'
 import Tinymce from '@/views/common/Tinymce/index'
 import { getToken } from '@/utils/auth'
